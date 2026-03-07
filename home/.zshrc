@@ -6,7 +6,14 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # prompt
-source "${HOMEBREW_PREFIX:-/opt/homebrew}/share/powerlevel10k/powerlevel10k.zsh-theme"
+if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
+  brew_share="$HOMEBREW_PREFIX/share"
+  brew_opt="$HOMEBREW_PREFIX/opt"
+fi
+
+if [[ -n "${brew_share:-}" ]] && [[ -f "$brew_share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+  source "$brew_share/powerlevel10k/powerlevel10k.zsh-theme"
+fi
 
 # environment
 export PNPM_HOME="$HOME/Library/pnpm"
@@ -44,8 +51,8 @@ setopt HIST_SAVE_NO_DUPS
 setopt HIST_FIND_NO_DUPS
 
 # extra tab completions
-if [ -d "${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh-completions" ]; then
-  fpath=("${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh-completions" $fpath)
+if [[ -n "${brew_share:-}" ]] && [[ -d "$brew_share/zsh-completions" ]]; then
+  fpath=("$brew_share/zsh-completions" $fpath)
 fi
 
 # zsh completion system
@@ -62,13 +69,13 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # plugins
-if [ -f "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh" ]; then
-  source "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh"
+if [[ -n "${brew_opt:-}" ]] && [[ -f "$brew_opt/fzf-tab/share/fzf-tab/fzf-tab.zsh" ]]; then
+  source "$brew_opt/fzf-tab/share/fzf-tab/fzf-tab.zsh"
 fi
 
 # fuzzy finder keybindings only (Ctrl-R, Ctrl-T, Alt-C)
-if [ -f "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/fzf/shell/key-bindings.zsh" ]; then
-  source "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/fzf/shell/key-bindings.zsh"
+if [[ -n "${brew_opt:-}" ]] && [[ -f "$brew_opt/fzf/shell/key-bindings.zsh" ]]; then
+  source "$brew_opt/fzf/shell/key-bindings.zsh"
 fi
 
 # smarter directory jumping (z, zi)
@@ -87,14 +94,14 @@ ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
   vi-forward-word-end
   vi-add-eol
 )
-if [ -f "${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-  source "${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+if [[ -n "${brew_share:-}" ]] && [[ -f "$brew_share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+  source "$brew_share/zsh-autosuggestions/zsh-autosuggestions.zsh"
   bindkey '^[;' autosuggest-accept
 fi
 
 # syntax highlighting (keep this near the end of .zshrc)
-if [ -f "${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-  source "${HOMEBREW_PREFIX:-/opt/homebrew}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+if [[ -n "${brew_share:-}" ]] && [[ -f "$brew_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+  source "$brew_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 # functions

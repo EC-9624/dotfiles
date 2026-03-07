@@ -1,15 +1,19 @@
-. "$HOME/.cargo/env"
+if [[ -r "$HOME/.cargo/env" ]]; then
+  . "$HOME/.cargo/env"
+fi
 
 if [[ -d /opt/homebrew ]]; then
   export HOMEBREW_PREFIX="/opt/homebrew"
+elif [[ -d /usr/local/Homebrew || -x /usr/local/bin/brew ]]; then
+  export HOMEBREW_PREFIX="/usr/local"
+fi
 
-  case ":$PATH:" in
-    *":$HOMEBREW_PREFIX/bin:"*) ;;
-    *) export PATH="$HOMEBREW_PREFIX/bin:$PATH" ;;
-  esac
-
-  case ":$PATH:" in
-    *":$HOMEBREW_PREFIX/sbin:"*) ;;
-    *) export PATH="$HOMEBREW_PREFIX/sbin:$PATH" ;;
-  esac
+if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
+  typeset -U path PATH
+  path=(
+    "$HOMEBREW_PREFIX/bin"
+    "$HOMEBREW_PREFIX/sbin"
+    $path
+  )
+  export PATH
 fi
