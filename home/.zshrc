@@ -26,19 +26,7 @@ path=(
 
 # node
 if command -v fnm >/dev/null 2>&1; then
-  autoload -U add-zsh-hook
-
-  _fnm_auto_use() {
-    if [[ -f .node-version || -f .nvmrc || -f package.json ]]; then
-      fnm use --silent-if-unchanged >/dev/null
-    fi
-  }
-
-  if (( ${chpwd_functions[(Ie)_fnm_auto_use]:-0} == 0 )); then
-    add-zsh-hook chpwd _fnm_auto_use
-  fi
-
-  _fnm_auto_use
+  eval "$(fnm env --shell zsh --use-on-cd)"
 fi
 
 # bun completions
