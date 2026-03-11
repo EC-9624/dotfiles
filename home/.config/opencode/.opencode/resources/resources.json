@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "resources": [
+    {
+      "name": "jotai",
+      "url": "https://github.com/pmndrs/jotai",
+      "branch": "main",
+      "notes": "",
+      "scope": "project",
+      "clonedAt": "2026-03-11T01:56:14.818Z",
+      "updatedAt": "2026-03-11T01:56:14.818Z"
+    }
+  ]
+}

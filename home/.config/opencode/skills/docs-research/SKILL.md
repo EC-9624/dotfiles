@@ -42,6 +42,11 @@ Do not use this skill for:
 | `grep`            | Search local code content |
 | `read`            | Read local code files |
 
+`resource_search` expects a regex query, not a plain keyword list.
+- Do: `createStore|getDefaultStore|Provider`
+- Don't: `createStore getDefaultStore Provider`
+- Prefer full globs for docs filters, e.g. `docs/**/*.mdx` or `**/*.{md,mdx,ts,tsx}`
+
 ## Research Modes
 
 Select a mode based on user intent.

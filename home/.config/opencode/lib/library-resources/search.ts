@@ -1,12 +1,15 @@
 import { tool } from "@opencode-ai/plugin";
 import { spawnSync } from "child_process";
 import * as fs from "fs";
+import * as path from "path";
 
 import type { Resource } from "./types";
 import type { ResourcePaths } from "./paths";
 import { getResourcePath } from "./paths";
 import { getMergedResources, getSelectedResources } from "./registry";
 import { getErrorMessage, isCommandMissing } from "./errors";
+import { listRelativeFiles, matchesFullGlob } from "./glob";
+import { formatNoMatchesMessage } from "./query";
 
 const SEARCH_MAX_MATCHES = 200;
 const SEARCH_MAX_MATCHES_PER_FILE = 20;
@@ -18,17 +21,18 @@ const SEARCH_EXCLUDE_GLOBS = [
   "!build/**",
   "!coverage/**",
 ];
-const SEARCH_EXCLUDE_DIRS = [
+const SEARCH_EXCLUDE_DIRS = new Set([
   ".git",
   "node_modules",
   "dist",
   "build",
   "coverage",
-];
+]);
 
 interface SearchableResource {
   resource: Resource;
   repoPath: string;
+  filePaths: string[];
 }
 
 interface ParsedResult {
@@ -42,20 +46,33 @@ interface CreateSearchToolOptions {
 
 const buildSearchableResources = (
   resources: Resource[],
-  paths: ResourcePaths
+  paths: ResourcePaths,
+  include: string | undefined
 ): SearchableResource[] => {
   return resources
     .map((resource) => ({
       resource,
       repoPath: getResourcePath(paths, resource),
     }))
-    .filter(({ repoPath }) => fs.existsSync(repoPath));
+    .filter(({ repoPath }) => fs.existsSync(repoPath))
+    .map(({ resource, repoPath }) => {
+      const relativeFilePaths = listRelativeFiles(repoPath, SEARCH_EXCLUDE_DIRS).filter(
+        (relativeFilePath) => !include || matchesFullGlob(relativeFilePath, include)
+      );
+
+      return {
+        resource,
+        repoPath,
+        filePaths: relativeFilePaths.map((relativeFilePath) =>
+          path.join(repoPath, relativeFilePath)
+        ),
+      };
+    });
 };
 
 const runRipgrep = (
   query: string,
-  include: string | undefined,
-  searchableResources: SearchableResource[]
+  filePaths: string[]
 ) => {
   const args = [
     "--line-number",
@@ -67,16 +84,11 @@ const runRipgrep = (
     String(SEARCH_MAX_MATCHES_PER_FILE),
   ];
 
-  if (include) {
-    args.push("-g", include);
-  }
   for (const globPattern of SEARCH_EXCLUDE_GLOBS) {
     args.push("-g", globPattern);
   }
   args.push("--", query);
-  for (const entry of searchableResources) {
-    args.push(entry.repoPath);
-  }
+  args.push(...filePaths);
 
   return spawnSync("rg", args, {
     encoding: "utf-8",
@@ -86,22 +98,16 @@ const runRipgrep = (
 
 const runGrepFallback = (
   query: string,
-  include: string | undefined,
-  searchableResources: SearchableResource[]
+  filePaths: string[]
 ) => {
-  const args = ["-R", "-n", "-i", "-E", "--binary-files=without-match"];
+  const args = ["-H", "-n", "-i", "-E", "--binary-files=without-match"];
 
-  if (include) {
-    args.push("--include", include);
-  }
   for (const excludeDir of SEARCH_EXCLUDE_DIRS) {
     args.push(`--exclude-dir=${excludeDir}`);
   }
 
   args.push("--", query);
-  for (const entry of searchableResources) {
-    args.push(entry.repoPath);
-  }
+  args.push(...filePaths);
 
   return spawnSync("grep", args, {
     encoding: "utf-8",
@@ -195,9 +201,7 @@ const formatResults = (
   }
 
   if (sections.length === 0) {
-    return `No matches found for "${query}"${
-      selectedName ? ` in ${selectedName}` : ""
-    }`;
+    return formatNoMatchesMessage(query, selectedName);
   }
 
   const truncationNote = truncated
@@ -214,9 +218,12 @@ export const createResourceSearchTool = ({ paths }: CreateSearchToolOptions) => 
   return tool({
     description: `Search for content within library resources.
 If name is omitted, searches all resources.
-Returns matching file paths and line snippets.`,
+Returns matching file paths and line snippets.
+Query is regex-only; use 'foo|bar' for OR.`,
     args: {
-      query: tool.schema.string().describe("Search pattern (supports regex)"),
+      query: tool.schema
+        .string()
+        .describe("Search regex pattern (use 'foo|bar' for OR)"),
       name: tool.schema
         .string()
         .optional()
@@ -224,7 +231,9 @@ Returns matching file paths and line snippets.`,
       include: tool.schema
         .string()
         .optional()
-        .describe("File pattern to include (e.g., '*.md', '*.ts')"),
+        .describe(
+          "Full file glob to include (e.g., 'docs/**/*.mdx', '**/*.{md,mdx}')"
+        ),
     },
     async execute(args) {
       const { query, name, include } = args;
@@ -236,18 +245,23 @@ Returns matching file paths and line snippets.`,
         return name ? `Resource '${name}' not found.` : "No resources available.";
       }
 
-      const searchableResources = buildSearchableResources(resources, paths);
+      const searchableResources = buildSearchableResources(resources, paths, include);
       if (searchableResources.length === 0) {
-        return `No matches found for "${query}"${name ? ` in ${name}` : ""}`;
+        return formatNoMatchesMessage(query, name);
       }
 
-      const rgResult = runRipgrep(query, include, searchableResources);
+      const filePaths = searchableResources.flatMap((resource) => resource.filePaths);
+      if (filePaths.length === 0) {
+        return formatNoMatchesMessage(query, name);
+      }
+
+      const rgResult = runRipgrep(query, filePaths);
       let usedFallback = false;
       let stdout = "";
 
       if (rgResult.error && isCommandMissing(rgResult.error)) {
         usedFallback = true;
-        const fallbackResult = runGrepFallback(query, include, searchableResources);
+        const fallbackResult = runGrepFallback(query, filePaths);
 
         if (fallbackResult.error) {
           return `Search failed: ${getErrorMessage(fallbackResult.error)}`;
