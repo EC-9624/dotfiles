@@ -16,20 +16,8 @@ if [[ -n "${brew_share:-}" ]] && [[ -f "$brew_share/powerlevel10k/powerlevel10k.
 fi
 
 # environment
-export PNPM_HOME="$HOME/Library/pnpm"
-export BUN_INSTALL="$HOME/.bun"
 export OPENCODE_DISABLE_DEFAULT_PLUGINS=true
 export OPENCODE_SERVER_URL="http://127.0.0.1:4096"
-
-typeset -U path PATH
-path=(
-  "$HOME/.opencode/bin"
-  "$HOME/.local/bin"
-  "$BUN_INSTALL/bin"
-  "$PNPM_HOME"
-  $path
-  "$HOME/go/bin"
-)
 
 # node
 if command -v fnm >/dev/null 2>&1; then
@@ -118,7 +106,11 @@ function y() {
 
 opencode() {
   if [[ "$#" -eq 0 ]]; then
-    command opencode attach "$OPENCODE_SERVER_URL" -p "$OPENCODE_SERVER_PASSWORD" --dir "$PWD"
+    if [[ -n "${OPENCODE_SERVER_PASSWORD:-}" ]]; then
+      command opencode attach "$OPENCODE_SERVER_URL" -p "$OPENCODE_SERVER_PASSWORD" --dir "$PWD"
+    else
+      command opencode attach "$OPENCODE_SERVER_URL" --dir "$PWD"
+    fi
   else
     command opencode "$@"
   fi
