@@ -43,6 +43,25 @@ install_oh_my_zsh() {
   git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "${omz_dir}"
 }
 
+install_bun() {
+  local bun_dir="${HOME}/.bun"
+  local bun_bin="${bun_dir}/bin/bun"
+  local bun_completion="${bun_dir}/_bun"
+
+  if [[ -x "${bun_bin}" ]] && [[ -f "${bun_completion}" ]]; then
+    say "ok: bun"
+    return 0
+  fi
+
+  need_cmd bash
+  need_cmd curl
+  need_cmd unzip
+
+  say "installing: bun"
+  SHELL=sh BUN_INSTALL="${bun_dir}" bash -c "$(curl -fsSL https://bun.sh/install)"
+  "${bun_bin}" completions > "${bun_completion}"
+}
+
 restow() {
   need_cmd stow
   stow -R -d "${DOTFILES_DIR}" -t "${HOME}" home
@@ -50,7 +69,17 @@ restow() {
 
 doctor() {
   local missing=0
-  local commands=(bat brew fd fnm fzf git stow yazi zoxide zsh)
+  local commands=(bat brew bun curl fd fnm fzf git stow unzip yazi zoxide zsh)
+  local paths=(
+    "${HOME}/.bun/_bun"
+    "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
+    "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
+    "/opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh"
+    "/opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme"
+    "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    "/opt/homebrew/share/zsh-completions"
+    "/opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  )
 
   for cmd in "${commands[@]}"; do
     if command -v "$cmd" >/dev/null 2>&1; then
@@ -61,12 +90,14 @@ doctor() {
     fi
   done
 
-  if [[ -d "${HOME}/.oh-my-zsh/.git" ]]; then
-    say "ok: oh-my-zsh"
-  else
-    say "missing: oh-my-zsh"
-    missing=1
-  fi
+  for path in "${paths[@]}"; do
+    if [[ -e "$path" ]]; then
+      say "ok: $path"
+    else
+      say "missing: $path"
+      missing=1
+    fi
+  done
 
   if stow -n -R -d "${DOTFILES_DIR}" -t "${HOME}" home >/dev/null; then
     say "ok: stow dry-run"
@@ -83,7 +114,7 @@ usage() {
 Usage: ./dot <command>
 
 Commands:
-  init    install bundle, oh-my-zsh, and stow files
+  init    install bundle, bun, oh-my-zsh, and stow files
   stow    restow managed files into $HOME
   doctor  check core commands and stow health
 EOF
@@ -95,6 +126,7 @@ main() {
   case "$command" in
     init)
       install_packages
+      install_bun
       install_oh_my_zsh
       restow
       ;;

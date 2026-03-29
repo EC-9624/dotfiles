@@ -17,7 +17,7 @@ cd ~/Code/dotfiles
 ./dot init
 ```
 
-`./dot init` installs the Homebrew bundle, clones `~/.oh-my-zsh` when missing, and stows `home/` into `$HOME`.
+`./dot init` installs the Homebrew bundle, installs Bun, clones `~/.oh-my-zsh` when missing, and stows `home/` into `$HOME`.
 
 ## Commands
 

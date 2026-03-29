@@ -10,36 +10,22 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""
 plugins=(git)
 
-if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
-  brew_share="$HOMEBREW_PREFIX/share"
-  brew_opt="$HOMEBREW_PREFIX/opt"
-fi
-
 # extra tab completions
-if [[ -n "${brew_share:-}" ]] && [[ -d "$brew_share/zsh-completions" ]]; then
-  fpath=("$brew_share/zsh-completions" $fpath)
-fi
-
-if [[ -f "$ZSH/oh-my-zsh.sh" ]]; then
-  source "$ZSH/oh-my-zsh.sh"
-fi
+fpath=(/opt/homebrew/share/zsh-completions $fpath)
+source "$ZSH/oh-my-zsh.sh"
 
 # prompt
-if [[ -n "${brew_share:-}" ]] && [[ -f "$brew_share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
-  source "$brew_share/powerlevel10k/powerlevel10k.zsh-theme"
-fi
+source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
 
 # environment
 export OPENCODE_DISABLE_DEFAULT_PLUGINS=true
 export OPENCODE_SERVER_URL="http://127.0.0.1:4096"
 
 # node
-if command -v fnm >/dev/null 2>&1; then
-  eval "$(fnm env --shell zsh --use-on-cd)"
-fi
+eval "$(fnm env --shell zsh --use-on-cd)"
 
 # bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+source "$HOME/.bun/_bun"
 
 # history (shared across terminals)
 HISTSIZE=5000
@@ -62,19 +48,13 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # plugins
-if [[ -n "${brew_opt:-}" ]] && [[ -f "$brew_opt/fzf-tab/share/fzf-tab/fzf-tab.zsh" ]]; then
-  source "$brew_opt/fzf-tab/share/fzf-tab/fzf-tab.zsh"
-fi
+source /opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh
 
 # fuzzy finder keybindings only (Ctrl-R, Ctrl-T, Alt-C)
-if [[ -n "${brew_opt:-}" ]] && [[ -f "$brew_opt/fzf/shell/key-bindings.zsh" ]]; then
-  source "$brew_opt/fzf/shell/key-bindings.zsh"
-fi
+source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
 
 # smarter directory jumping (z, zi)
-if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init zsh)"
-fi
+eval "$(zoxide init zsh)"
 
 # command autosuggestions
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
@@ -87,15 +67,11 @@ ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
   vi-forward-word-end
   vi-add-eol
 )
-if [[ -n "${brew_share:-}" ]] && [[ -f "$brew_share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
-  source "$brew_share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-  bindkey '^[;' autosuggest-accept
-fi
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+bindkey '^[;' autosuggest-accept
 
 # syntax highlighting (keep this near the end of .zshrc)
-if [[ -n "${brew_share:-}" ]] && [[ -f "$brew_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
-  source "$brew_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-fi
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # functions
 function y() {
