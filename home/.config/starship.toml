@@ -1,0 +1,60 @@
+"$schema" = "https://starship.rs/config-schema.json"
+
+add_newline = true
+command_timeout = 500
+scan_timeout = 100
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$cmd_duration\
+$line_break\
+$python\
+$character\
+"""
+
+[directory]
+style = "#9ccfd8"
+truncation_length = 0
+truncate_to_repo = false
+home_symbol = "~"
+format = "[$path]($style) "
+
+[git_branch]
+symbol = " "
+style = "#f6c177"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+format = '$all_status$ahead_behind'
+conflicted = "[=](#eb6f92) "
+ahead = "[⇡${count}](#908caa) "
+behind = "[⇣${count}](#908caa) "
+diverged = "[⇡${ahead_count}⇣${behind_count}](#908caa) "
+untracked = "[?](#f6c177) "
+stashed = ""
+modified = "[!](#ebbcba) "
+staged = "[+](#31748f) "
+renamed = "[»](#9ccfd8) "
+deleted = "[✘](#eb6f92) "
+
+[cmd_duration]
+min_time = 5000
+style = "#f6c177"
+format = '([ $duration]($style)) '
+
+[python]
+format = '([$virtualenv]($style) )'
+style = "#6e6a86"
+detect_extensions = []
+detect_files = []
+detect_folders = []
+
+[line_break]
+disabled = false
+
+[character]
+success_symbol = "[❯](bold #c4a7e7)"
+error_symbol = "[❯](bold #eb6f92)"
+vimcmd_symbol = "[❮](bold #c4a7e7)"
