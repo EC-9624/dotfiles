@@ -26,6 +26,23 @@ install_packages() {
   brew bundle --file="${PACKAGES_DIR}/bundle"
 }
 
+install_oh_my_zsh() {
+  local omz_dir="${HOME}/.oh-my-zsh"
+
+  if [[ -d "${omz_dir}/.git" ]]; then
+    say "ok: oh-my-zsh"
+    return 0
+  fi
+
+  if [[ -e "${omz_dir}" ]]; then
+    fail "~/.oh-my-zsh exists but is not a git checkout"
+  fi
+
+  need_cmd git
+  say "installing: oh-my-zsh"
+  git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "${omz_dir}"
+}
+
 restow() {
   need_cmd stow
   stow -R -d "${DOTFILES_DIR}" -t "${HOME}" home
@@ -33,7 +50,7 @@ restow() {
 
 doctor() {
   local missing=0
-  local commands=(brew git stow fzf zoxide)
+  local commands=(bat brew fd fnm fzf git stow yazi zoxide zsh)
 
   for cmd in "${commands[@]}"; do
     if command -v "$cmd" >/dev/null 2>&1; then
@@ -43,6 +60,13 @@ doctor() {
       missing=1
     fi
   done
+
+  if [[ -d "${HOME}/.oh-my-zsh/.git" ]]; then
+    say "ok: oh-my-zsh"
+  else
+    say "missing: oh-my-zsh"
+    missing=1
+  fi
 
   if stow -n -R -d "${DOTFILES_DIR}" -t "${HOME}" home >/dev/null; then
     say "ok: stow dry-run"
@@ -59,7 +83,7 @@ usage() {
 Usage: ./dot <command>
 
 Commands:
-  init    install bundle and stow files
+  init    install bundle, oh-my-zsh, and stow files
   stow    restow managed files into $HOME
   doctor  check core commands and stow health
 EOF
@@ -71,6 +95,7 @@ main() {
   case "$command" in
     init)
       install_packages
+      install_oh_my_zsh
       restow
       ;;
     stow)

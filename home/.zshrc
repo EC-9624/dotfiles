@@ -5,12 +5,26 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# prompt
+# oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME=""
+plugins=(git)
+
 if [[ -n "${HOMEBREW_PREFIX:-}" ]]; then
   brew_share="$HOMEBREW_PREFIX/share"
   brew_opt="$HOMEBREW_PREFIX/opt"
 fi
 
+# extra tab completions
+if [[ -n "${brew_share:-}" ]] && [[ -d "$brew_share/zsh-completions" ]]; then
+  fpath=("$brew_share/zsh-completions" $fpath)
+fi
+
+if [[ -f "$ZSH/oh-my-zsh.sh" ]]; then
+  source "$ZSH/oh-my-zsh.sh"
+fi
+
+# prompt
 if [[ -n "${brew_share:-}" ]] && [[ -f "$brew_share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
   source "$brew_share/powerlevel10k/powerlevel10k.zsh-theme"
 fi
@@ -37,15 +51,6 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_IGNORE_ALL_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_FIND_NO_DUPS
-
-# extra tab completions
-if [[ -n "${brew_share:-}" ]] && [[ -d "$brew_share/zsh-completions" ]]; then
-  fpath=("$brew_share/zsh-completions" $fpath)
-fi
-
-# zsh completion system
-autoload -Uz compinit
-compinit
 
 # completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'

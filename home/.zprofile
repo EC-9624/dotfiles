@@ -1,1 +1,1 @@
-source "$HOME/.zshenv"
+# Shared environment lives in ~/.zshenv.
