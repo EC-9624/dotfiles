@@ -1,6 +1,5 @@
 brew "fzf"
 brew "git"
 brew "neovim"
-brew "opencode"
 brew "stow"
 brew "zoxide"
