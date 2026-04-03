@@ -110,7 +110,6 @@
 - Never create commits, pull requests, or push unless explicitly requested
 - Never add AI or agent attribution or contributor status in commits, pull requests, or messages
 - Use `gh` for GitHub operations when needed
-- Use `glab` for GitLab operations when needed
 - Do not use destructive version-control commands unless explicitly requested
 
 ## Plans
