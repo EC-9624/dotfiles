@@ -49,8 +49,8 @@ unset_alt  = { fg = "#eb6f92", bg = "#1f1d2e" }
 
 [status]
 overall   = { bg = "#191724" }
-sep_left  = { open = "", close = "" }
-sep_right = { open = "", close = "" }
+sep_left  = { open = "", close = "" }
+sep_right = { open = "", close = "" }
 
 # Permissions
 perm_sep   = { fg = "#6e6a86" }
