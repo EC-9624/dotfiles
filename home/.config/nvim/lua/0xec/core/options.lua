@@ -21,7 +21,7 @@ opt.termguicolors = true
 -- Mouse, timing, and undo history
 opt.mouse = "a"
 opt.updatetime = 250
-opt.timeoutlen = 500
+opt.timeoutlen = 300
 opt.undofile = true
 
 -- Backup and swap files
