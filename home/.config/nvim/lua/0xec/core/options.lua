@@ -1,8 +1,5 @@
 local opt = vim.opt
 
--- Language and spelling
-opt.spelllang = { "en_us", "de_de", "es_es" }
-
 -- Search behavior
 opt.hlsearch = false
 opt.ignorecase = true
@@ -37,8 +34,8 @@ opt.whichwrap:append("<,>,[,],h,l")
 opt.wrap = false
 opt.linebreak = true
 opt.breakindent = true
-opt.scrolloff = 8
-opt.sidescrolloff = 8
+opt.scrolloff = 10
+opt.sidescrolloff = 10
 
 -- Indentation and tabs
 opt.shiftwidth = 4
