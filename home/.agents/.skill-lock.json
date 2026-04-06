@@ -1,0 +1,40 @@
+{
+  "version": 3,
+  "skills": {
+    "agent-browser": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "skillPath": "skills/agent-browser/SKILL.md",
+      "skillFolderHash": "068bc465a3f22625f98a7996817feefcd18d772f",
+      "installedAt": "2026-04-06T02:18:09.859Z",
+      "updatedAt": "2026-04-06T02:18:09.859Z"
+    },
+    "dogfood": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "skillPath": "skills/dogfood/SKILL.md",
+      "skillFolderHash": "c818a5daf6e6ef6ec6375705df201499de4e6437",
+      "installedAt": "2026-04-06T02:24:08.843Z",
+      "updatedAt": "2026-04-06T02:24:08.843Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "antigravity",
+    "cline",
+    "codex",
+    "cursor",
+    "deepagents",
+    "firebender",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-cli",
+    "opencode",
+    "warp"
+  ]
+}
