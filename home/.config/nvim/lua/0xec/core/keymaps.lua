@@ -61,11 +61,39 @@ map("n", "<leader>tp", "<cmd>tabprevious<CR>", opts("Previous tab"))
 map("v", "p", '"_dP', opts("Paste without replacing register"))
 map({ "n", "v" }, "<leader>y", '"+y', opts("Yank to system clipboard"))
 map("n", "<leader>Y", '"+Y', opts("Yank line to system clipboard"))
-map("n", "<leader>e", "<cmd>Oil<CR>", opts("Open explorer"))
+map("n", "<leader>e", function()
+  require("neo-tree.command").execute({
+    action = "focus",
+    source = "filesystem",
+    position = "right",
+    reveal = true,
+  })
+end, opts("Reveal current file in explorer"))
+map("n", "<leader>E", function()
+  require("neo-tree.command").execute({
+    toggle = true,
+    source = "filesystem",
+    position = "right",
+  })
+end, opts("Toggle explorer"))
 map("n", "-", "<cmd>Oil<CR>", opts("Open parent directory"))
 map("n", "<leader>-", function()
   require("oil").toggle_float()
 end, opts("Toggle Oil float"))
+map("n", "<leader>ge", function()
+  require("neo-tree.command").execute({
+    toggle = true,
+    source = "git_status",
+    position = "float",
+  })
+end, opts("Open git status explorer"))
+map("n", "<leader>oe", function()
+  require("neo-tree.command").execute({
+    toggle = true,
+    source = "buffers",
+    position = "float",
+  })
+end, opts("Open buffers explorer"))
 
 -- Telescope
 map("n", "<leader>ff", function()
