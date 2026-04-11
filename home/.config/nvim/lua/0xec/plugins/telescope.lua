@@ -1,6 +1,56 @@
 return {
   "nvim-telescope/telescope.nvim",
   branch = "0.1.x",
+  keys = {
+    {
+      "<leader>ff",
+      function()
+        require("telescope.builtin").find_files()
+      end,
+      desc = "Find files",
+    },
+    {
+      "<leader>fg",
+      function()
+        require("telescope.builtin").live_grep()
+      end,
+      desc = "Live grep",
+    },
+    {
+      "<leader>fd",
+      function()
+        require("telescope.builtin").find_files({
+          find_command = { "rg", "--files", "--hidden", "-g", "!.git" },
+        })
+      end,
+      desc = "Find dotfiles",
+    },
+    {
+      "<leader>sd",
+      function()
+        require("telescope.builtin").live_grep({
+          additional_args = function()
+            return { "--hidden", "-g", "!.git" }
+          end,
+        })
+      end,
+      desc = "Live grep dotfiles",
+    },
+    {
+      "<leader>fb",
+      function()
+        require("telescope.builtin").buffers()
+      end,
+      desc = "Find buffers",
+    },
+    {
+      "<leader>fh",
+      function()
+        require("telescope.builtin").help_tags()
+      end,
+      desc = "Find help",
+    },
+  },
   dependencies = {
     "nvim-lua/plenary.nvim",
     {
@@ -10,7 +60,6 @@ return {
   },
   config = function()
     local telescope = require("telescope")
-    local builtin = require("telescope.builtin")
     local action_layout = require("telescope.actions.layout")
 
     telescope.setup({
@@ -49,14 +98,5 @@ return {
     })
 
     pcall(telescope.load_extension, "fzf")
-
-    vim.keymap.set("n", "<leader>ff", function()
-      builtin.find_files()
-    end, { desc = "Find files" })
-    vim.keymap.set("n", "<leader>fg", function()
-      builtin.live_grep()
-    end, { desc = "Live grep" })
-    vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
-    vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help" })
   end,
 }

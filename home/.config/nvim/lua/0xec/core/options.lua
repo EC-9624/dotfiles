@@ -12,7 +12,6 @@ opt.signcolumn = "yes"
 opt.numberwidth = 4
 opt.showtabline = 2
 opt.laststatus = 2
-opt.statusline = "%f%=%l/%L"
 opt.termguicolors = true
 
 -- Mouse, timing, and undo history
