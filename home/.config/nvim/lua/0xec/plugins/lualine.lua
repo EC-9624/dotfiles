@@ -76,10 +76,48 @@ return {
       color = { fg = colors.text, bg = colors.overlay },
     }
 
+    local oil_extension = {
+      sections = {
+        lualine_a = {
+          {
+            function()
+              return "Oil"
+            end,
+            color = { fg = colors.base, bg = colors.foam, gui = "bold" },
+          },
+        },
+        lualine_b = {
+          {
+            function()
+              local oil = require("oil")
+              local dir = oil.get_current_dir()
+
+              if not dir then
+                return ""
+              end
+
+              return vim.fn.fnamemodify(dir, ":~")
+            end,
+            color = { fg = colors.text, bg = colors.none },
+          },
+        },
+        lualine_c = {
+          {
+            function()
+              return "Browse files"
+            end,
+            color = { fg = colors.subtle, bg = colors.none },
+          },
+        },
+      },
+      filetypes = { "oil" },
+    }
+
     lualine.setup({
       icons_enabled = true,
       options = {
         theme = my_lualine_theme,
+        globalstatus = true,
         component_separators = { left = "│", right = "│" },
         section_separators = { left = "", right = "" },
       },
@@ -96,6 +134,7 @@ return {
           { "filetype" },
         },
       },
+      extensions = { oil_extension },
     })
   end,
 }
