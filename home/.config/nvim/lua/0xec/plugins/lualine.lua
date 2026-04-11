@@ -4,21 +4,7 @@ return {
   config = function()
     local lualine = require("lualine")
     local lazy_status = require("lazy.status")
-
-    local colors = {
-      base = "#191724",
-      surface = "#1f1d2e",
-      overlay = "#26233a",
-      muted = "#6e6a86",
-      subtle = "#908caa",
-      text = "#e0def4",
-      love = "#eb6f92",
-      gold = "#f6c177",
-      foam = "#9ccfd8",
-      iris = "#c4a7e7",
-      pine = "#524f67",
-      none = "NONE",
-    }
+    local colors = require("rose-pine.palette")
 
     local my_lualine_theme = {
       normal = {
@@ -42,7 +28,7 @@ return {
         c = { fg = colors.subtle, bg = colors.none },
       },
       command = {
-        a = { fg = colors.base, bg = colors.pine, gui = "bold" },
+        a = { fg = colors.base, bg = colors.highlight_high, gui = "bold" },
         b = { fg = colors.text, bg = colors.none },
         c = { fg = colors.subtle, bg = colors.none },
       },
@@ -129,7 +115,7 @@ return {
           {
             lazy_status.updates,
             cond = lazy_status.has_updates,
-            color = { fg = "#ff9e64" },
+            color = { fg = colors.gold },
           },
           { "filetype" },
         },

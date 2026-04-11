@@ -74,18 +74,6 @@ end, opts("Find files"))
 map("n", "<leader>fg", function()
   require("telescope.builtin").live_grep()
 end, opts("Live grep"))
-map("n", "<leader>fd", function()
-  require("telescope.builtin").find_files({
-    find_command = { "rg", "--files", "--hidden", "-g", "!.git" },
-  })
-end, opts("Find dotfiles"))
-map("n", "<leader>sd", function()
-  require("telescope.builtin").live_grep({
-    additional_args = function()
-      return { "--hidden", "-g", "!.git" }
-    end,
-  })
-end, opts("Live grep dotfiles"))
 map("n", "<leader>fb", function()
   require("telescope.builtin").buffers()
 end, opts("Find buffers"))

@@ -10,6 +10,7 @@ return {
   },
   config = function()
     local telescope = require("telescope")
+    local actions = require("telescope.actions")
     local action_layout = require("telescope.actions.layout")
 
     telescope.setup({
@@ -21,19 +22,45 @@ return {
         },
         mappings = {
           i = {
+            ["<C-k>"] = actions.move_selection_previous,
+            ["<C-j>"] = actions.move_selection_next,
+            ["<C-u>"] = actions.preview_scrolling_up,
+            ["<C-d>"] = actions.preview_scrolling_down,
+            ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
             ["<M-p>"] = action_layout.toggle_preview,
           },
           n = {
             ["<M-p>"] = action_layout.toggle_preview,
           },
         },
+        file_ignore_patterns = {
+          "node_modules",
+          "yarn.lock",
+          ".git",
+          "pnpm.lock",
+          ".sl",
+          "_build",
+          ".next",
+        },
       },
       pickers = {
+        buffers = {
+          mappings = {
+            i = {
+              ["<C-x>"] = actions.delete_buffer,
+            },
+          },
+        },
         find_files = {
+          hidden = true,
+          find_command = { "rg", "--files", "--hidden", "-g", "!.git" },
           previewer = false,
           path_display = { "truncate" },
         },
         live_grep = {
+          additional_args = function()
+            return { "--hidden", "-g", "!.git" }
+          end,
           path_display = { "truncate" },
         },
       },
