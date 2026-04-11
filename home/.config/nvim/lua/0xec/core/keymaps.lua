@@ -38,7 +38,7 @@ map("n", "<leader>b", "<cmd>enew<CR>", opts("New buffer"))
 
 -- Numbers and wrapping
 map("n", "<leader>+", "<C-a>", opts("Increment number"))
-map("n", "<leader>-", "<C-x>", opts("Decrement number"))
+map("n", "<leader>_", "<C-x>", opts("Decrement number"))
 map("n", "<leader>lw", "<cmd>set wrap!<CR>", opts("Toggle line wrap"))
 
 -- Windows
@@ -62,3 +62,33 @@ map("v", "p", '"_dP', opts("Paste without replacing register"))
 map({ "n", "v" }, "<leader>y", '"+y', opts("Yank to system clipboard"))
 map("n", "<leader>Y", '"+Y', opts("Yank line to system clipboard"))
 map("n", "<leader>e", "<cmd>Oil<CR>", opts("Open explorer"))
+map("n", "-", "<cmd>Oil<CR>", opts("Open parent directory"))
+map("n", "<leader>-", function()
+  require("oil").toggle_float()
+end, opts("Toggle Oil float"))
+
+-- Telescope
+map("n", "<leader>ff", function()
+  require("telescope.builtin").find_files()
+end, opts("Find files"))
+map("n", "<leader>fg", function()
+  require("telescope.builtin").live_grep()
+end, opts("Live grep"))
+map("n", "<leader>fd", function()
+  require("telescope.builtin").find_files({
+    find_command = { "rg", "--files", "--hidden", "-g", "!.git" },
+  })
+end, opts("Find dotfiles"))
+map("n", "<leader>sd", function()
+  require("telescope.builtin").live_grep({
+    additional_args = function()
+      return { "--hidden", "-g", "!.git" }
+    end,
+  })
+end, opts("Live grep dotfiles"))
+map("n", "<leader>fb", function()
+  require("telescope.builtin").buffers()
+end, opts("Find buffers"))
+map("n", "<leader>fh", function()
+  require("telescope.builtin").help_tags()
+end, opts("Find help"))
