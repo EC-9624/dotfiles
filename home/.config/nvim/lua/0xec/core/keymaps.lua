@@ -135,20 +135,6 @@ map("n", "-", "<cmd>Oil<CR>", opts("Open parent directory"))
 map("n", "<leader>-", function()
   require("oil").toggle_float()
 end, opts("Toggle Oil float"))
-map("n", "<leader>ge", function()
-  require("neo-tree.command").execute({
-    toggle = true,
-    source = "git_status",
-    position = "float",
-  })
-end, opts("Open git status explorer"))
-map("n", "<leader>oe", function()
-  require("neo-tree.command").execute({
-    toggle = true,
-    source = "buffers",
-    position = "float",
-  })
-end, opts("Open buffers explorer"))
 
 -- Telescope
 map("n", "<leader>ff", function()

@@ -8,6 +8,7 @@ return {
   },
   config = function()
     require("neo-tree").setup({
+      sources = { "filesystem" },
       close_if_last_window = true,
       popup_border_style = "rounded",
       enable_git_status = true,
@@ -49,19 +50,6 @@ return {
         },
         hijack_netrw_behavior = "disabled",
         use_libuv_file_watcher = true,
-      },
-      buffers = {
-        follow_current_file = {
-          enabled = true,
-        },
-        window = {
-          position = "float",
-        },
-      },
-      git_status = {
-        window = {
-          position = "float",
-        },
       },
     })
   end,

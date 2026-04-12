@@ -49,7 +49,9 @@ return {
       treesitter.update(parser_languages):wait(300000)
     end,
     config = function()
-      require("nvim-treesitter").setup({})
+      require("nvim-treesitter").setup({
+        auto_install = true,
+      })
       install_missing_parsers()
     end,
   },
