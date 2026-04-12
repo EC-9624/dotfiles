@@ -33,13 +33,53 @@ map("n", "<Right>", "<cmd>vertical resize +2<CR>", opts("Increase window width")
 map("n", "<Tab>", "<cmd>bnext<CR>", opts("Next buffer"))
 map("n", "<S-Tab>", "<cmd>bprevious<CR>", opts("Previous buffer"))
 map("n", "<leader>sb", "<cmd>buffers<CR>:buffer ", opts("Select buffer", { silent = false }))
-map("n", "<leader>x", "<cmd>bdelete<CR>", opts("Delete buffer"))
+map("n", "<leader>x", function()
+  Snacks.bufdelete()
+end, opts("Delete buffer"))
 map("n", "<leader>b", "<cmd>enew<CR>", opts("New buffer"))
 
 -- Numbers and wrapping
 map("n", "<leader>+", "<C-a>", opts("Increment number"))
 map("n", "<leader>_", "<C-x>", opts("Decrement number"))
 map("n", "<leader>lw", "<cmd>set wrap!<CR>", opts("Toggle line wrap"))
+map("n", "<leader>ln", function()
+  Snacks.toggle.option("relativenumber", { name = "Relative Number" }):toggle()
+end, opts("Toggle relative line numbers"))
+map("n", "<leader>ld", function()
+  Snacks.toggle.diagnostics():toggle()
+end, opts("Toggle diagnostics"))
+map("n", "<leader>cl", function()
+  Snacks.toggle.option("cursorline", { name = "Cursor Line" }):toggle()
+end, opts("Toggle cursor line"))
+map("n", "<leader>zm", function()
+  Snacks.toggle.dim():toggle()
+end, opts("Toggle dim mode"))
+map("n", "<leader>tc", function()
+  local tsc = require("treesitter-context")
+
+  Snacks.toggle({
+    name = "Treesitter Context",
+    get = tsc.enabled,
+    set = function(state)
+      if state then
+        tsc.enable()
+      else
+        tsc.disable()
+      end
+    end,
+  }):toggle()
+end, opts("Toggle Treesitter context"))
+map("n", "<leader>ih", function()
+  Snacks.toggle({
+    name = "Inlay Hints",
+    get = function()
+      return vim.lsp.inlay_hint.is_enabled()
+    end,
+    set = function(state)
+      vim.lsp.inlay_hint.enable(state)
+    end,
+  }):toggle()
+end, opts("Toggle inlay hints"))
 
 -- Windows
 map("n", "<leader>v", "<C-w>v", opts("Split window vertically"))
@@ -61,6 +101,21 @@ map("n", "<leader>tp", "<cmd>tabprevious<CR>", opts("Previous tab"))
 map("v", "p", '"_dP', opts("Paste without replacing register"))
 map({ "n", "v" }, "<leader>y", '"+y', opts("Yank to system clipboard"))
 map("n", "<leader>Y", '"+Y', opts("Yank line to system clipboard"))
+map({ "n", "v" }, "<leader>og", function()
+  Snacks.gitbrowse()
+end, opts("Open git in browser"))
+map("n", "<leader>nh", function()
+  Snacks.notifier.show_history()
+end, opts("Notification history"))
+map("n", "<leader>nd", function()
+  Snacks.notifier.hide()
+end, opts("Dismiss notifications"))
+map("n", "<leader>.", function()
+  Snacks.scratch()
+end, opts("Toggle scratch buffer"))
+map("n", "<leader>s.", function()
+  Snacks.scratch.select()
+end, opts("Search scratch buffers"))
 map("n", "<leader>e", function()
   require("neo-tree.command").execute({
     action = "focus",
