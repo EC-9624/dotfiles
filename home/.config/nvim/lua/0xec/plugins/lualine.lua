@@ -117,7 +117,16 @@ return {
             cond = lazy_status.has_updates,
             color = { fg = colors.gold },
           },
-          { "filetype" },
+          {
+              "filetype", 
+              fmt = function(ft)
+                  local map = {
+                      typescriptreact = "tsx",
+                      javascriptreact = "jsx",
+                  }
+                  return map[ft] or ft
+              end
+          },
         },
       },
       extensions = { oil_extension },
