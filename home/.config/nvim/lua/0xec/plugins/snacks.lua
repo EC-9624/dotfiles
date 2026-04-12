@@ -9,7 +9,17 @@ return {
     bufdelete = { enabled = true },
     dim = { enabled = true },
     gitbrowse = { enabled = true },
-    indent = { enabled = true },
+    indent = {
+      enabled = true,
+      char = "┆",
+      animate = {
+        enabled = false,
+      },
+      scope = {
+        enabled = true,
+        char = "┆",
+      },
+    },
     input = { enabled = true },
     notifier = {
       enabled = true,

@@ -38,6 +38,10 @@ return {
           NeoTreeExpander = { fg = "muted" },
           NeoTreeCursorLine = { bg = "overlay" },
 
+          SnacksIndent = { fg = "highlight_med" },
+          SnacksIndentScope = { fg = "love" },
+          SnacksIndentChunk = { fg = "foam" },
+
           OilFile = { fg = "text" },
           OilLink = { fg = "iris" },
           OilOrphanLink = { fg = "love" },
