@@ -5,8 +5,7 @@ return {
         "hrsh7th/nvim-cmp",
     },
     config = function()
-        local autopairs = require("nvim-autopairs") -- import nvim-autopairs
-        
+        local autopairs = require("nvim-autopairs") -- import nvim-autopairs 
         -- setup autopairs
         autopairs.setup({
             check_ts = true, -- treesitter enabled

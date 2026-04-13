@@ -35,7 +35,6 @@ return {
         file_ignore_patterns = {
           "node_modules",
           "yarn.lock",
-          ".git",
           "pnpm.lock",
           ".sl",
           "_build",
