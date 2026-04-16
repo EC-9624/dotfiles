@@ -1,5 +1,6 @@
 local parser_languages = {
   "bash",
+  "astro",
   "css",
   "dockerfile",
   "go",

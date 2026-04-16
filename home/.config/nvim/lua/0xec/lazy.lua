@@ -13,4 +13,9 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup("0xec.plugins")
+require("lazy").setup({
+  spec = {
+    { import = "0xec.plugins" },
+    { import = "0xec.plugins.lsp" },
+  },
+})
