@@ -1,3 +1,6 @@
+export EDITOR="nvim"
+export VISUAL="nvim"
+
 export HOMEBREW_PREFIX="/opt/homebrew"
 
 export PNPM_HOME="$HOME/Library/pnpm"

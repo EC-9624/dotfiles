@@ -83,6 +83,7 @@ bindkey -M viins '^Y' autosuggest-accept
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # aliases
+alias vim="nvim"
 alias ls="eza --icons=always"
 alias ll="eza --icons=always -l --group-directories-first"
 alias la="eza --icons=always -la --group-directories-first"
