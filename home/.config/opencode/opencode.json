@@ -1,3 +1,19 @@
 {
-  "$schema": "https://opencode.ai/config.json"
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-opus-4-7",
+  "provider": {
+    "anthropic": {
+      "models": {
+        "claude-opus-4-7": {
+          "options": {
+            "thinking": {
+              "type": "adaptive",
+              "display": "summarized"
+            },
+            "effort": "high"
+          }
+        }
+      }
+    }
+  }
 }
