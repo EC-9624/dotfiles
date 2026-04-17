@@ -8,12 +8,11 @@ local servers = {
   lua_ls = {
     settings = {
       Lua = {
-        diagnostics = {
-          globals = { "vim" },
+        completion = {
+          callSnippet = "Replace",
         },
         workspace = {
           checkThirdParty = false,
-          library = vim.api.nvim_get_runtime_file("", true),
         },
       },
     },
@@ -44,15 +43,23 @@ return {
     },
     config = function()
       local lsp = require("0xec.util.lsp")
+      local border = "rounded"
+
+      lsp.setup()
 
       vim.diagnostic.config({
-        float = {
-          border = "rounded",
+        virtual_text = {
+          spacing = 2,
+          prefix = "●",
         },
-      })
-
-      vim.api.nvim_create_user_command("LspInfo", "checkhealth vim.lsp", {
-        desc = "Alias to :checkhealth vim.lsp",
+        signs = true,
+        severity_sort = true,
+        underline = true,
+        update_in_insert = false,
+        float = {
+          border = border,
+          source = true,
+        },
       })
 
       vim.api.nvim_create_user_command("LspLog", function()
@@ -77,7 +84,6 @@ return {
       for server, config in pairs(servers) do
         vim.lsp.config(server, vim.tbl_deep_extend("force", {
           capabilities = lsp.capabilities(),
-          on_attach = lsp.on_attach,
         }, config))
       end
     end,
