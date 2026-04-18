@@ -33,6 +33,17 @@ syntect_theme = "~/.config/yazi/rose-pine.tmTheme"
 # : }}}
 
 
+# : Indicator of hovered file {{{
+
+[indicator]
+parent  = { reversed = true }
+current = { reversed = true }
+preview = { underline = true }
+padding = { open = "▐", close = "▌" }
+
+# : }}}
+
+
 # : Status {{{
 
 [mode]
