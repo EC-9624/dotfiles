@@ -12,6 +12,18 @@
                         },
                         "effort": "max"
                     }
+                },
+                "claude-opus-4-5": {
+                    "headers": {
+                        "anthropic-beta": "context-1m-2025-08-07"
+                    },
+                    "limit": {
+                        "context": 1000000,
+                        "output": 64000
+                    },
+                    "options": {
+                        "effort": "high"
+                    }
                 }
             }
         }
