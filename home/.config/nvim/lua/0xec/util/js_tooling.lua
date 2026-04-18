@@ -1,157 +1,95 @@
 local M = {}
 
-local xo_config_files = {
-  "xo.config.js",
-  "xo.config.ts",
-  "xo.config.cjs",
-  "xo.config.mjs",
-  "xo.config.cts",
-  "xo.config.mts",
+local XO_CONFIGS = {
+  "xo.config.js", "xo.config.ts", "xo.config.cjs",
+  "xo.config.mjs", "xo.config.cts", "xo.config.mts",
 }
 
-local oxc_config_files = {
-  ".oxlintrc.json",
-  ".oxlintrc.jsonc",
-  ".oxfmtrc.json",
-  ".oxfmtrc.jsonc",
+local OXC_CONFIGS = {
+  ".oxlintrc.json", ".oxlintrc.jsonc",
+  ".oxfmtrc.json", ".oxfmtrc.jsonc",
   "oxlint.config.ts",
 }
 
-local project_markers = {
-  ".git",
-  "package.json",
-  "pnpm-lock.yaml",
-  "package-lock.json",
-  "yarn.lock",
-  "bun.lock",
-  "bun.lockb",
+local PROJECT_MARKERS = {
+  ".git", "package.json", "pnpm-lock.yaml",
+  "package-lock.json", "yarn.lock", "bun.lock", "bun.lockb",
 }
 
-local function read_package_json(path)
-  local file = io.open(path, "r")
+local function find_up(start, names)
+  return vim.fs.find(names, { path = start, upward = true, limit = 1, type = "file" })[1]
+end
 
-  if not file then
-    return nil
-  end
+local function start_dir(path)
+  if not path or path == "" then return vim.fn.getcwd() end
+  local stat = vim.uv.fs_stat(path)
+  return (stat and stat.type == "directory") and path or vim.fs.dirname(path)
+end
 
+local function pkg_declares(pkg_path, name)
+  local file = io.open(pkg_path, "r")
+  if not file then return false end
   local content = file:read("*a")
   file:close()
 
-  local ok, decoded = pcall(vim.json.decode, content)
-  if not ok then
-    return nil
-  end
+  local ok, data = pcall(vim.json.decode, content)
+  if not ok or type(data) ~= "table" then return false end
 
-  return decoded
-end
-
-local function package_uses_tool(package_json, name)
-  if not package_json then
-    return false
-  end
-
-  if package_json[name] ~= nil then
-    return true
-  end
-
+  if data[name] ~= nil then return true end
   for _, section in ipairs({ "dependencies", "devDependencies" }) do
-    local dependencies = package_json[section]
-
-    if type(dependencies) == "table" and dependencies[name] ~= nil then
-      return true
-    end
+    local deps = data[section]
+    if type(deps) == "table" and deps[name] ~= nil then return true end
   end
-
   return false
 end
 
-local function search_upwards(start_path, names)
-  local found = vim.fs.find(names, {
-    path = start_path,
-    upward = true,
-    limit = 1,
-    type = "file",
-  })
-
-  return found[1]
-end
-
-local function normalize_start_path(path)
-  if path == nil or path == "" then
-    return vim.fn.getcwd()
-  end
-
-  local stat = vim.uv.fs_stat(path)
-  if stat and stat.type == "directory" then
-    return path
-  end
-
-  return vim.fs.dirname(path)
-end
-
+---@return { profile: "xo"|"oxc"|nil, root: string }
 function M.project_for_path(path)
-  local start_path = normalize_start_path(path)
-  local xo_config = search_upwards(start_path, xo_config_files)
+  local start = start_dir(path)
 
-  if xo_config then
-    return {
-      profile = "xo",
-      root = vim.fs.dirname(xo_config),
-    }
-  end
+  local cfg = find_up(start, XO_CONFIGS)
+  if cfg then return { profile = "xo", root = vim.fs.dirname(cfg) } end
 
-  local oxc_config = search_upwards(start_path, oxc_config_files)
+  cfg = find_up(start, OXC_CONFIGS)
+  if cfg then return { profile = "oxc", root = vim.fs.dirname(cfg) } end
 
-  if oxc_config then
-    return {
-      profile = "oxc",
-      root = vim.fs.dirname(oxc_config),
-    }
-  end
-
-  local package_json_path = search_upwards(start_path, { "package.json" })
-  if package_json_path then
-    local package_json = read_package_json(package_json_path)
-
-    if package_uses_tool(package_json, "xo") then
-      return {
-        profile = "xo",
-        root = vim.fs.dirname(package_json_path),
-      }
+  local pkg = find_up(start, { "package.json" })
+  if pkg then
+    if pkg_declares(pkg, "xo") then
+      return { profile = "xo", root = vim.fs.dirname(pkg) }
     end
-
-    if package_uses_tool(package_json, "oxlint") or package_uses_tool(package_json, "oxfmt") then
-      return {
-        profile = "oxc",
-        root = vim.fs.dirname(package_json_path),
-      }
+    if pkg_declares(pkg, "oxlint") or pkg_declares(pkg, "oxfmt") then
+      return { profile = "oxc", root = vim.fs.dirname(pkg) }
     end
   end
 
   return {
     profile = nil,
-    root = vim.fs.root(start_path, project_markers) or vim.fn.getcwd(),
+    root = vim.fs.root(start, PROJECT_MARKERS) or vim.fn.getcwd(),
   }
 end
 
 function M.current_project(bufnr)
-  local buffer = bufnr == 0 and vim.api.nvim_get_current_buf() or bufnr
-  return M.project_for_path(vim.api.nvim_buf_get_name(buffer))
+  bufnr = (bufnr == nil or bufnr == 0) and vim.api.nvim_get_current_buf() or bufnr
+  return M.project_for_path(vim.api.nvim_buf_get_name(bufnr))
 end
 
+--- Resolve a JS tool binary. Walks upward from `root` through each ancestor's
+--- node_modules/.bin/ (handles pnpm/yarn/npm workspace hoisting), then $PATH,
+--- then the bare name.
 function M.find_local_or_global_binary(root, name)
-  local local_binary = vim.fs.joinpath(root, "node_modules", ".bin", name)
-
-  if vim.fn.executable(local_binary) == 1 then
-    return local_binary
+  local current = root
+  while current and current ~= "" do
+    local candidate = vim.fs.joinpath(current, "node_modules", ".bin", name)
+    local stat = vim.uv.fs_stat(candidate)
+    if stat and stat.type == "file" then return candidate end
+    local parent = vim.fs.dirname(current)
+    if parent == current then break end
+    current = parent
   end
 
-  local global_binary = vim.fn.exepath(name)
-  if global_binary ~= "" then
-    return global_binary
-  end
-
-  return name
+  local on_path = vim.fn.exepath(name)
+  return on_path ~= "" and on_path or name
 end
 
 return M

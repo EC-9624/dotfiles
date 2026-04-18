@@ -117,6 +117,12 @@ return {
         group = group,
         callback = function(args)
           local bufnr = args.buf
+
+          -- Skip the BufWritePost triggered by conform's async re-save after formatting
+          if vim.b[bufnr].conform_applying_formatting then
+            return
+          end
+
           local filetype = vim.bo[bufnr].filetype
 
           if not js_lint_filetypes[filetype] then
