@@ -2,7 +2,7 @@ local map = vim.keymap.set
 local default_opts = { noremap = true, silent = true }
 
 local function opts(desc, extra)
-  return vim.tbl_extend("force", default_opts, { desc = desc }, extra or {})
+	return vim.tbl_extend("force", default_opts, { desc = desc }, extra or {})
 end
 
 -- Leader and setup
@@ -34,7 +34,7 @@ map("n", "<Tab>", "<cmd>bnext<CR>", opts("Next buffer"))
 map("n", "<S-Tab>", "<cmd>bprevious<CR>", opts("Previous buffer"))
 map("n", "<leader>sb", "<cmd>buffers<CR>:buffer ", opts("Select buffer", { silent = false }))
 map("n", "<leader>x", function()
-  Snacks.bufdelete()
+	Snacks.bufdelete()
 end, opts("Delete buffer"))
 map("n", "<leader>b", "<cmd>enew<CR>", opts("New buffer"))
 
@@ -43,42 +43,42 @@ map("n", "<leader>+", "<C-a>", opts("Increment number"))
 map("n", "<leader>_", "<C-x>", opts("Decrement number"))
 map("n", "<leader>lw", "<cmd>set wrap!<CR>", opts("Toggle line wrap"))
 map("n", "<leader>ln", function()
-  Snacks.toggle.option("relativenumber", { name = "Relative Number" }):toggle()
+	Snacks.toggle.option("relativenumber", { name = "Relative Number" }):toggle()
 end, opts("Toggle relative line numbers"))
 map("n", "<leader>ld", function()
-  Snacks.toggle.diagnostics():toggle()
+	Snacks.toggle.diagnostics():toggle()
 end, opts("Toggle diagnostics"))
 map("n", "<leader>cl", function()
-  Snacks.toggle.option("cursorline", { name = "Cursor Line" }):toggle()
+	Snacks.toggle.option("cursorline", { name = "Cursor Line" }):toggle()
 end, opts("Toggle cursor line"))
 map("n", "<leader>zm", function()
-  Snacks.toggle.dim():toggle()
+	Snacks.toggle.dim():toggle()
 end, opts("Toggle dim mode"))
 map("n", "<leader>tc", function()
-  local tsc = require("treesitter-context")
+	local tsc = require("treesitter-context")
 
-  Snacks.toggle({
-    name = "Treesitter Context",
-    get = tsc.enabled,
-    set = function(state)
-      if state then
-        tsc.enable()
-      else
-        tsc.disable()
-      end
-    end,
-  }):toggle()
+	Snacks.toggle({
+		name = "Treesitter Context",
+		get = tsc.enabled,
+		set = function(state)
+			if state then
+				tsc.enable()
+			else
+				tsc.disable()
+			end
+		end,
+	}):toggle()
 end, opts("Toggle Treesitter context"))
 map("n", "<leader>ih", function()
-  Snacks.toggle({
-    name = "Inlay Hints",
-    get = function()
-      return vim.lsp.inlay_hint.is_enabled()
-    end,
-    set = function(state)
-      vim.lsp.inlay_hint.enable(state)
-    end,
-  }):toggle()
+	Snacks.toggle({
+		name = "Inlay Hints",
+		get = function()
+			return vim.lsp.inlay_hint.is_enabled()
+		end,
+		set = function(state)
+			vim.lsp.inlay_hint.enable(state)
+		end,
+	}):toggle()
 end, opts("Toggle inlay hints"))
 
 -- Windows
@@ -102,50 +102,50 @@ map("v", "p", '"_dP', opts("Paste without replacing register"))
 map({ "n", "v" }, "<leader>y", '"+y', opts("Yank to system clipboard"))
 map("n", "<leader>Y", '"+Y', opts("Yank line to system clipboard"))
 map({ "n", "v" }, "<leader>og", function()
-  Snacks.gitbrowse()
+	Snacks.gitbrowse()
 end, opts("Open git in browser"))
 map("n", "<leader>nh", function()
-  Snacks.notifier.show_history()
+	Snacks.notifier.show_history()
 end, opts("Notification history"))
 map("n", "<leader>nd", function()
-  Snacks.notifier.hide()
+	Snacks.notifier.hide()
 end, opts("Dismiss notifications"))
 map("n", "<leader>.", function()
-  Snacks.scratch()
+	Snacks.scratch()
 end, opts("Toggle scratch buffer"))
 map("n", "<leader>s.", function()
-  Snacks.scratch.select()
+	Snacks.scratch.select()
 end, opts("Search scratch buffers"))
 map("n", "<leader>e", function()
-  require("neo-tree.command").execute({
-    action = "focus",
-    source = "filesystem",
-    position = "right",
-    reveal = true,
-  })
+	require("neo-tree.command").execute({
+		action = "focus",
+		source = "filesystem",
+		position = "right",
+		reveal = true,
+	})
 end, opts("Reveal current file in explorer"))
 map("n", "<leader>E", function()
-  require("neo-tree.command").execute({
-    toggle = true,
-    source = "filesystem",
-    position = "right",
-  })
+	require("neo-tree.command").execute({
+		toggle = true,
+		source = "filesystem",
+		position = "right",
+	})
 end, opts("Toggle explorer"))
 map("n", "-", "<cmd>Oil<CR>", opts("Open parent directory"))
 map("n", "<leader>-", function()
-  require("oil").toggle_float()
+	require("oil").toggle_float()
 end, opts("Toggle Oil float"))
 
 -- Telescope
 map("n", "<leader>ff", function()
-  require("telescope.builtin").find_files()
+	require("telescope.builtin").find_files()
 end, opts("Find files"))
 map("n", "<leader>fg", function()
-  require("telescope.builtin").live_grep()
+	require("telescope.builtin").live_grep()
 end, opts("Live grep"))
 map("n", "<leader>fb", function()
-  require("telescope.builtin").buffers()
+	require("telescope.builtin").buffers()
 end, opts("Find buffers"))
 map("n", "<leader>fh", function()
-  require("telescope.builtin").help_tags()
+	require("telescope.builtin").help_tags()
 end, opts("Find help"))
