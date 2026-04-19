@@ -1,49 +1,24 @@
 local js_fts = { "javascript", "javascriptreact", "typescript", "typescriptreact" }
 
-local function project_formatters(bufnr)
-  local js_tooling = require("0xec.util.js_tooling")
-  if js_tooling.current_project(bufnr).profile == "xo" then
-    return { "prettier" }
-  end
-  return { "oxfmt", "biome", "prettierd", stop_after_first = true }
-end
-
 return {
   {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
     cmd = { "ConformInfo", "ConformFormat" },
     config = function()
-      local js_tooling = require("0xec.util.js_tooling")
       local conform = require("conform")
 
       conform.setup({
         formatters = {
-          xo = {
-            inherit = false,
-            command = function(_, ctx)
-              local project = js_tooling.project_for_path(ctx.filename)
-              return js_tooling.find_local_or_global_binary(project.root, "xo")
-            end,
-            args = function(_, ctx)
-              return { "--fix", "--stdin", "--stdin-filename", ctx.filename }
-            end,
-            cwd = function(_, ctx)
-              return js_tooling.project_for_path(ctx.filename).root
-            end,
-            require_cwd = true,
-            stdin = true,
-            exit_codes = { 0, 1 },
-          },
           prettier = {
             prepend_args = { "--bracket-spacing=false" },
           },
         },
         formatters_by_ft = {
-          javascript = project_formatters,
-          javascriptreact = project_formatters,
-          typescript = project_formatters,
-          typescriptreact = project_formatters,
+          javascript = { "prettierd", "prettier", stop_after_first = true },
+          javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+          typescript = { "prettierd", "prettier", stop_after_first = true },
+          typescriptreact = { "prettierd", "prettier", stop_after_first = true },
           astro = { "prettierd" },
           css = { "prettierd" },
           html = { "prettierd" },

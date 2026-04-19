@@ -7,7 +7,6 @@ local XO_CONFIGS = {
 
 local OXC_CONFIGS = {
   ".oxlintrc.json", ".oxlintrc.jsonc",
-  ".oxfmtrc.json", ".oxfmtrc.jsonc",
   "oxlint.config.ts",
 }
 
@@ -58,7 +57,7 @@ function M.project_for_path(path)
     if pkg_declares(pkg, "xo") then
       return { profile = "xo", root = vim.fs.dirname(pkg) }
     end
-    if pkg_declares(pkg, "oxlint") or pkg_declares(pkg, "oxfmt") then
+    if pkg_declares(pkg, "oxlint") then
       return { profile = "oxc", root = vim.fs.dirname(pkg) }
     end
   end
