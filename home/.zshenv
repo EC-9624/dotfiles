@@ -13,6 +13,8 @@ path=(
   "$BUN_INSTALL/bin"
   "$HOMEBREW_PREFIX/bin"
   "$HOMEBREW_PREFIX/sbin"
+  "/usr/local/bin"
+  "/usr/local/sbin"
   "$PNPM_HOME"
   "$HOME/.cargo/bin"
   $path
