@@ -4,14 +4,38 @@ return {
 	{
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
-		cmd = { "ConformInfo", "ConformFormat" },
+		cmd = { "ConformInfo", "ConformFormat", "XoFix" },
 		config = function()
 			local conform = require("conform")
+			local js_tooling = require("0xec.util.js_tooling")
 
 			conform.setup({
 				formatters = {
+					prettierd = {
+						prepend_args = { "--no-bracket-spacing" },
+					},
 					prettier = {
-						prepend_args = { "--bracket-spacing=false" },
+						prepend_args = { "--no-bracket-spacing" },
+					},
+					xo_fix = {
+						meta = {
+							url = "https://github.com/xojs/xo",
+							description = "Fix auto-fixable XO/ESLint issues",
+						},
+						command = function()
+							local project = js_tooling.current_project(0)
+							return js_tooling.find_local_or_global_binary(project.root, "xo")
+						end,
+						args = { "--fix", "$FILENAME" },
+						stdin = false,
+						tmpfile = "conform_$FILENAME",
+						cwd = function()
+							return js_tooling.current_project(0).root
+						end,
+						condition = function()
+							return js_tooling.current_project(0).profile == "xo"
+						end,
+						exit_codes = { 0, 1 },
 					},
 				},
 				formatters_by_ft = {
@@ -34,7 +58,21 @@ return {
 					local is_js = vim.tbl_contains(js_fts, vim.bo[bufnr].filetype)
 					return { lsp_format = is_js and "never" or "fallback", timeout_ms = 5000 }
 				end,
+				format_after_save = function(bufnr)
+					if vim.bo[bufnr].buftype ~= "" then
+						return
+					end
+					if not vim.tbl_contains(js_fts, vim.bo[bufnr].filetype) then
+						return
+					end
+					-- xo_fix's condition auto-skips non-XO projects
+					return { formatters = { "xo_fix" }, lsp_format = "never", timeout_ms = 15000 }
+				end,
 			})
+
+			vim.api.nvim_create_user_command("XoFix", function()
+				conform.format({ formatters = { "xo_fix" }, async = true, timeout_ms = 30000 })
+			end, { desc = "Run XO --fix on current buffer" })
 
 			vim.api.nvim_create_user_command("ConformFormat", function(opts)
 				conform.format({

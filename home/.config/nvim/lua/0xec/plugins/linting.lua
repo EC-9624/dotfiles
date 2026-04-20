@@ -132,6 +132,13 @@ return {
 					local project = js_tooling.current_project(bufnr)
 
 					if project.profile == "xo" then
+						-- Skip BufWritePost: format_after_save runs xo --fix async after save,
+						-- so linting before it completes would show stale auto-fixable errors.
+						-- Diagnostics still update on BufEnter and InsertLeave.
+						if args.event == "BufWritePost" then
+							return
+						end
+
 						lint.try_lint({ "xo" }, { cwd = project.root, ignore_errors = true })
 						return
 					end
