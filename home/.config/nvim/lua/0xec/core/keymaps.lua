@@ -118,19 +118,12 @@ map("n", "<leader>s.", function()
 end, opts("Search scratch buffers"))
 map("n", "<leader>e", function()
 	require("neo-tree.command").execute({
-		action = "focus",
+		toggle = true,
 		source = "filesystem",
 		position = "right",
 		reveal = true,
 	})
-end, opts("Reveal current file in explorer"))
-map("n", "<leader>E", function()
-	require("neo-tree.command").execute({
-		toggle = true,
-		source = "filesystem",
-		position = "right",
-	})
-end, opts("Toggle explorer"))
+end, opts("Toggle explorer and reveal current file"))
 map("n", "-", "<cmd>Oil<CR>", opts("Open parent directory"))
 map("n", "<leader>-", function()
 	require("oil").toggle_float()
