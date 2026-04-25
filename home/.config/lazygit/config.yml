@@ -28,8 +28,7 @@ gui:
   showBottomLine: true
   showPanelJumps: false
   border: rounded
-
 git:
-  paging:
-    colorArg: always
-    pager: delta --dark --paging=never --line-numbers
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never --line-numbers

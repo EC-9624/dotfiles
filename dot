@@ -73,7 +73,7 @@ doctor() {
   local paths=(
     "${HOME}/.bun/_bun"
     "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
-    "${HOME}/Library/Application Support/lazygit/config.yml"
+    "${HOME}/.config/lazygit/config.yml"
     "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
     "/opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh"
     "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
