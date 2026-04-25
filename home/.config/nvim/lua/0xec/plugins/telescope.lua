@@ -52,7 +52,6 @@ return {
 				find_files = {
 					hidden = true,
 					find_command = { "rg", "--files", "--hidden", "-g", "!.git" },
-					previewer = false,
 					path_display = { "truncate" },
 				},
 				live_grep = {
