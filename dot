@@ -69,10 +69,11 @@ restow() {
 
 doctor() {
   local missing=0
-  local commands=(bat brew bun curl eza fd fnm fzf git starship stow tmux unzip yazi zoxide zsh)
+  local commands=(bat brew bun curl delta eza fd fnm fzf git lazygit starship stow tmux unzip yazi zoxide zsh)
   local paths=(
     "${HOME}/.bun/_bun"
     "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
+    "${HOME}/Library/Application Support/lazygit/config.yml"
     "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
     "/opt/homebrew/opt/fzf-tab/share/fzf-tab/fzf-tab.zsh"
     "/opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
