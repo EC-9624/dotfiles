@@ -13,6 +13,7 @@ opt.numberwidth = 4
 opt.showtabline = 0
 opt.laststatus = 3
 opt.termguicolors = true
+opt.fillchars:append({ eob = " " })
 
 -- Mouse, timing, and undo history
 opt.mouse = "a"

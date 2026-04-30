@@ -44,6 +44,7 @@ return {
 		},
 		dim = { enabled = true },
 		gitbrowse = { enabled = true },
+		image = { enabled = true },
 		indent = {
 			enabled = true,
 			char = "┆",
