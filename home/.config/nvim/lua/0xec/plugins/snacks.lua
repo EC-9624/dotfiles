@@ -63,6 +63,7 @@ return {
 			timeout = 3000,
 			style = "fancy",
 		},
+		picker = { enabled = true },
 		quickfile = { enabled = true },
 		rename = { enabled = true },
 		scratch = { enabled = true },
