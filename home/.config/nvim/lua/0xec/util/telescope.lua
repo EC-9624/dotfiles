@@ -4,7 +4,7 @@ local find_files
 
 find_files = function(opts, show_hidden)
 	opts = opts or {}
-	show_hidden = vim.F.if_nil(show_hidden, false)
+	show_hidden = vim.F.if_nil(show_hidden, true)
 	opts.path_display = { "truncate" }
 	opts.attach_mappings = function(_, map)
 		map({ "n", "i" }, "<C-h>", function(prompt_bufnr)
