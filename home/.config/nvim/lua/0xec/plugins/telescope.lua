@@ -50,14 +50,15 @@ return {
 					},
 				},
 				find_files = {
-					hidden = true,
-					find_command = { "rg", "--files", "--hidden", "-g", "!.git" },
 					path_display = { "truncate" },
 				},
 				live_grep = {
 					additional_args = function()
 						return { "--hidden", "-g", "!.git" }
 					end,
+					path_display = { "truncate" },
+				},
+				oldfiles = {
 					path_display = { "truncate" },
 				},
 			},

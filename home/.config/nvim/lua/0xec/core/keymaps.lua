@@ -157,7 +157,7 @@ end, opts("Toggle Oil float"))
 
 -- Telescope
 map("n", "<leader>ff", function()
-	require("telescope.builtin").find_files()
+	require("0xec.util.telescope").find_files()
 end, opts("Find files"))
 map("n", "<leader>fg", function()
 	require("telescope.builtin").live_grep()

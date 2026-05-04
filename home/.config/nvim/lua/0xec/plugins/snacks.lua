@@ -10,7 +10,17 @@ return {
 		dashboard = {
 			enabled = true,
 			preset = {
-				pick = nil,
+				pick = function(cmd, opts)
+					local builtin = require("telescope.builtin")
+
+					if cmd == "files" then
+						return require("0xec.util.telescope").find_files(opts)
+					elseif cmd == "live_grep" then
+						return builtin.live_grep(opts)
+					elseif cmd == "oldfiles" then
+						return builtin.oldfiles(opts)
+					end
+				end,
 				keys = {
 					{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
 					{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
@@ -34,6 +44,19 @@ return {
 ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
 ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
 ]],
+			},
+			formats = {
+				file = function(item, ctx)
+					local fname = vim.fn.fnamemodify(item.file, ":~:.")
+					local width = ctx.width or 60
+
+					if #fname > width then
+						fname = "…" .. fname:sub(-(width - 1))
+					end
+
+					local dir, file = fname:match("^(.*)/(.+)$")
+					return dir and { { dir .. "/", hl = "dir" }, { file, hl = "file" } } or { { fname, hl = "file" } }
+				end,
 			},
 			sections = {
 				{ section = "header" },
