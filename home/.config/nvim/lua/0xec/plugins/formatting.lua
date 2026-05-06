@@ -1,16 +1,54 @@
 local js_fts = { "javascript", "javascriptreact", "typescript", "typescriptreact" }
 
+local function find_local_binary(start, name)
+	local root = vim.fs.root(start, { "package.json", ".git" })
+	local current = root
+
+	while current and current ~= "" do
+		local candidate = vim.fs.joinpath(current, "node_modules", ".bin", name)
+		local stat = vim.uv.fs_stat(candidate)
+		if stat and stat.type == "file" then
+			return candidate
+		end
+
+		local parent = vim.fs.dirname(current)
+		if parent == current then
+			break
+		end
+
+		current = parent
+	end
+end
+
+local function formatter_root(_, ctx)
+	return vim.fs.root(ctx.dirname, {
+		".oxfmtrc.json",
+		".oxfmtrc.jsonc",
+		"oxfmt.config.ts",
+		"package.json",
+	})
+end
+
 return {
 	{
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
-		cmd = { "ConformInfo", "ConformFormat", "XoFix" },
+		cmd = { "ConformInfo", "ConformFormat" },
 		config = function()
 			local conform = require("conform")
-			local js_tooling = require("0xec.util.js_tooling")
 
 			conform.setup({
 				formatters = {
+					oxfmt = {
+						inherit = true,
+						command = function(_, ctx)
+							return find_local_binary(ctx.dirname, "oxfmt") or "oxfmt"
+						end,
+						condition = function(_, ctx)
+							return find_local_binary(ctx.dirname, "oxfmt") ~= nil
+						end,
+						cwd = formatter_root,
+					},
 					prettierd = {
 						prepend_args = { "--no-bracket-spacing" },
 					},
@@ -19,14 +57,14 @@ return {
 					},
 				},
 				formatters_by_ft = {
-					javascript = { "prettierd", "prettier", stop_after_first = true },
-					javascriptreact = { "prettierd", "prettier", stop_after_first = true },
-					typescript = { "prettierd", "prettier", stop_after_first = true },
-					typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+					javascript = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
+					javascriptreact = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
+					typescript = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
+					typescriptreact = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
 					astro = { "prettierd", "prettier", stop_after_first = true },
 					css = { "prettierd", "prettier", stop_after_first = true },
 					html = { "prettierd", "prettier", stop_after_first = true },
-					json = { "prettierd", "prettier", stop_after_first = true },
+					json = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
 					svelte = { "prettierd", "prettier", stop_after_first = true },
 					yaml = { "prettierd", "prettier", stop_after_first = true },
 					lua = { "stylua" },
@@ -39,84 +77,6 @@ return {
 					return { lsp_format = is_js and "never" or "fallback", timeout_ms = 5000 }
 				end,
 			})
-
-			-- Run xo --fix on the actual saved file after prettier formats.
-			-- Uses vim.system (async) so the editor is not blocked.
-			local xo_fix_group = vim.api.nvim_create_augroup("0xec-xo-fix", { clear = true })
-
-			vim.api.nvim_create_autocmd("BufWritePost", {
-				group = xo_fix_group,
-				pattern = { "*.js", "*.jsx", "*.ts", "*.tsx" },
-				callback = function(args)
-					local bufnr = args.buf
-
-					-- Skip the re-save that conform triggers after format_on_save
-					if vim.b[bufnr].conform_applying_formatting then
-						return
-					end
-
-					-- Skip if xo --fix is already running for this buffer
-					if vim.b[bufnr]._xo_fixing then
-						return
-					end
-
-					local project = js_tooling.current_project(bufnr)
-					if project.profile ~= "xo" then
-						return
-					end
-
-					local file = vim.api.nvim_buf_get_name(bufnr)
-					local xo_bin = js_tooling.find_local_or_global_binary(project.root, "xo")
-
-					vim.b[bufnr]._xo_fixing = true
-					vim.system(
-						{ xo_bin, "--fix", file, "--cwd=" .. project.root },
-						{ cwd = project.root },
-						vim.schedule_wrap(function()
-							if not vim.api.nvim_buf_is_valid(bufnr) then
-								return
-							end
-
-							vim.b[bufnr]._xo_fixing = false
-
-							-- Reload from disk only if the user hasn't started editing
-							if not vim.bo[bufnr].modified then
-								vim.api.nvim_buf_call(bufnr, function()
-									vim.cmd("silent! checktime")
-								end)
-							end
-						end)
-					)
-				end,
-			})
-
-			-- Manual batch-fix command
-			vim.api.nvim_create_user_command("XoFix", function()
-				local bufnr = vim.api.nvim_get_current_buf()
-				local project = js_tooling.current_project(bufnr)
-				if project.profile ~= "xo" then
-					vim.notify("Not an XO project", vim.log.levels.WARN)
-					return
-				end
-
-				local file = vim.api.nvim_buf_get_name(bufnr)
-				local xo_bin = js_tooling.find_local_or_global_binary(project.root, "xo")
-
-				-- Save first so xo operates on the latest content
-				vim.cmd("silent write")
-
-				vim.system(
-					{ xo_bin, "--fix", file, "--cwd=" .. project.root },
-					{ cwd = project.root },
-					vim.schedule_wrap(function()
-						if vim.api.nvim_buf_is_valid(bufnr) then
-							vim.api.nvim_buf_call(bufnr, function()
-								vim.cmd("silent! edit")
-							end)
-						end
-					end)
-				)
-			end, { desc = "Run XO --fix on current buffer" })
 
 			vim.api.nvim_create_user_command("ConformFormat", function(opts)
 				conform.format({

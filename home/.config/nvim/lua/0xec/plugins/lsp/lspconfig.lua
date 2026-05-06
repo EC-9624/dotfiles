@@ -72,6 +72,7 @@ local servers = {
 			},
 		},
 	},
+	oxlint = {},
 	astro = {},
 }
 

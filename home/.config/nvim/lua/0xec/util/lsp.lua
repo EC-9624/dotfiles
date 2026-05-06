@@ -18,6 +18,23 @@ local function apply_source_action(kind)
 	})
 end
 
+local function code_action()
+	local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+	local diagnostics = vim.diagnostic.get(0, { lnum = line })
+
+	if #diagnostics > 0 then
+		vim.lsp.buf.code_action({
+			context = {
+				only = { "quickfix" },
+				diagnostics = diagnostics,
+			},
+		})
+		return
+	end
+
+	vim.lsp.buf.code_action()
+end
+
 function M.setup()
 	local group = vim.api.nvim_create_augroup("0xec-lsp-attach", { clear = true })
 
@@ -52,7 +69,7 @@ function M.setup()
 			end, "LSP type definition")
 			map_lsp(bufnr, "K", vim.lsp.buf.hover, "LSP hover")
 			map_lsp(bufnr, "<leader>rn", vim.lsp.buf.rename, "LSP rename")
-			map_lsp(bufnr, "<leader>ca", vim.lsp.buf.code_action, "LSP code action")
+			map_lsp(bufnr, "<leader>ca", code_action, "LSP code action")
 
 			if client.name == "ts_ls" then
 				map_lsp(bufnr, "<leader>co", function()
@@ -67,6 +84,16 @@ function M.setup()
 				map_lsp(bufnr, "<leader>cf", function()
 					apply_source_action("source.fixAll.ts")
 				end, "TS fix all")
+			end
+
+			if client.name == "oxlint" then
+				map_lsp(bufnr, "<leader>cx", function()
+					client:exec_cmd({
+						title = "Apply Oxlint automatic fixes",
+						command = "oxc.fixAll",
+						arguments = { { uri = vim.uri_from_bufnr(bufnr) } },
+					})
+				end, "Oxlint fix all")
 			end
 
 			map_lsp(bufnr, "<leader>ds", function()

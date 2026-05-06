@@ -6,6 +6,7 @@ local servers = {
 	"intelephense",
 	"jsonls",
 	"lua_ls",
+	"oxlint",
 	"svelte",
 	"terraformls",
 	"yamlls",
