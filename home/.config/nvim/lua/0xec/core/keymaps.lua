@@ -144,7 +144,6 @@ map("n", "<leader>s.", function()
 end, opts("Search scratch buffers"))
 map("n", "<leader>e", function()
 	require("neo-tree.command").execute({
-		toggle = true,
 		source = "filesystem",
 		position = "right",
 		reveal = true,

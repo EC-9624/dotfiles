@@ -8,6 +8,16 @@ local function map_lsp(bufnr, lhs, rhs, desc)
 	})
 end
 
+local function apply_source_action(kind)
+	vim.lsp.buf.code_action({
+		apply = true,
+		context = {
+			only = { kind },
+			diagnostics = vim.diagnostic.get(0),
+		},
+	})
+end
+
 function M.setup()
 	local group = vim.api.nvim_create_augroup("0xec-lsp-attach", { clear = true })
 
@@ -22,7 +32,7 @@ function M.setup()
 				return
 			end
 
-			if client.name == "typescript-tools" then
+			if client.name == "ts_ls" then
 				client.server_capabilities.documentFormattingProvider = false
 				client.server_capabilities.documentRangeFormattingProvider = false
 			end
@@ -43,6 +53,22 @@ function M.setup()
 			map_lsp(bufnr, "K", vim.lsp.buf.hover, "LSP hover")
 			map_lsp(bufnr, "<leader>rn", vim.lsp.buf.rename, "LSP rename")
 			map_lsp(bufnr, "<leader>ca", vim.lsp.buf.code_action, "LSP code action")
+
+			if client.name == "ts_ls" then
+				map_lsp(bufnr, "<leader>co", function()
+					apply_source_action("source.organizeImports.ts")
+				end, "TS organize imports")
+				map_lsp(bufnr, "<leader>cM", function()
+					apply_source_action("source.addMissingImports.ts")
+				end, "TS add missing imports")
+				map_lsp(bufnr, "<leader>cu", function()
+					apply_source_action("source.removeUnused.ts")
+				end, "TS remove unused")
+				map_lsp(bufnr, "<leader>cf", function()
+					apply_source_action("source.fixAll.ts")
+				end, "TS fix all")
+			end
+
 			map_lsp(bufnr, "<leader>ds", function()
 				require("telescope.builtin").lsp_document_symbols()
 			end, "LSP document symbols")
