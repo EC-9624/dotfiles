@@ -1,8 +1,19 @@
 local servers = {
 	bashls = {},
 	cssls = {},
-	gopls = {},
-	html = {},
+	gopls = {
+		settings = {
+			gopls = {
+				semanticTokens = true,
+			},
+		},
+	},
+	html = {
+		filetypes = { "html", "templ" },
+	},
+	htmx = {
+		filetypes = { "html", "templ" },
+	},
 	intelephense = {},
 	jsonls = {},
 	lua_ls = {
@@ -28,10 +39,24 @@ local servers = {
 			"javascript",
 			"javascriptreact",
 			"svelte",
+			"templ",
 			"typescript",
 			"typescriptreact",
 		},
+		init_options = {
+			userLanguages = {
+				templ = "html",
+			},
+		},
+		settings = {
+			tailwindCSS = {
+				includeLanguages = {
+					templ = "html",
+				},
+			},
+		},
 	},
+	templ = {},
 	ts_ls = {
 		filetypes = {
 			"javascript",

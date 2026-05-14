@@ -13,11 +13,35 @@ local parser_languages = {
 	"php",
 	"query",
 	"svelte",
+	"templ",
 	"terraform",
 	"tsx",
 	"typescript",
 	"vim",
 	"vimdoc",
+	"yaml",
+}
+
+local highlight_filetypes = {
+	"astro",
+	"bash",
+	"css",
+	"dockerfile",
+	"go",
+	"html",
+	"javascript",
+	"javascriptreact",
+	"json",
+	"lua",
+	"markdown",
+	"php",
+	"query",
+	"svelte",
+	"templ",
+	"terraform",
+	"typescript",
+	"typescriptreact",
+	"vim",
 	"yaml",
 }
 
@@ -52,6 +76,12 @@ return {
 		config = function()
 			require("nvim-treesitter").setup({
 				auto_install = true,
+			})
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = highlight_filetypes,
+				callback = function()
+					pcall(vim.treesitter.start)
+				end,
 			})
 			install_missing_parsers()
 		end,

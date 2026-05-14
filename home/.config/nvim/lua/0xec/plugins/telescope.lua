@@ -15,6 +15,7 @@ return {
 		telescope.setup({
 			defaults = {
 				layout_strategy = "horizontal",
+				path_display = { "truncate" },
 				layout_config = {
 					width = 0.95,
 					preview_width = 0.45,

@@ -3,6 +3,7 @@ local servers = {
 	"cssls",
 	"gopls",
 	"html",
+	"htmx",
 	"intelephense",
 	"jsonls",
 	"lua_ls",
@@ -11,6 +12,7 @@ local servers = {
 	"terraformls",
 	"yamlls",
 	"tailwindcss",
+	"templ",
 	"ts_ls",
 	"astro",
 }

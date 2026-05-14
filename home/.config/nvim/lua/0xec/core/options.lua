@@ -1,5 +1,11 @@
 local opt = vim.opt
 
+vim.filetype.add({
+	extension = {
+		templ = "templ",
+	},
+})
+
 -- Search behavior
 opt.hlsearch = false
 opt.ignorecase = true
