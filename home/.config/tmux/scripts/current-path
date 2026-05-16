@@ -1,0 +1,17 @@
+#!/bin/sh
+
+path=$1
+
+[ -n "$path" ] || exit 0
+
+case $path in
+  "$HOME")
+    printf '~'
+    ;;
+  "$HOME"/*)
+    printf '~/%s' "${path#"$HOME"/}"
+    ;;
+  *)
+    printf '%s' "$path"
+    ;;
+esac
