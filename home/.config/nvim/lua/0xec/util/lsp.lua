@@ -25,7 +25,6 @@ local function code_action()
 	if #diagnostics > 0 then
 		vim.lsp.buf.code_action({
 			context = {
-				only = { "quickfix" },
 				diagnostics = diagnostics,
 			},
 		})

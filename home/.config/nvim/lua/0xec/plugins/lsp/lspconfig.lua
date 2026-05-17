@@ -97,7 +97,10 @@ local servers = {
 			},
 		},
 	},
-	oxlint = {},
+	oxlint = {
+		root_markers = { ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts", "package.json", ".git" },
+		workspace_required = false,
+	},
 	astro = {},
 }
 

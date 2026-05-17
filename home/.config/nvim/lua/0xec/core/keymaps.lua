@@ -21,6 +21,9 @@ map("n", "N", "Nzzzv", opts("Previous search result and center"))
 map("n", "<C-s>", "<cmd>write<CR>", opts("Save file"))
 map("n", "<leader>sn", "<cmd>noautocmd write<CR>", opts("Save without autocommands"))
 map("n", "<C-q>", "<cmd>quit<CR>", opts("Quit window"))
+map("n", "U", "<C-r>", opts("Redo"))
+map("n", "H", "^", opts("Go to first non-blank character"))
+map("n", "L", "$", opts("Go to end of line"))
 map("n", "x", '"_x', opts("Delete character without yanking"))
 
 -- Window resizing
