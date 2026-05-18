@@ -11,6 +11,3 @@ home/.config/opencode/state/
 
 # Local tmux plugins managed by TPM
 home/.config/tmux/plugins/
-
-# opensrc - source code for packages
-/opensrc/
