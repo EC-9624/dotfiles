@@ -1,13 +1,5 @@
-# vim:fileencoding=utf-8:foldmethod=marker
-
-# : Manager {{{
-
-[manager]
+[mgr]
 cwd = { fg = "#9ccfd8" }
-
-# Hovered
-hovered = { fg = "#e0def4", bg = "#26233a" }
-preview_hovered = { underline = true }
 
 # Find
 find_keyword = { fg = "#f6c177", italic = true }
@@ -18,11 +10,6 @@ marker_selected = { fg = "#9ccfd8", bg = "#9ccfd8" }
 marker_copied = { fg = "#f6c177", bg = "#f6c177" }
 marker_cut = { fg = "#B4637A", bg = "#B4637A" }
 
-# Tab
-tab_active = { fg = "#e0def4", bg = "#191724" }
-tab_inactive = { fg = "#e0def4", bg = "#2A273F" }
-tab_width = 1
-
 # Border
 border_symbol = "│"
 border_style = { fg = "#524f67" }
@@ -30,21 +17,19 @@ border_style = { fg = "#524f67" }
 # Highlighting
 syntect_theme = "~/.config/yazi/rose-pine.tmTheme"
 
-# : }}}
+
+[tabs]
+active = { fg = "#e0def4", bg = "#191724" }
+inactive = { fg = "#e0def4", bg = "#2A273F" }
 
 
-# : Indicator of hovered file {{{
-
+# Indicator of hovered file
 [indicator]
 parent  = { reversed = true }
 current = { reversed = true }
 preview = { underline = true }
 padding = { open = "▐", close = "▌" }
 
-# : }}}
-
-
-# : Status {{{
 
 [mode]
 normal_main = { fg = "#191724", bg = "#9ccfd8", bold = true }
@@ -57,6 +42,7 @@ select_alt  = { fg = "#ebbcba", bg = "#1f1d2e" }
 # Unset mode
 unset_main = { fg = "#191724", bg = "#eb6f92", bold = true }
 unset_alt  = { fg = "#eb6f92", bg = "#1f1d2e" }
+
 
 [status]
 overall   = { bg = "#191724" }
@@ -75,10 +61,6 @@ progress_label = { fg = "#e0def4", bold = true }
 progress_normal = { fg = "#e0def4", bg = "#1f1d2e" }
 progress_error = { fg = "#eb6f92", bg = "#1f1d2e" }
 
-# : }}}
-
-
-# : Input {{{
 
 [input]
 border = { fg = "#524f67" }
@@ -86,56 +68,37 @@ title = {}
 value = {}
 selected = { reversed = true }
 
-# : }}}
 
-
-# : Select {{{
-
-[select]
+[pick]
 border = { fg = "#524f67" }
 active = { fg = "#eb6f92" }
 inactive = {}
 
-# : }}}
-
-
-# : Tasks {{{
 
 [tasks]
 border = { fg = "#524f67" }
 title = {}
 hovered = { underline = true }
 
-# : }}}
-
-
-# : Which {{{
 
 [which]
 mask = { bg = "#313244" }
 cand = { fg = "#9ccfd8" }
 rest = { fg = "#9399b2" }
 desc = { fg = "#eb6f92" }
-separator = "  "
+separator = "  "
 separator_style = { fg = "#585b70" }
 
-# : }}}
-
-
-# : Help {{{
 
 [help]
 on = { fg = "#eb6f92" }
-exec = { fg = "#9ccfd8" }
+run = { fg = "#9ccfd8" }
 desc = { fg = "#9399b2" }
 hovered = { bg = "#585b70", bold = true }
 footer = { fg = "#2A273F", bg = "#e0def4" }
 
-# : }}}
 
-
-# : File-specific styles {{{
-
+# File-specific styles
 [filetype]
 
 rules = [
@@ -156,8 +119,6 @@ rules = [
     { mime = "application/x-rar", fg = "#eb6f92" },
 
     # Fallback
-    { name = "*", fg = "#e0def4" },
-    { name = "*/", fg = "#524f67" },
+    { url = "*", fg = "#e0def4" },
+    { url = "*/", fg = "#524f67" },
 ]
-
-# : }}}
