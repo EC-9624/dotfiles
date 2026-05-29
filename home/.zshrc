@@ -10,6 +10,7 @@ source "$ZSH/oh-my-zsh.sh"
 # environment
 export OPENCODE_DISABLE_DEFAULT_PLUGINS=true
 export OPENCODE_SERVER_URL="http://127.0.0.1:4096"
+export OPENCODE_EXPERIMENTAL_WEBSOCKETS=1
 
 # vim editing
 set -o vi

@@ -3,6 +3,15 @@
   "provider": {
     "anthropic": {
       "models": {
+        "claude-opus-4-8": {
+          "options": {
+            "thinking": {
+              "type": "adaptive",
+              "display": "summarized"
+            },
+            "effort": "max"
+          }
+        },
         "claude-opus-4-7": {
           "options": {
             "thinking": {
