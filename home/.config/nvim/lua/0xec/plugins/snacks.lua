@@ -102,7 +102,7 @@ return {
 			timeout = 3000,
 			style = "fancy",
 		},
-		picker = { enabled = true },
+		picker = { enabled = false },
 		quickfile = { enabled = true },
 		rename = { enabled = true },
 		scratch = { enabled = true },

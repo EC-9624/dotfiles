@@ -45,23 +45,6 @@ local highlight_filetypes = {
 	"yaml",
 }
 
-local function install_missing_parsers()
-	local treesitter = require("nvim-treesitter")
-	local installed = {}
-
-	for _, language in ipairs(treesitter.get_installed()) do
-		installed[language] = true
-	end
-
-	local missing = vim.tbl_filter(function(language)
-		return not installed[language]
-	end, parser_languages)
-
-	if #missing > 0 then
-		treesitter.install(missing)
-	end
-end
-
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -75,7 +58,7 @@ return {
 		end,
 		config = function()
 			require("nvim-treesitter").setup({
-				auto_install = true,
+				auto_install = false,
 			})
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = highlight_filetypes,
@@ -83,7 +66,6 @@ return {
 					pcall(vim.treesitter.start)
 				end,
 			})
-			install_missing_parsers()
 		end,
 	},
 	{

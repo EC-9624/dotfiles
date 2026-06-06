@@ -42,7 +42,7 @@ return {
 					oxfmt = {
 						inherit = true,
 						command = function(_, ctx)
-							return find_local_binary(ctx.dirname, "oxfmt") or "oxfmt"
+							return find_local_binary(ctx.dirname, "oxfmt")
 						end,
 						condition = function(_, ctx)
 							return find_local_binary(ctx.dirname, "oxfmt") ~= nil

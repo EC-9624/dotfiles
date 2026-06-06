@@ -122,9 +122,6 @@ end, opts("Git blame line"))
 map("n", "<leader>gg", function()
 	Snacks.lazygit()
 end, opts("Open lazygit"))
-map("n", "<leader>gd", "<cmd>DiffviewOpen<CR>", opts("Open git diff view"))
-map("n", "<leader>gD", "<cmd>DiffviewClose<CR>", opts("Close git diff view"))
-map("n", "<leader>gh", "<cmd>DiffviewFileHistory %<CR>", opts("Git file history"))
 
 -- Clipboard and explorer
 map("v", "p", '"_dP', opts("Paste without replacing register"))
