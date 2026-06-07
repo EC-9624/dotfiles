@@ -1,4 +1,5 @@
 require("0xec.core.options")
+require("0xec.core.autocmds")
 require("0xec.core.keymaps")
 
 vim.g.loaded_netrw = 1
