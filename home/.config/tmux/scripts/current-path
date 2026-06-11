@@ -3,15 +3,18 @@
 path=$1
 
 [ -n "$path" ] || exit 0
+path=${path%/}
+
+if [ -z "$path" ]; then
+  printf '/'
+  exit 0
+fi
 
 case $path in
   "$HOME")
     printf '~'
     ;;
-  "$HOME"/*)
-    printf '~/%s' "${path#"$HOME"/}"
-    ;;
   *)
-    printf '%s' "$path"
+    printf '%s' "${path##*/}"
     ;;
 esac
