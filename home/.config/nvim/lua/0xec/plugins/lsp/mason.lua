@@ -15,6 +15,7 @@ local servers = {
 	"templ",
 	"ts_ls",
 	"astro",
+	"zls",
 }
 
 return {

@@ -102,6 +102,7 @@ local servers = {
 		workspace_required = false,
 	},
 	astro = {},
+	zls = {},
 }
 
 return {

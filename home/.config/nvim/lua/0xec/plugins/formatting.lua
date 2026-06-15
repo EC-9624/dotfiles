@@ -67,6 +67,7 @@ return {
 					json = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
 					svelte = { "prettierd", "prettier", stop_after_first = true },
 					yaml = { "prettierd", "prettier", stop_after_first = true },
+					zig = { "zigfmt" },
 					lua = { "stylua" },
 				},
 				format_on_save = function(bufnr)
