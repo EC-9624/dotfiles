@@ -1,5 +1,19 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "references": {
+    "vault": {
+      "path": "~/Code/agent-vault/",
+      "description": "obsidian vault that act as durable memory for the user and AI agents"
+    }
+  },
+  "permission": {
+    "external_directory": {
+      "~/Code/agent-vault/**": "allow"
+    },
+    "edit": {
+      "~/Code/agent-vault/**": "allow"
+    }
+  },
   "provider": {
     "anthropic": {
       "models": {
