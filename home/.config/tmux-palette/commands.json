@@ -1,0 +1,10 @@
+[
+  {
+    "icon": "",
+    "title": "Reload Tmux Config",
+    "description": "source ~/.config/tmux/tmux.conf",
+    "category": "System",
+    "aliases": ["source-file", "reload config"],
+    "action": { "tmux": "source-file ~/.config/tmux/tmux.conf \\; display-message 'tmux reloaded'" }
+  }
+]
