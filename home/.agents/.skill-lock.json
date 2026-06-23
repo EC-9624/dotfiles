@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
       "skillPath": "skills/agent-browser/SKILL.md",
-      "skillFolderHash": "c1470a475a0472fceda2401ea6763708a91680a8",
+      "skillFolderHash": "9b31e495b887e4ca123960415eca69fc7e1bba28",
       "installedAt": "2026-04-06T02:18:09.859Z",
-      "updatedAt": "2026-06-07T14:15:15.524Z"
+      "updatedAt": "2026-06-23T05:41:16.683Z"
     },
     "defuddle": {
       "source": "git@github.com:kepano/obsidian-skills.git",
@@ -17,7 +17,7 @@
       "skillPath": "skills/defuddle/SKILL.md",
       "skillFolderHash": "0ed68bc3e818ba0e6b8d192357ea3daaf552a3893f8854e7fd43c06831f91323",
       "installedAt": "2026-06-07T14:11:27.058Z",
-      "updatedAt": "2026-06-07T14:11:27.058Z"
+      "updatedAt": "2026-06-23T05:41:19.437Z"
     },
     "json-canvas": {
       "source": "git@github.com:kepano/obsidian-skills.git",
@@ -26,7 +26,7 @@
       "skillPath": "skills/json-canvas/SKILL.md",
       "skillFolderHash": "56cbac74a93e4fba97f4d44bccfdeaae89e545b223f47df392c7705e01e6c543",
       "installedAt": "2026-06-07T14:11:27.059Z",
-      "updatedAt": "2026-06-07T14:11:27.059Z"
+      "updatedAt": "2026-06-23T05:41:19.444Z"
     },
     "obsidian-bases": {
       "source": "git@github.com:kepano/obsidian-skills.git",
@@ -35,7 +35,7 @@
       "skillPath": "skills/obsidian-bases/SKILL.md",
       "skillFolderHash": "65db029661f38daadc8b8eb755bd7b96011336f49bdc11e966ec7fd157d8f125",
       "installedAt": "2026-06-07T14:11:27.060Z",
-      "updatedAt": "2026-06-07T14:11:27.060Z"
+      "updatedAt": "2026-06-23T05:41:19.445Z"
     },
     "obsidian-cli": {
       "source": "git@github.com:kepano/obsidian-skills.git",
@@ -44,16 +44,25 @@
       "skillPath": "skills/obsidian-cli/SKILL.md",
       "skillFolderHash": "f46ae626875f7e47c410c2ee93896c4526024ebe127719e8fb430261b5677edc",
       "installedAt": "2026-06-07T14:11:27.060Z",
-      "updatedAt": "2026-06-07T14:11:27.060Z"
+      "updatedAt": "2026-06-23T05:41:19.445Z"
     },
     "obsidian-markdown": {
       "source": "git@github.com:kepano/obsidian-skills.git",
       "sourceType": "git",
       "sourceUrl": "git@github.com:kepano/obsidian-skills.git",
       "skillPath": "skills/obsidian-markdown/SKILL.md",
-      "skillFolderHash": "cacc9058a35ad3fd4985b4c31121bff8202f1337c39808c1326ded6a19a7915f",
+      "skillFolderHash": "0f47297035d7824e7bf0f1984e8145a59a123e2258b5d54c9ac9642f9f77e177",
       "installedAt": "2026-06-07T14:11:27.060Z",
-      "updatedAt": "2026-06-07T14:11:27.060Z"
+      "updatedAt": "2026-06-23T05:41:19.446Z"
+    },
+    "modern-web-guidance": {
+      "source": "GoogleChrome/modern-web-guidance",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/GoogleChrome/modern-web-guidance.git",
+      "skillPath": "skills/modern-web-guidance/SKILL.md",
+      "skillFolderHash": "6a556d0fcee54f2fa419c30147a90d8b55b5b777",
+      "installedAt": "2026-06-23T05:26:05.377Z",
+      "updatedAt": "2026-06-23T05:26:05.377Z"
     }
   },
   "dismissed": {
