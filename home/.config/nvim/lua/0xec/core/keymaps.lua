@@ -16,6 +16,11 @@ map("n", "<C-d>", "<C-d>zz", opts("Scroll down and center"))
 map("n", "<C-u>", "<C-u>zz", opts("Scroll up and center"))
 map("n", "n", "nzzzv", opts("Next search result and center"))
 map("n", "N", "Nzzzv", opts("Previous search result and center"))
+map("n", "J", "mzJ`z", opts("Join line and keep cursor"))
+map("v", "J", ":m '>+1<CR>gv=gv", opts("Move selected lines down"))
+map("v", "K", ":m '<-2<CR>gv=gv", opts("Move selected lines up"))
+map("v", "<", "<gv", opts("Indent left and reselect"))
+map("v", ">", ">gv", opts("Indent right and reselect"))
 
 -- File and editing
 map("n", "<C-s>", "<cmd>write<CR>", opts("Save file"))
@@ -127,6 +132,17 @@ end, opts("Open lazygit"))
 map("v", "p", '"_dP', opts("Paste without replacing register"))
 map({ "n", "v" }, "<leader>y", '"+y', opts("Yank to system clipboard"))
 map("n", "<leader>Y", '"+Y', opts("Yank line to system clipboard"))
+map("n", "<leader>fp", function()
+	local file_path = vim.fn.expand("%:~:.")
+
+	if file_path == "" then
+		vim.notify("No file path for current buffer", vim.log.levels.WARN)
+		return
+	end
+
+	vim.fn.setreg("+", file_path)
+	vim.notify("Copied file path: " .. file_path)
+end, opts("Copy file path"))
 map({ "n", "v" }, "<leader>og", function()
 	Snacks.gitbrowse()
 end, opts("Open git in browser"))

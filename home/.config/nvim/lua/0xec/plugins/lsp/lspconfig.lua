@@ -28,6 +28,7 @@ local servers = {
 			},
 		},
 	},
+	marksman = {},
 	svelte = {},
 	terraformls = {},
 	yamlls = {},

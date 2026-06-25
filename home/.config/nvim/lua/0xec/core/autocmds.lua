@@ -32,6 +32,7 @@ local function exclude_from_shada(path)
 end
 
 local git_message_oldfiles_group = vim.api.nvim_create_augroup("0xec-git-message-oldfiles", { clear = true })
+local highlight_yank_group = vim.api.nvim_create_augroup("0xec-highlight-yank", { clear = true })
 
 vim.api.nvim_create_autocmd({ "VimEnter", "VimLeavePre" }, {
 	group = git_message_oldfiles_group,
@@ -45,5 +46,12 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 			exclude_from_shada(event.file)
 			vim.schedule(filter_git_message_oldfiles)
 		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+	group = highlight_yank_group,
+	callback = function()
+		vim.hl.on_yank()
 	end,
 })

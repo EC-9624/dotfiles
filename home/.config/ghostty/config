@@ -14,8 +14,12 @@ background-blur-radius = 20
 macos-titlebar-style = hidden
 window-padding-x = 10
 window-padding-y = 8
+window-padding-balance = true
 window-save-state = always
 window-theme = dark
+confirm-close-surface = false
+unfocused-split-opacity = 0.75
+split-divider-color = #524f67
 
 # --- Quick Terminal ---
 quick-terminal-position = top
