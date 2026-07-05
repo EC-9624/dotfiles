@@ -115,15 +115,25 @@ return {
 		config = function()
 			local lsp = require("0xec.util.lsp")
 			local border = "rounded"
+			local diagnostic_icons = {
+				[vim.diagnostic.severity.ERROR] = "",
+				[vim.diagnostic.severity.WARN] = "",
+				[vim.diagnostic.severity.INFO] = "",
+				[vim.diagnostic.severity.HINT] = "󰌶",
+			}
 
 			lsp.setup()
 
 			vim.diagnostic.config({
 				virtual_text = {
 					spacing = 2,
-					prefix = "●",
+					prefix = function(diagnostic)
+						return diagnostic_icons[diagnostic.severity] or "●"
+					end,
 				},
-				signs = true,
+				signs = {
+					text = diagnostic_icons,
+				},
 				severity_sort = true,
 				underline = true,
 				update_in_insert = false,

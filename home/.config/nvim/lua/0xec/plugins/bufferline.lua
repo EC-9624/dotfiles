@@ -4,6 +4,12 @@ return {
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	opts = function()
 		local colors = require("rose-pine.palette")
+		local diagnostic_icons = {
+			error = "",
+			warning = "",
+			info = "",
+			hint = "󰌶",
+		}
 
 		return {
 			options = {
@@ -19,11 +25,19 @@ return {
 					local parts = {}
 
 					if diagnostics.error then
-						table.insert(parts, "E" .. diagnostics.error)
+						table.insert(parts, diagnostic_icons.error .. diagnostics.error)
 					end
 
 					if diagnostics.warning then
-						table.insert(parts, "W" .. diagnostics.warning)
+						table.insert(parts, diagnostic_icons.warning .. diagnostics.warning)
+					end
+
+					if diagnostics.info then
+						table.insert(parts, diagnostic_icons.info .. diagnostics.info)
+					end
+
+					if diagnostics.hint then
+						table.insert(parts, diagnostic_icons.hint .. diagnostics.hint)
 					end
 
 					return #parts > 0 and " " .. table.concat(parts, " ") or ""
