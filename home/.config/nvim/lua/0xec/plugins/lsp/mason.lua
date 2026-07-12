@@ -1,23 +1,5 @@
-local servers = {
-	"bashls",
-	"cssls",
-	"gopls",
-	"html",
-	"htmx",
-	"intelephense",
-	"jsonls",
-	"lua_ls",
-	"marksman",
-	"oxlint",
-	"svelte",
-	"terraformls",
-	"yamlls",
-	"tailwindcss",
-	"templ",
-	"ts_ls",
-	"astro",
-	"zls",
-}
+local servers = vim.tbl_keys(require("0xec.lsp.servers"))
+table.sort(servers)
 
 return {
 	{
