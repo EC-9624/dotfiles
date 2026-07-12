@@ -5,9 +5,6 @@ local function opts(desc, extra)
 	return vim.tbl_extend("force", default_opts, { desc = desc }, extra or {})
 end
 
--- Leader and setup
-map({ "n", "v" }, "<Space>", "<Nop>", opts("Ignore space"))
-
 -- Movement and search
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", opts("Move up display line", { expr = true }))
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", opts("Move down display line", { expr = true }))
