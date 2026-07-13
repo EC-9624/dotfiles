@@ -11,14 +11,18 @@ return {
 			enabled = true,
 			preset = {
 				pick = function(cmd, opts)
-					local builtin = require("telescope.builtin")
+					opts = opts or {}
 
 					if cmd == "files" then
-						return require("0xec.util.telescope").find_files(opts)
+						if opts.cwd then
+							return Snacks.picker.files(opts)
+						end
+
+						return require("fff").find_files()
 					elseif cmd == "live_grep" then
-						return builtin.live_grep(opts)
+						return require("fff").live_grep(opts)
 					elseif cmd == "oldfiles" then
-						return builtin.oldfiles(opts)
+						return Snacks.picker.recent(opts)
 					end
 				end,
 				keys = {

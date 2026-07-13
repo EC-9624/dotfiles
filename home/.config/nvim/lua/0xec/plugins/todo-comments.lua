@@ -28,6 +28,12 @@ return {
 			end,
 			desc = "Previous todo comment",
 		},
-		{ "<leader>ft", "<cmd>TodoTelescope<CR>", desc = "Find todo comments" },
+		{
+			"<leader>ft",
+			function()
+				Snacks.picker.todo_comments()
+			end,
+			desc = "Find todo comments",
+		},
 	},
 }

@@ -96,10 +96,10 @@ function M.setup()
 			end
 
 			map_lsp(bufnr, "<leader>ds", function()
-				require("telescope.builtin").lsp_document_symbols()
+				Snacks.picker.lsp_symbols()
 			end, "LSP document symbols")
 			map_lsp(bufnr, "<leader>ws", function()
-				require("telescope.builtin").lsp_dynamic_workspace_symbols()
+				Snacks.picker.lsp_workspace_symbols()
 			end, "LSP workspace symbols")
 			map_lsp(bufnr, "[d", function()
 				vim.diagnostic.jump({ count = -1, float = true })

@@ -21,9 +21,9 @@ cd ~/Code/dotfiles
 
 ## Neovim
 
-The Neovim configuration requires Neovim 0.11 or newer. Telescope uses `fd`, `rg`, and `make`; configured formatters include Prettier, Prettierd, Stylua, and Zigfmt.
+The Neovim configuration requires Neovim 0.11 or newer. Configured formatters include Prettier, Prettierd, Stylua, and Zigfmt.
 
-Oil handles directory editing, while Neo-tree provides a persistent project tree. Telescope is the primary general-purpose picker; Snacks remains responsible for focused LSP navigation and its dashboard, notification, Git, scratch, and toggle features.
+Oil handles directory editing, while Neo-tree provides a persistent project tree. FFF provides indexed project file and content search; its native binary is downloaded during plugin installation and can fall back to a local Rust toolchain. Snacks provides buffers, help, recent files, LSP and TODO pickers alongside its dashboard, notification, Git, scratch, and toggle features.
 
 Oxfmt and `tsgo` are optional project-local tools. When present, Oxfmt takes priority over Prettier for supported files, and `tsc.nvim` finds `node_modules/.bin/tsgo` automatically.
 

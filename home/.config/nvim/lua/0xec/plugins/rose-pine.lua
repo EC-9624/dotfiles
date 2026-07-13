@@ -12,15 +12,6 @@ return {
 					transparency = true,
 				},
 				highlight_groups = {
-					TelescopePromptBorder = { fg = "muted", bg = "none" },
-					TelescopeResultsBorder = { fg = "muted", bg = "none" },
-					TelescopePreviewBorder = { fg = "muted", bg = "none" },
-					TelescopePromptTitle = { fg = "base", bg = "iris", bold = true },
-					TelescopeResultsTitle = { fg = "base", bg = "foam", bold = true },
-					TelescopePreviewTitle = { fg = "base", bg = "gold", bold = true },
-					TelescopeSelection = { fg = "text", bg = "overlay", bold = true },
-					TelescopeSelectionCaret = { fg = "rose", bg = "overlay" },
-
 					NeoTreeNormal = { fg = "text", bg = "none" },
 					NeoTreeNormalNC = { fg = "subtle", bg = "none" },
 					NeoTreeEndOfBuffer = { fg = "none", bg = "none" },
