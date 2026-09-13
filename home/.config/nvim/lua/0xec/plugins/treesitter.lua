@@ -24,10 +24,10 @@ local parser_languages = {
 
 local highlight_filetypes = {
 	"astro",
-	"bash",
 	"css",
 	"dockerfile",
 	"go",
+	"help",
 	"html",
 	"javascript",
 	"javascriptreact",
@@ -36,6 +36,7 @@ local highlight_filetypes = {
 	"markdown",
 	"php",
 	"query",
+	"sh",
 	"svelte",
 	"templ",
 	"terraform",
@@ -45,11 +46,36 @@ local highlight_filetypes = {
 	"yaml",
 }
 
+local installing = {}
+
+local function start_highlighting(bufnr)
+	if not vim.api.nvim_buf_is_loaded(bufnr) or not vim.tbl_contains(highlight_filetypes, vim.bo[bufnr].filetype) then
+		return
+	end
+
+	local language = vim.treesitter.language.get_lang(vim.bo[bufnr].filetype)
+	if language and installing[language] then
+		return
+	end
+
+	local ok, err = pcall(vim.treesitter.start, bufnr)
+	if not ok then
+		vim.notify_once(
+			("Treesitter highlighting failed for %s: %s. Run :checkhealth nvim-treesitter and :TSInstall %s."):format(
+				vim.bo[bufnr].filetype,
+				err,
+				language or vim.bo[bufnr].filetype
+			),
+			vim.log.levels.WARN
+		)
+	end
+end
+
 local function install_missing_parsers()
 	local treesitter = require("nvim-treesitter")
 	local installed = {}
 
-	for _, language in ipairs(treesitter.get_installed()) do
+	for _, language in ipairs(treesitter.get_installed("parsers")) do
 		installed[language] = true
 	end
 
@@ -58,7 +84,28 @@ local function install_missing_parsers()
 	end, parser_languages)
 
 	if #missing > 0 then
-		treesitter.install(missing)
+		for _, language in ipairs(missing) do
+			installing[language] = true
+		end
+
+		-- Force only missing parsers, so leftover queries cannot make installation skip them.
+		treesitter.install(missing, { force = true }):await(vim.schedule_wrap(function(err, success)
+			installing = {}
+			if err or not success then
+				vim.notify_once(
+					("Treesitter parser installation failed: %s. Run :checkhealth nvim-treesitter and retry :TSInstall %s."):format(
+						err or "see parser installation messages",
+						table.concat(missing, " ")
+					),
+					vim.log.levels.WARN
+				)
+			end
+
+			-- FileType may have fired before the asynchronous installation finished.
+			for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+				start_highlighting(bufnr)
+			end
+		end))
 	end
 end
 
@@ -74,13 +121,12 @@ return {
 			treesitter.update(parser_languages):wait(300000)
 		end,
 		config = function()
-			require("nvim-treesitter").setup({
-				auto_install = true,
-			})
+			local group = vim.api.nvim_create_augroup("0xec-treesitter-highlight", { clear = true })
 			vim.api.nvim_create_autocmd("FileType", {
+				group = group,
 				pattern = highlight_filetypes,
-				callback = function()
-					pcall(vim.treesitter.start)
+				callback = function(event)
+					start_highlighting(event.buf)
 				end,
 			})
 			install_missing_parsers()

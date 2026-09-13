@@ -8,14 +8,15 @@ return {
 			{ "<leader>", mode = { "n", "v" } },
 		},
 		spec = {
-			{ "<leader>c", group = "Code" },
-			{ "<leader>f", group = "Find" },
+			{ "<leader>b", group = "Buffers" },
+			{ "<leader>c", group = "Code / Cursor" },
+			{ "<leader>f", group = "Find / File path" },
 			{ "<leader>g", group = "Git" },
-			{ "<leader>l", group = "Toggles" },
+			{ "<leader>l", group = "Display toggles" },
 			{ "<leader>n", group = "Notifications" },
-			{ "<leader>s", group = "Search/Save" },
-			{ "<leader>t", group = "Tabs/Context" },
-			{ "<leader>x", group = "Diagnostics/Close" },
+			{ "<leader>s", group = "Save / Select / Splits" },
+			{ "<leader>t", group = "Tabs / Treesitter" },
+			{ "<leader>x", group = "Diagnostics / Close" },
 		},
 	},
 	keys = {
@@ -24,7 +25,7 @@ return {
 			function()
 				require("which-key").show({ keys = "<leader>" })
 			end,
-			desc = "Show leader keymaps",
+			desc = "Show leader keybindings",
 		},
 	},
 }

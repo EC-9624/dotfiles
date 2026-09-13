@@ -19,21 +19,21 @@ return {
 			function()
 				require("todo-comments").jump_next()
 			end,
-			desc = "Next todo comment",
+			desc = "Next TODO comment",
 		},
 		{
 			"[t",
 			function()
 				require("todo-comments").jump_prev()
 			end,
-			desc = "Previous todo comment",
+			desc = "Previous TODO comment",
 		},
 		{
 			"<leader>ft",
 			function()
 				Snacks.picker.todo_comments()
 			end,
-			desc = "Find todo comments",
+			desc = "Find TODO comments",
 		},
 	},
 }

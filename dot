@@ -140,7 +140,7 @@ ensure_theme() {
 
 doctor() {
   local missing=0
-  local commands=(bat brew bun curl delta eza fd fnm fzf git jq lazygit nvim opencode2 prettier prettierd rg starship stow stylua tmux unzip yazi zig zoxide zsh)
+  local commands=(bat brew bun cc curl delta eza fd fnm fzf git jq lazygit nvim opencode2 prettier prettierd rg starship stow stylua tar tmux tree-sitter unzip yazi zig zoxide zsh)
   local paths=(
     "${HOME}/.bun/_bun"
     "${HOME}/.oh-my-zsh/oh-my-zsh.sh"

@@ -11,6 +11,7 @@ return {
 	opts = {
 		keymap = {
 			preset = "default",
+			-- Tab navigates snippet placeholders first, otherwise completion items.
 			["<Tab>"] = {
 				function(cmp)
 					if cmp.snippet_active() then

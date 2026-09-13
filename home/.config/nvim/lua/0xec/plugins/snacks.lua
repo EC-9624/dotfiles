@@ -26,18 +26,18 @@ return {
 					end
 				end,
 				keys = {
-					{ icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
-					{ icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+					{ icon = " ", key = "f", desc = "Find files", action = ":lua Snacks.dashboard.pick('files')" },
+					{ icon = " ", key = "n", desc = "New file", action = ":ene | startinsert" },
 					{
 						icon = " ",
 						key = "g",
-						desc = "Find Text",
+						desc = "Find text",
 						action = ":lua Snacks.dashboard.pick('live_grep')",
 					},
 					{
 						icon = " ",
 						key = "r",
-						desc = "Recent Files",
+						desc = "Recent files",
 						action = ":lua Snacks.dashboard.pick('oldfiles')",
 					},
 					{
@@ -46,7 +46,7 @@ return {
 						desc = "Config",
 						action = ":lua Snacks.dashboard.pick('files', { cwd = vim.fn.stdpath('config') })",
 					},
-					{ icon = " ", key = "s", desc = "Restore Session", section = "session" },
+					{ icon = " ", key = "s", desc = "Restore session", section = "session" },
 					{
 						icon = "󰒲 ",
 						key = "l",
@@ -54,7 +54,7 @@ return {
 						action = ":Lazy",
 						enabled = package.loaded.lazy ~= nil,
 					},
-					{ icon = " ", key = "q", desc = "Quit", action = ":qa" },
+					{ icon = " ", key = "q", desc = "Quit Neovim", action = ":qa" },
 				},
 				header = [[
 ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
@@ -128,17 +128,6 @@ return {
 					end
 
 					return notify(message, level, opts)
-				end
-			end,
-		})
-
-		vim.api.nvim_create_autocmd("User", {
-			pattern = "OilActionsPost",
-			callback = function(event)
-				local action = event.data.actions
-
-				if action.type == "move" then
-					Snacks.rename.on_rename_file(action.src_url, action.dest_url)
 				end
 			end,
 		})
