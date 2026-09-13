@@ -13,25 +13,8 @@ local function apply_source_action(kind)
 		apply = true,
 		context = {
 			only = { kind },
-			diagnostics = vim.diagnostic.get(0),
 		},
 	})
-end
-
-local function code_action()
-	local line = vim.api.nvim_win_get_cursor(0)[1] - 1
-	local diagnostics = vim.diagnostic.get(0, { lnum = line })
-
-	if #diagnostics > 0 then
-		vim.lsp.buf.code_action({
-			context = {
-				diagnostics = diagnostics,
-			},
-		})
-		return
-	end
-
-	vim.lsp.buf.code_action()
 end
 
 function M.setup()
@@ -55,34 +38,34 @@ function M.setup()
 
 			map_lsp(bufnr, "gd", function()
 				Snacks.picker.lsp_definitions()
-			end, "LSP definition")
-			map_lsp(bufnr, "gD", vim.lsp.buf.declaration, "LSP declaration")
+			end, "Go to definition")
+			map_lsp(bufnr, "gD", vim.lsp.buf.declaration, "Go to declaration")
 			map_lsp(bufnr, "gr", function()
 				Snacks.picker.lsp_references()
-			end, "LSP references")
+			end, "Go to references")
 			map_lsp(bufnr, "gI", function()
 				Snacks.picker.lsp_implementations()
-			end, "LSP implementation")
+			end, "Go to implementation")
 			map_lsp(bufnr, "gy", function()
 				Snacks.picker.lsp_type_definitions()
-			end, "LSP type definition")
-			map_lsp(bufnr, "K", vim.lsp.buf.hover, "LSP hover")
-			map_lsp(bufnr, "<leader>rn", vim.lsp.buf.rename, "LSP rename")
-			map_lsp(bufnr, "<leader>ca", code_action, "LSP code action")
+			end, "Go to type definition")
+			map_lsp(bufnr, "K", vim.lsp.buf.hover, "Show hover documentation")
+			map_lsp(bufnr, "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
+			map_lsp(bufnr, "<leader>ca", vim.lsp.buf.code_action, "Code actions")
 
 			if client.name == "ts_ls" then
 				map_lsp(bufnr, "<leader>co", function()
 					apply_source_action("source.organizeImports.ts")
-				end, "TS organize imports")
+				end, "Code: organize imports (TypeScript)")
 				map_lsp(bufnr, "<leader>cM", function()
 					apply_source_action("source.addMissingImports.ts")
-				end, "TS add missing imports")
+				end, "Code: add missing imports (TypeScript)")
 				map_lsp(bufnr, "<leader>cu", function()
 					apply_source_action("source.removeUnused.ts")
-				end, "TS remove unused")
+				end, "Code: remove unused (TypeScript)")
 				map_lsp(bufnr, "<leader>cf", function()
 					apply_source_action("source.fixAll.ts")
-				end, "TS fix all")
+				end, "Code: fix all (TypeScript)")
 			end
 
 			if client.name == "oxlint" then
@@ -92,21 +75,21 @@ function M.setup()
 						command = "oxc.fixAll",
 						arguments = { { uri = vim.uri_from_bufnr(bufnr) } },
 					})
-				end, "Oxlint fix all")
+				end, "Code: fix all (Oxlint)")
 			end
 
 			map_lsp(bufnr, "<leader>ds", function()
 				Snacks.picker.lsp_symbols()
-			end, "LSP document symbols")
+			end, "Document symbols")
 			map_lsp(bufnr, "<leader>ws", function()
 				Snacks.picker.lsp_workspace_symbols()
-			end, "LSP workspace symbols")
+			end, "Workspace symbols")
 			map_lsp(bufnr, "[d", function()
 				vim.diagnostic.jump({ count = -1, float = true })
-			end, "Previous diagnostic")
+			end, "Previous diagnostic and details")
 			map_lsp(bufnr, "]d", function()
 				vim.diagnostic.jump({ count = 1, float = true })
-			end, "Next diagnostic")
+			end, "Next diagnostic and details")
 		end,
 	})
 end

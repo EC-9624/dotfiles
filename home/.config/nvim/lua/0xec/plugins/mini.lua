@@ -18,7 +18,7 @@ return {
 				function()
 					require("mini.trailspace").trim()
 				end,
-				desc = "Trim trailing whitespace",
+				desc = "Clean whitespace: trim trailing",
 			},
 		},
 	},

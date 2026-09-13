@@ -45,9 +45,11 @@ After switching, reload Ghostty with `Cmd+Shift+,` and restart open Neovim, Yazi
 
 ## Neovim
 
-The Neovim configuration requires Neovim 0.11 or newer. Configured formatters include Prettier, Prettierd, Stylua, and Zigfmt.
+The Neovim configuration requires Neovim 0.12 or newer. Treesitter parser installation requires tree-sitter CLI 0.26.1 or newer (included in the Homebrew bundle), a C compiler, `tar`, and `curl`. On macOS, install the compiler with `xcode-select --install` if needed. Run `./dot doctor` to check command availability. Configured formatters include Prettier, Prettierd, Stylua, and Zigfmt.
 
 Oil handles directory editing, while Neo-tree provides a persistent project tree. FFF provides indexed project file and content search; its native binary is downloaded during plugin installation and can fall back to a local Rust toolchain. Snacks provides buffers, help, recent files, LSP and TODO pickers alongside its dashboard, notification, Git, scratch, and toggle features.
+
+Oil uses its native LSP file-operation support to update references when files are renamed. Any buffers changed by those edits must be saved separately. `<leader>e` toggles Neo-tree and reveals the current file when opening it.
 
 Oxfmt and `tsgo` are optional project-local tools. When present, Oxfmt takes priority over Prettier for supported files, and `tsc.nvim` finds `node_modules/.bin/tsgo` automatically.
 
