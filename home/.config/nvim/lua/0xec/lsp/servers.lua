@@ -1,3 +1,5 @@
+local npm_root = vim.trim(vim.fn.system({ "npm", "root", "-g" }))
+
 return {
 	bashls = {},
 	cssls = {},
@@ -64,8 +66,16 @@ return {
 			"javascriptreact",
 			"typescript",
 			"typescriptreact",
+			"css",
 		},
 		init_options = {
+			plugins = {
+				{
+					name = "@css-modules-kit/ts-plugin",
+					location = npm_root,
+					languages = { "css" },
+				},
+			},
 			preferences = {
 				includeCompletionsForModuleExports = true,
 				quotePreference = "auto",
