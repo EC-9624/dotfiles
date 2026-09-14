@@ -55,6 +55,30 @@ Oxfmt and `tsgo` are optional project-local tools. When present, Oxfmt takes pri
 
 `home/.vimrc` is a plugin-free keybinding starter for minimal Vim or Neovim installations. Neovim does not load it automatically; source it from an `init.vim` or copy the mappings when bootstrapping a separate setup.
 
+### CSS Modules
+
+CSS Modules Kit runs through `ts_ls` for completion, navigation, references, and cross-file rename in TypeScript/JavaScript and `.module.css` files. Install its TypeScript plugin for the Node version used by Neovim:
+
+```bash
+npm install -g @css-modules-kit/ts-plugin
+```
+
+The configuration resolves its location using `npm root -g`. When switching Node versions with fnm, install the plugin in that version too.
+
+Enable CSS Modules Kit in each project's `tsconfig.json`:
+
+```json
+{
+  "cmkOptions": {
+    "enabled": true
+  }
+}
+```
+
+Ensure the project's `include` patterns cover `.module.css` files (for example, `"src/**/*"`, rather than only `"src/**/*.ts"`). Restart Neovim after setup. Use `:LspBuf` in a `.tsx` file and its `.module.css` file to confirm `ts_ls` is attached; `cssls` also provides normal CSS support.
+
+For matching command-line type checking with `tsc` or `tsgo`, set up the separate code generator following the [upstream guide](https://github.com/mizdra/css-modules-kit/blob/main/docs/get-started.md).
+
 ## Commands
 
 ```bash
