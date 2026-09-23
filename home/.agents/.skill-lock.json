@@ -72,6 +72,15 @@
       "skillFolderHash": "6bfe555e89a6b264e09d5ece7c4040226458c8e5",
       "installedAt": "2026-08-05T07:10:00.649Z",
       "updatedAt": "2026-09-02T01:54:02.375Z"
+    },
+    "install-anti-slop": {
+      "source": "dmmulroy/anti-slop",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dmmulroy/anti-slop.git",
+      "skillPath": "skills/install-anti-slop/SKILL.md",
+      "skillFolderHash": "89044d21c75a367eac1ddbaf208e650b1a7d5820",
+      "installedAt": "2026-09-23T05:39:23.498Z",
+      "updatedAt": "2026-09-23T05:39:23.498Z"
     }
   },
   "dismissed": {
@@ -79,14 +88,13 @@
   },
   "lastSelectedAgents": [
     "amp",
-    "antigravity",
-    "antigravity-cli",
     "cline",
     "codex",
     "cursor",
-    "deepagents",
+    "droid",
     "gemini-cli",
     "github-copilot",
+    "kilo",
     "kimi-code-cli",
     "opencode",
     "warp",
