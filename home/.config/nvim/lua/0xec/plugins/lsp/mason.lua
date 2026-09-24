@@ -1,5 +1,8 @@
-local servers = vim.tbl_keys(require("0xec.lsp.servers"))
-table.sort(servers)
+-- effect_tsgo is installed per project (npm i -D @effect/tsgo), never through Mason.
+local mason_servers = vim.tbl_filter(function(server)
+	return server ~= "effect_tsgo"
+end, vim.tbl_keys(require("0xec.lsp.servers")))
+table.sort(mason_servers)
 
 return {
 	{
@@ -17,8 +20,8 @@ return {
 			"neovim/nvim-lspconfig",
 		},
 		opts = {
-			ensure_installed = servers,
-			automatic_enable = servers,
+			ensure_installed = mason_servers,
+			automatic_enable = mason_servers,
 		},
 	},
 }

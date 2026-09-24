@@ -8,11 +8,18 @@ local function map_lsp(bufnr, lhs, rhs, desc)
 	})
 end
 
-local function apply_source_action(kind)
+local ts_clients = {
+	ts_ls = true,
+	effect_tsgo = true,
+}
+
+--- ts_ls names its source actions `source.*.ts`; effect_tsgo (TypeScript-Go) uses the
+--- unprefixed kinds. Pass both so the mapping works with whichever client owns the buffer.
+local function apply_source_action(kinds)
 	vim.lsp.buf.code_action({
 		apply = true,
 		context = {
-			only = { kind },
+			only = kinds,
 		},
 	})
 end
@@ -31,7 +38,7 @@ function M.setup()
 				return
 			end
 
-			if client.name == "ts_ls" then
+			if ts_clients[client.name] then
 				client.server_capabilities.documentFormattingProvider = false
 				client.server_capabilities.documentRangeFormattingProvider = false
 			end
@@ -53,19 +60,23 @@ function M.setup()
 			map_lsp(bufnr, "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
 			map_lsp(bufnr, "<leader>ca", vim.lsp.buf.code_action, "Code actions")
 
-			if client.name == "ts_ls" then
+			if ts_clients[client.name] then
 				map_lsp(bufnr, "<leader>co", function()
-					apply_source_action("source.organizeImports.ts")
+					apply_source_action({ "source.organizeImports.ts", "source.organizeImports" })
 				end, "Code: organize imports (TypeScript)")
-				map_lsp(bufnr, "<leader>cM", function()
-					apply_source_action("source.addMissingImports.ts")
-				end, "Code: add missing imports (TypeScript)")
 				map_lsp(bufnr, "<leader>cu", function()
-					apply_source_action("source.removeUnused.ts")
+					apply_source_action({ "source.removeUnused.ts", "source.removeUnusedImports" })
 				end, "Code: remove unused (TypeScript)")
 				map_lsp(bufnr, "<leader>cf", function()
-					apply_source_action("source.fixAll.ts")
+					apply_source_action({ "source.fixAll.ts", "source.fixAll" })
 				end, "Code: fix all (TypeScript)")
+			end
+
+			-- effect_tsgo has no add-missing-imports source action.
+			if client.name == "ts_ls" then
+				map_lsp(bufnr, "<leader>cM", function()
+					apply_source_action({ "source.addMissingImports.ts" })
+				end, "Code: add missing imports (TypeScript)")
 			end
 
 			if client.name == "oxlint" then
