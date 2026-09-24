@@ -67,9 +67,9 @@ require_repo = true
 ignore_timeout = true
 
 [git_branch]
-symbol = "[](bright-black) "
+symbol = " "
 style = "fg:yellow bg:bright-black"
-format = " [$symbol$branch]($style)[](bright-black) "
+format = " [ $symbol$branch ]($style) "
 
 [git_status]
 format = "$untracked$staged$modified$renamed$deleted$conflicted$ahead_behind"
