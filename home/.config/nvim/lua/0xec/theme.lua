@@ -11,4 +11,6 @@ if type(theme) ~= "table" or type(theme.spec) ~= "table" or type(theme.colors) ~
 	error(("invalid theme definition: %s"):format(path))
 end
 
+require("0xec.theme.syntax").setup(vim.fn.expand("~/.config/current-theme/opencode.json"))
+
 return theme

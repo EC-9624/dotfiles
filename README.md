@@ -43,6 +43,18 @@ Tokyo Night, Rose Pine, and Catppuccin Macchiato are available through a shared 
 
 After switching, reload Ghostty with `Cmd+Shift+,` and restart open Neovim, Yazi, and OpenCode sessions.
 
+Each theme's `opencode.json` is the source for code colors. Neovim reads its dark-mode syntax tokens and applies them to Vim, Tree-sitter, and LSP highlights after the colorscheme loads. Yazi's syntax previews are generated from the same tokens. The editor presets use dark variants: Rosé Pine main, Tokyo Night night, and Catppuccin Macchiato.
+
+OpenCode's main background is transparent so Ghostty applies window opacity once. Yazi's preview background uses the concrete `hue.neutral.800` palette color.
+
+After changing tokens, regenerate Yazi previews and verify the Neovim mappings:
+
+```bash
+nvim --headless -u NONE -l scripts/sync-theme-syntax.lua
+nvim --headless -u NONE -l scripts/sync-theme-syntax.lua --check
+nvim --headless -u NONE -l tests/theme-syntax.lua
+```
+
 ## Neovim
 
 The Neovim configuration requires Neovim 0.12 or newer. Treesitter parser installation requires tree-sitter CLI 0.26.1 or newer (included in the Homebrew bundle), a C compiler, `tar`, and `curl`. On macOS, install the compiler with `xcode-select --install` if needed. Run `./dot doctor` to check command availability. Configured formatters include Prettier, Prettierd, Stylua, and Zigfmt.
