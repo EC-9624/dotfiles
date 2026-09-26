@@ -106,7 +106,22 @@ return {
 			timeout = 3000,
 			style = "fancy",
 		},
-		picker = { enabled = true },
+		picker = {
+			enabled = true,
+			layout = {
+				config = function(layout)
+					local function square_borders(box)
+						if box.border == true or box.border == "rounded" then
+							box.border = "single"
+						end
+						for _, child in ipairs(box) do
+							square_borders(child)
+						end
+					end
+					square_borders(layout.layout)
+				end,
+			},
+		},
 		quickfile = { enabled = true },
 		rename = { enabled = true },
 		scratch = { enabled = true },

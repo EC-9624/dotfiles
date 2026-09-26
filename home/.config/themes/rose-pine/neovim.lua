@@ -31,6 +31,14 @@ return {
 				transparency = true,
 			},
 			highlight_groups = {
+				NormalFloat = { fg = colors.text, bg = colors.surface },
+				FloatBorder = { fg = colors.iris, bg = colors.surface },
+				FloatTitle = { fg = colors.iris, bg = colors.surface, bold = true },
+
+				SnacksPickerListCursorLine = { fg = colors.text, bg = colors.highlight_high, bold = true },
+				FFFCursorLine = { fg = colors.text, bg = colors.highlight_high, bold = true },
+				FFFSelectedActive = { fg = colors.foam, bg = colors.highlight_high, bold = true },
+
 				NeoTreeNormal = { fg = colors.text, bg = colors.none },
 				NeoTreeNormalNC = { fg = colors.subtle, bg = colors.none },
 				NeoTreeEndOfBuffer = { fg = colors.none, bg = colors.none },
