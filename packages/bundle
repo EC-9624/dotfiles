@@ -1,6 +1,6 @@
 brew "ast-grep"
 brew "bat"
-brew "btop" 
+brew "btop"
 brew "eza"
 brew "fd"
 brew "fnm"

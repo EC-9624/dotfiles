@@ -62,20 +62,20 @@ install_bun() {
   "${bun_bin}" completions > "${bun_completion}"
 }
 
-install_opencode2() {
-  local opencode_bin="${HOME}/.opencode/bin/opencode2"
+install_opencode() {
+  local opencode_bin="${HOME}/.opencode/bin/opencode"
 
   if [[ -x "${opencode_bin}" ]] && "${opencode_bin}" --version >/dev/null 2>&1; then
-    say "ok: opencode2"
+    say "ok: opencode"
     return 0
   fi
 
   need_cmd bash
   need_cmd curl
-  say "installing: opencode2"
+  say "installing: opencode"
   curl -fsSL https://opencode.ai/v2/install | bash -s -- --no-modify-path
 
-  "${opencode_bin}" --version >/dev/null 2>&1 || fail "opencode2 installation failed"
+  "${opencode_bin}" --version >/dev/null 2>&1 || fail "opencode installation failed"
 }
 
 restow() {
@@ -83,7 +83,7 @@ restow() {
   stow -R -d "${DOTFILES_DIR}" -t "${HOME}" home
 }
 
-set_theme() {
+set_theme() (
   local name="${1:-}"
   local themes_dir="${HOME}/.config/themes"
   local theme_dir="${themes_dir}/${name}"
@@ -99,25 +99,26 @@ set_theme() {
     fail "theme does not exist: $theme_dir"
   fi
 
+  need_cmd jq
+  jq -e 'type == "object"' "${theme_dir}/opencode.json" >/dev/null || fail "invalid OpenCode theme JSON: ${theme_dir}/opencode.json"
+
+  mkdir -p "${HOME}/.config/opencode/themes"
+  opencode_cli_tmp="$(mktemp "${opencode_cli}.XXXXXX")"
+  trap "rm -f -- $(printf '%q' "$opencode_cli_tmp")" EXIT
+  if [[ -f "$opencode_cli" ]]; then
+    jq -e '.theme.name = "current" | .theme.mode //= "system"' "$opencode_cli" > "$opencode_cli_tmp"
+  else
+    printf '%s\n' '{}' | jq '.theme.name = "current" | .theme.mode = "system"' > "$opencode_cli_tmp"
+  fi
+
+  cp "${theme_dir}/opencode.json" "${HOME}/.config/opencode/themes/current.json"
+  # Write through Stow's symlink rather than replacing it.
+  cat "$opencode_cli_tmp" > "$opencode_cli"
+  chmod 600 "$opencode_cli"
   ln -nsf "$theme_dir" "$current_theme"
 
   if [[ -d "${HOME}/.config/tmux-palette" ]]; then
     printf '%s\n' '{' '  "name": "terminal"' '}' > "${HOME}/.config/tmux-palette/theme.json"
-  fi
-
-  if [[ -f "${current_theme}/opencode.json" ]]; then
-    mkdir -p "${HOME}/.config/opencode/themes"
-    cp "${current_theme}/opencode.json" "${HOME}/.config/opencode/themes/current.json"
-
-    need_cmd jq
-    opencode_cli_tmp="$(mktemp "${opencode_cli}.XXXXXX")"
-    if [[ -f "${opencode_cli}" ]]; then
-      jq '.theme.name = "current" | .theme.mode //= "system"' "${opencode_cli}" > "${opencode_cli_tmp}"
-    else
-      printf '%s\n' '{}' | jq '.theme.name = "current" | .theme.mode = "system"' > "${opencode_cli_tmp}"
-    fi
-    chmod 600 "${opencode_cli_tmp}"
-    mv "${opencode_cli_tmp}" "${opencode_cli}"
   fi
 
   if command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
@@ -129,23 +130,26 @@ set_theme() {
   fi
 
   say "theme: $name"
-  say "reload Ghostty with Cmd+Shift+,; restart open Neovim, Yazi, and opencode2 sessions"
-}
+  say "reload Ghostty with Cmd+Shift+,; restart open Neovim, Yazi, and OpenCode sessions"
+)
 
 ensure_theme() {
   if [[ ! -e "${HOME}/.config/current-theme" ]]; then
     set_theme tokyo-night
+  elif [[ ! -f "${HOME}/.config/opencode/themes/current.json" || ! -f "${HOME}/.config/opencode/cli.json" ]]; then
+    set_theme "$(basename "$(readlink "${HOME}/.config/current-theme")")"
   fi
 }
 
 doctor() {
   local missing=0
-  local commands=(bat brew bun cc curl delta eza fd fnm fzf git jq lazygit nvim opencode2 prettier prettierd rg starship stow stylua tar tmux tree-sitter unzip yazi zig zoxide zsh)
+  local commands=(bat brew bun cc curl delta eza fd fnm fzf git jq lazygit nvim opencode prettier prettierd rg starship stow stylua tar tmux tree-sitter unzip yazi zig zoxide zsh)
   local paths=(
     "${HOME}/.bun/_bun"
     "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
     "${HOME}/.config/lazygit/config.yml"
     "${HOME}/.config/current-theme"
+    "${HOME}/.config/opencode/themes/current.json"
     "${HOME}/.config/themes/catppuccin"
     "${HOME}/.config/themes/rose-pine"
     "${HOME}/.config/themes/tokyo-night"
@@ -189,7 +193,7 @@ usage() {
 Usage: ./dot <command>
 
 Commands:
-  init    install bundle, bun, oh-my-zsh, and stow files
+  init    install bundle, Bun, OpenCode, Oh My Zsh, and stow files
   stow    restow managed files into $HOME
   theme   switch terminal theme: ./dot theme <name>
   doctor  check core commands and stow health
@@ -203,7 +207,7 @@ main() {
     init)
       install_packages
       install_bun
-      install_opencode2
+      install_opencode
       install_oh_my_zsh
       restow
       ensure_theme

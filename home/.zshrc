@@ -85,7 +85,7 @@ alias ll="eza --icons=always -l --group-directories-first"
 alias la="eza --icons=always -la --group-directories-first"
 alias lzg="lazygit"
 alias brewup="brew update && brew upgrade"
-alias oc="opencode2"
+alias oc="opencode"
 
 # functions
 function y() {
