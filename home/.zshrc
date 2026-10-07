@@ -86,6 +86,8 @@ alias la="eza --icons=always -la --group-directories-first"
 alias lzg="lazygit"
 alias brewup="brew update && brew upgrade"
 alias oc="opencode"
+alias cx='codex --profile dotfiles --add-dir "$HOME/Code/agent-vault"'
+alias cc="claude"
 
 # functions
 function y() {

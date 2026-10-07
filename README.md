@@ -19,7 +19,7 @@ cd ~/Code/dotfiles
 ./dot init
 ```
 
-`./dot init` installs the Homebrew bundle, Bun, OpenCode 2, clones `~/.oh-my-zsh` when missing, and stows `home/` into `$HOME`.
+`./dot init` installs the Homebrew bundle, Bun, OpenCode 2, clones `~/.oh-my-zsh` when missing, and stows `home/` into `$HOME`. Install Codex CLI and Claude Code separately.
 
 Ghostty, the configured font, and tmux's plugin manager are separate prerequisites:
 
@@ -41,6 +41,28 @@ opencode pair
 ```
 
 The service listens on localhost by default. For remote access on a trusted network, run `opencode service set hostname 0.0.0.0`, then use `opencode pair` to authenticate remote clients.
+
+## Shared agent setup
+
+OpenCode, Codex, and Claude Code share instructions from `home/.agents/AGENTS.md`, linked into each tool's global instruction path. Edit that source file to change the common guidance. Skills live in `home/.agents/skills/`: Codex discovers `~/.agents/skills` directly, and Claude Code's `~/.claude/skills` links there. Cloud-synced skills under `skills/synced/` are local runtime content and ignored by git.
+
+| Tool | Launch | Managed settings |
+| --- | --- | --- |
+| OpenCode | `oc` | `home/.config/opencode/opencode.json`, `cli.json` |
+| Codex CLI | `cx` | `home/.codex/dotfiles.config.toml` |
+| Claude Code | `cc` or `claude` | `home/.claude/settings.json`, `statusline-command.sh` |
+
+`cx` runs `codex --profile dotfiles --add-dir "$HOME/Code/agent-vault"`. The profile requires Codex 0.134.0+ and overlays portable preferences on your existing `~/.codex/config.toml`, with a 1,050,000-token context window matching OpenCode. Plain `codex` and the desktop app keep using their local settings; all launches receive the shared global instructions and skills. Change the profile's model if it is unavailable on your account.
+
+The shared vault is expected at `~/Code/agent-vault/`. Claude Code includes it through `permissions.additionalDirectories`; Codex's `cx` shortcut adds it as a writable directory. Launch plain `codex --profile dotfiles` if the vault is not installed.
+
+`./dot stow` creates real `~/.codex` and `~/.claude` directories before linking individual managed files, so session history and credentials stay local. On an existing machine, Stow reports conflicting files instead of overwriting them: back up and reconcile your settings before replacing them with the managed versions. Authentication, Codex's base config, and `~/.claude.json` stay outside git.
+
+### MCP
+
+OpenCode uses its direct servers from `opencode.json`. Codex and Claude Code use `my_codemode`, with registrations stored in their local configuration.
+
+Configure MCP registrations manually. Backend credentials and OAuth sign-in are managed by `my-codemode` separately. Sign in to Codex and Claude Code interactively on a new machine.
 
 ## Themes
 

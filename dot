@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:${PATH}"
+export PATH="${HOME}/.opencode/bin:${HOME}/.local/bin:${HOME}/.bun/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:${PATH}"
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOME_DIR="${DOTFILES_DIR}/home"
@@ -80,6 +80,8 @@ install_opencode() {
 
 restow() {
   need_cmd stow
+  # Keep runtime-writing tools from populating the stowed source directories.
+  mkdir -p "${HOME}/.codex" "${HOME}/.claude"
   stow -R -d "${DOTFILES_DIR}" -t "${HOME}" home
 }
 
@@ -143,13 +145,22 @@ ensure_theme() {
 
 doctor() {
   local missing=0
-  local commands=(bat brew bun cc curl delta eza fd fnm fzf git jq lazygit nvim opencode prettier prettierd rg starship stow stylua tar tmux tree-sitter unzip yazi zig zoxide zsh)
+  local commands=(bat brew bun cc claude codex curl delta eza fd fnm fzf git jq lazygit nvim opencode prettier prettierd rg starship stow stylua tar tmux tree-sitter unzip yazi zig zoxide zsh)
   local paths=(
     "${HOME}/.bun/_bun"
+    "${HOME}/.agents/AGENTS.md"
+    "${HOME}/.agents/skills"
+    "${HOME}/.claude/CLAUDE.md"
+    "${HOME}/.claude/settings.json"
+    "${HOME}/.claude/skills"
+    "${HOME}/.claude/statusline-command.sh"
+    "${HOME}/.codex/AGENTS.md"
+    "${HOME}/.codex/dotfiles.config.toml"
     "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
     "${HOME}/.config/lazygit/config.yml"
     "${HOME}/.config/current-theme"
     "${HOME}/.config/opencode/themes/current.json"
+    "${HOME}/.config/opencode/AGENTS.md"
     "${HOME}/.config/themes/catppuccin"
     "${HOME}/.config/themes/rose-pine"
     "${HOME}/.config/themes/tokyo-night"

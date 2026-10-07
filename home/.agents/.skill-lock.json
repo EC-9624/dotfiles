@@ -15,9 +15,9 @@
       "sourceType": "git",
       "sourceUrl": "git@github.com:kepano/obsidian-skills.git",
       "skillPath": "skills/defuddle/SKILL.md",
-      "skillFolderHash": "0ed68bc3e818ba0e6b8d192357ea3daaf552a3893f8854e7fd43c06831f91323",
+      "skillFolderHash": "5ae2d9f2d5de3f27adb5b4d0a752c16be38f1a2d6316721a74ab721866d5fb2e",
       "installedAt": "2026-06-07T14:11:27.058Z",
-      "updatedAt": "2026-06-23T05:41:19.437Z"
+      "updatedAt": "2026-10-06T09:50:06.424Z"
     },
     "json-canvas": {
       "source": "git@github.com:kepano/obsidian-skills.git",
@@ -60,18 +60,18 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/GoogleChrome/modern-web-guidance.git",
       "skillPath": "skills/modern-web-guidance/SKILL.md",
-      "skillFolderHash": "9bd508d217b14d82adb63f2ec05b955c551c24cc",
+      "skillFolderHash": "684a6cd6167eb1ed92d55fcf9dbf7af811bdf5b5",
       "installedAt": "2026-06-23T05:26:05.377Z",
-      "updatedAt": "2026-09-10T05:09:42.832Z"
+      "updatedAt": "2026-10-06T09:50:08.897Z"
     },
     "gh-stack": {
       "source": "github/gh-stack",
       "sourceType": "github",
       "sourceUrl": "https://github.com/github/gh-stack.git",
       "skillPath": "skills/gh-stack/SKILL.md",
-      "skillFolderHash": "6bfe555e89a6b264e09d5ece7c4040226458c8e5",
+      "skillFolderHash": "bde7bcf5a96697d31aa55b33565fa0ff002167ca",
       "installedAt": "2026-08-05T07:10:00.649Z",
-      "updatedAt": "2026-09-02T01:54:02.375Z"
+      "updatedAt": "2026-10-06T09:50:11.008Z"
     },
     "install-anti-slop": {
       "source": "dmmulroy/anti-slop",

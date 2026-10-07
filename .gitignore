@@ -8,6 +8,18 @@ home/.config/opencode/service.json
 home/.config/opencode/state/
 home/.config/opencode/themes/
 
+# Agent runtime state; only portable configuration belongs in git
+home/.agents/skills/synced/
+home/.claude.json
+home/.claude/*
+!home/.claude/CLAUDE.md
+!home/.claude/settings.json
+!home/.claude/skills
+!home/.claude/statusline-command.sh
+home/.codex/*
+!home/.codex/AGENTS.md
+!home/.codex/dotfiles.config.toml
+
 # OpenCode local runtime output
 .opencode/plans/
 
