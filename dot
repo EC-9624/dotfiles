@@ -81,7 +81,7 @@ install_opencode() {
 restow() {
   need_cmd stow
   # Keep runtime-writing tools from populating the stowed source directories.
-  mkdir -p "${HOME}/.codex" "${HOME}/.claude"
+  mkdir -p "${HOME}/.codex" "${HOME}/.claude" "${HOME}/.config/my-codemode"
   stow -R -d "${DOTFILES_DIR}" -t "${HOME}" home
 }
 
@@ -155,7 +155,10 @@ doctor() {
     "${HOME}/.claude/skills"
     "${HOME}/.claude/statusline-command.sh"
     "${HOME}/.codex/AGENTS.md"
+    "${HOME}/.codex/config.toml"
     "${HOME}/.codex/dotfiles.config.toml"
+    "${HOME}/.config/my-codemode/codex-live.json"
+    "${HOME}/.config/my-codemode/mcm-live.sh"
     "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
     "${HOME}/.config/lazygit/config.yml"
     "${HOME}/.config/current-theme"

@@ -8,7 +8,7 @@ home/.config/opencode/service.json
 home/.config/opencode/state/
 home/.config/opencode/themes/
 
-# Agent runtime state; only portable configuration belongs in git
+# Agent runtime state; only selected portable configuration belongs in git
 home/.agents/skills/synced/
 home/.claude.json
 home/.claude/*
@@ -18,7 +18,14 @@ home/.claude/*
 !home/.claude/statusline-command.sh
 home/.codex/*
 !home/.codex/AGENTS.md
+!home/.codex/config.toml
 !home/.codex/dotfiles.config.toml
+
+# My CodeMode: track configuration, never OAuth state or local scratch files
+home/.config/my-codemode/*
+!home/.config/my-codemode/codex-live.json
+!home/.config/my-codemode/mcm-live.sh
+home/.local/state/my-codemode/
 
 # OpenCode local runtime output
 .opencode/plans/
