@@ -49,20 +49,55 @@ OpenCode, Codex, and Claude Code share instructions from `home/.agents/AGENTS.md
 | Tool | Launch | Managed settings |
 | --- | --- | --- |
 | OpenCode | `oc` | `home/.config/opencode/opencode.json`, `cli.json` |
-| Codex CLI | `cx` | `home/.codex/dotfiles.config.toml` |
+| Codex CLI / desktop | `codex` or `cx` | `home/.codex/config.toml`, `dotfiles.config.toml` |
 | Claude Code | `cc` or `claude` | `home/.claude/settings.json`, `statusline-command.sh` |
 
-`cx` runs `codex --profile dotfiles --add-dir "$HOME/Code/agent-vault"`. The profile requires Codex 0.134.0+ and overlays portable preferences on your existing `~/.codex/config.toml`, with a 1,050,000-token context window matching OpenCode. Plain `codex` and the desktop app keep using their local settings; all launches receive the shared global instructions and skills. Change the profile's model if it is unavailable on your account.
+Codex's portable `~/.codex/config.toml` and Claude Code's `~/.claude/settings.json` are managed directly by Stow. Codex project trust, authentication, plugin marketplace caches, and app-installed MCP integrations are machine/runtime state and are not tracked. Edit the managed config in `home/`; no config-patching step is required.
+
+`cx` runs `codex --profile dotfiles --add-dir "$HOME/Code/agent-vault"`. The optional profile requires Codex 0.134.0+ and overlays preferences on the managed base config, with a 1,050,000-token context window matching OpenCode. Plain `codex` and the desktop app use the managed base config. All launches receive the shared global instructions and skills.
 
 The shared vault is expected at `~/Code/agent-vault/`. Claude Code includes it through `permissions.additionalDirectories`; Codex's `cx` shortcut adds it as a writable directory. Launch plain `codex --profile dotfiles` if the vault is not installed.
 
-`./dot stow` creates real `~/.codex` and `~/.claude` directories before linking individual managed files, so session history and credentials stay local. On an existing machine, Stow reports conflicting files instead of overwriting them: back up and reconcile your settings before replacing them with the managed versions. Authentication, Codex's base config, and `~/.claude.json` stay outside git.
+`./dot stow` creates real `~/.codex`, `~/.claude`, and `~/.config/my-codemode` directories before linking individual managed files, so session history and credentials stay local. On an existing machine, Stow reports conflicting files instead of overwriting them: back up and reconcile your settings before replacing them with the managed versions. Authentication stays outside git. Claude's mixed `~/.claude.json` file also stays local because it contains account metadata, project state, MCP registrations, and caches.
 
 ### MCP
 
-OpenCode uses its direct servers from `opencode.json`. Codex and Claude Code use `my_codemode`, with registrations stored in their local configuration.
+OpenCode uses its direct servers from `opencode.json`. Codex and Claude Code both launch `my_codemode` over stdio; the gateway connects to GitHub, New Relic, and Metabase over HTTP/OAuth.
 
-Configure MCP registrations manually. Backend credentials and OAuth sign-in are managed by `my-codemode` separately. Sign in to Codex and Claude Code interactively on a new machine.
+```bash
+./dot stow
+```
+
+Codex's MCP registration is part of the directly managed `config.toml`. Claude's user-scoped MCP registration lives in its local `~/.claude.json`; on a new machine, register the managed launcher once:
+
+```bash
+claude mcp add --scope user --transport stdio my_codemode -- \
+  /bin/sh -c 'exec /bin/sh "$HOME/.config/my-codemode/mcm-live.sh" serve'
+```
+
+The shared files are:
+
+- `home/.config/my-codemode/mcm-live.sh`: portable launcher using `$HOME`, Bun, and macOS Keychain.
+- `home/.config/my-codemode/codex-live.json`: shared provider configuration and explicit read-tool allowlists (63 GitHub, 34 New Relic, 6 Metabase at setup).
+
+GitHub uses its provider-enforced read-only mode. Metabase exposes resource/search, saved-question, and structured-query tools; create/update and raw-SQL tools are excluded. GitHub's OAuth `repo` scope is broader than read-only, so the endpoint mode and gateway allowlist are the tool-access boundary.
+
+#### New-machine prerequisites
+
+1. Install Bun and clone `my-codemode` into `~/Code/personal/my-codemode`; install its locked dependencies using that repository's instructions.
+2. Provision the existing `my-codemode-dev` OAuth app's client secret in the **login Keychain**, with account `EC-9624` and service `my-codemode.github-oauth.Ov23lijrFXwA3lhQMXCy`. The public client ID is tracked; the secret is not. The app's callback is `http://127.0.0.1:19877/callback`.
+3. Sign in to each provider, sequentially, then check connections:
+
+```bash
+sh ~/.config/my-codemode/mcm-live.sh auth login github
+sh ~/.config/my-codemode/mcm-live.sh auth login newrelic
+sh ~/.config/my-codemode/mcm-live.sh auth login metabase
+sh ~/.config/my-codemode/mcm-live.sh doctor
+```
+
+My CodeMode stores OAuth state privately under `~/.local/state/my-codemode/oauth` by default. Credentials, Keychain data, and agent sessions are not in this repository. The launcher resolves the GitHub client secret at startup, so no token export is needed for a desktop app or daemon. All configured providers must connect for gateway startup to succeed.
+
+Edit the managed gateway JSON here and restow it; using commands that atomically replace that file can replace its Stow symlink. Codex may update its config at runtime, so review changes there before committing. Configure a separate local gateway profile for experiments. Sign in to Codex and Claude Code interactively on a new machine.
 
 ## Themes
 

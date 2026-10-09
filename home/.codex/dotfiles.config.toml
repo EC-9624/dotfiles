@@ -1,5 +1,5 @@
 # Launch with `cx` or `codex --profile dotfiles` (Codex 0.134.0+).
-# Machine-specific settings and MCP registrations stay in ~/.codex/config.toml.
+# The complete base configuration is managed directly in home/.codex/config.toml.
 model = "gpt-6-luna"
 model_context_window = 1050000
 model_reasoning_effort = "medium"
