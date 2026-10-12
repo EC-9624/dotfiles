@@ -4,5 +4,6 @@ return {
 	{ "folke/tokyonight.nvim", lazy = false },
 	{ "rose-pine/neovim", name = "rose-pine", lazy = false },
 	{ "catppuccin/nvim", name = "catppuccin", lazy = false },
+	{ "ellisonleao/gruvbox.nvim", lazy = false },
 	theme.spec,
 }

@@ -101,19 +101,20 @@ Edit the managed gateway JSON here and restow it; using commands that atomically
 
 ## Themes
 
-Tokyo Night, Rose Pine, and Catppuccin Macchiato are available through a shared terminal-native theme setup. Ghostty, Neovim, Yazi syntax, and OpenCode load theme-specific files through `~/.config/current-theme`; tmux, Starship, lazygit, btop, tmux-palette, and the Yazi interface use the terminal ANSI palette.
+Tokyo Night, Rose Pine, Catppuccin Macchiato, and Gruvbox are available through a shared terminal-native theme setup. Ghostty, Neovim, Yazi syntax, OpenCode, and lazygit load theme-specific files through `~/.config/current-theme`; tmux, Starship, btop, tmux-palette, and the Yazi interface use the terminal ANSI palette.
 
 ```bash
 ./dot theme tokyo-night
 ./dot theme rose-pine
 ./dot theme catppuccin
+./dot theme gruvbox
 ```
 
 After switching, reload Ghostty with `Cmd+Shift+,` and restart open Neovim, Yazi, and OpenCode sessions.
 
-Theme switching checks OpenCode JSON before changing the active theme. `./dot init` and `./dot stow` regenerate missing OpenCode theme files without changing the selected theme.
+Theme switching checks OpenCode JSON before changing the active theme. `./dot init` and `./dot stow` regenerate missing OpenCode theme files without changing the selected theme. Switching also rewrites the `gui.theme` block in `~/.config/lazygit/config.yml` from the selected theme's `lazygit.yml`, writing through Stow's symlink; that block tracks the active theme, so review its diff before committing.
 
-Each theme's `opencode.json` is the source for code colors. Neovim reads its dark-mode syntax tokens and applies them to Vim, Tree-sitter, and LSP highlights after the colorscheme loads. Yazi's syntax previews are generated from the same tokens. The editor presets use dark variants: Rosé Pine main, Tokyo Night night, and Catppuccin Macchiato.
+Each theme's `opencode.json` is the source for code colors. Neovim reads its dark-mode syntax tokens and applies them to Vim, Tree-sitter, and LSP highlights after the colorscheme loads. Yazi's syntax previews are generated from the same tokens. The editor presets use dark variants: Rosé Pine main, Tokyo Night night, Catppuccin Macchiato, and Gruvbox dark (medium background). Gruvbox colors follow the theme bundled with OpenCode itself.
 
 OpenCode's main background is transparent so Ghostty applies window opacity once. Yazi's preview background uses the concrete `hue.neutral.800` palette color.
 

@@ -92,6 +92,8 @@ set_theme() (
   local current_theme="${HOME}/.config/current-theme"
   local opencode_cli="${HOME}/.config/opencode/cli.json"
   local opencode_cli_tmp
+  local lazygit_config="${HOME}/.config/lazygit/config.yml"
+  local lazygit_tmp
 
   if [[ ! "$name" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
     fail "invalid theme name: ${name:-<empty>}"
@@ -119,6 +121,18 @@ set_theme() (
   chmod 600 "$opencode_cli"
   ln -nsf "$theme_dir" "$current_theme"
 
+  if [[ -f "${theme_dir}/lazygit.yml" ]]; then
+    need_cmd yq
+    [[ -f "$lazygit_config" ]] || fail "missing lazygit config: $lazygit_config"
+    yq -e 'type == "!!map"' "${theme_dir}/lazygit.yml" >/dev/null \
+      || fail "invalid lazygit theme YAML: ${theme_dir}/lazygit.yml"
+    lazygit_tmp="$(mktemp "${lazygit_config}.XXXXXX")"
+    trap "rm -f -- $(printf '%q' "$opencode_cli_tmp") $(printf '%q' "$lazygit_tmp")" EXIT
+    yq ".gui.theme = load(\"${theme_dir}/lazygit.yml\")" "$lazygit_config" > "$lazygit_tmp"
+    # Write through Stow's symlink rather than replacing it.
+    cat "$lazygit_tmp" > "$lazygit_config"
+  fi
+
   if [[ -d "${HOME}/.config/tmux-palette" ]]; then
     printf '%s\n' '{' '  "name": "terminal"' '}' > "${HOME}/.config/tmux-palette/theme.json"
   fi
@@ -145,7 +159,7 @@ ensure_theme() {
 
 doctor() {
   local missing=0
-  local commands=(bat brew bun cc claude codex curl delta eza fd fnm fzf git jq lazygit nvim opencode prettier prettierd rg starship stow stylua tar tmux tree-sitter unzip yazi zig zoxide zsh)
+  local commands=(bat brew bun cc claude codex curl delta eza fd fnm fzf git jq lazygit nvim opencode prettier prettierd rg starship stow stylua tar tmux tree-sitter unzip yazi yq zig zoxide zsh)
   local paths=(
     "${HOME}/.bun/_bun"
     "${HOME}/.agents/AGENTS.md"
@@ -165,6 +179,7 @@ doctor() {
     "${HOME}/.config/opencode/themes/current.json"
     "${HOME}/.config/opencode/AGENTS.md"
     "${HOME}/.config/themes/catppuccin"
+    "${HOME}/.config/themes/gruvbox"
     "${HOME}/.config/themes/rose-pine"
     "${HOME}/.config/themes/tokyo-night"
     "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"

@@ -84,6 +84,12 @@ local cases = {
 		scheme = "catppuccin-macchiato",
 		colors = { "#939ab7", "#c6a0f6", "#8aadf4", "#ed8796", "#a6da95", "#f5a97f", "#eed49f", "#91d7e3", "#cad3f5" },
 	},
+	{
+		name = "gruvbox",
+		plugin = "gruvbox.nvim",
+		scheme = "gruvbox",
+		colors = { "#928374", "#fb4934", "#b8bb26", "#83a598", "#fabd2f", "#d3869b", "#8ec07c", "#fe8019", "#ebdbb2" },
+	},
 }
 
 local groups = {

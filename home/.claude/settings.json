@@ -5,7 +5,7 @@
       "~/Code/agent-vault/"
     ]
   },
-  "model": "sonnet",
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "zsh \"$HOME/.claude/statusline-command.sh\""
@@ -31,6 +31,9 @@
     },
     "claude-sonnet-5-5": {
       "effortLevel": "low"
+    },
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
     }
   },
   "tui": "fullscreen",

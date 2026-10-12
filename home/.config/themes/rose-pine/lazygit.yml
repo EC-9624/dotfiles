@@ -1,0 +1,22 @@
+activeBorderColor:
+  - "#9ccfd8"
+  - bold
+inactiveBorderColor:
+  - "#6e6a86"
+searchingActiveBorderColor:
+  - "#f6c177"
+  - bold
+optionsTextColor:
+  - "#c4a7e7"
+selectedLineBgColor:
+  - "#1f1d2e"
+selectedRangeBgColor:
+  - "#26233a"
+cherryPickedCommitBgColor:
+  - "#9ccfd8"
+cherryPickedCommitFgColor:
+  - "#191724"
+unstagedChangesColor:
+  - "#eb6f92"
+defaultFgColor:
+  - "#e0def4"
