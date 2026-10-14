@@ -12,6 +12,10 @@ plan_mode_reasoning_effort = "xhigh"
 status_line = ["model-with-reasoning", "context-remaining", "project-name", "git-branch"]
 theme = "gruvbox-dark"
 status_line_use_colors = true
+screen_reader_detection_done = true
+
+[tui.model_availability_nux]
+"gpt-6.1-sol" = 1
 
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
@@ -82,3 +86,6 @@ ui = "Inter"
 diffAdded = "#9ccfd8"
 diffRemoved = "#908caa"
 skill = "#c4a7e7"
+
+[projects."/Users/eakudompong.chanoknan/Code/personal/mcm"]
+trust_level = "trusted"

@@ -37,5 +37,8 @@
     }
   },
   "tui": "fullscreen",
-  "theme": "dark-ansi"
+  "timeFormat": "auto",
+  "theme": "dark",
+  "editorMode": "normal",
+  "fileCheckpointingEnabled": true
 }
