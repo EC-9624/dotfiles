@@ -81,6 +81,15 @@
       "skillFolderHash": "89044d21c75a367eac1ddbaf208e650b1a7d5820",
       "installedAt": "2026-09-23T05:39:23.498Z",
       "updatedAt": "2026-09-23T05:39:23.498Z"
+    },
+    "show-me": {
+      "source": "humanlayer/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/humanlayer/skills.git",
+      "skillPath": "plugins/show-me/skills/show-me/SKILL.md",
+      "skillFolderHash": "362200ac2fb3c17b765049444e88de73767e6d08",
+      "installedAt": "2026-10-14T00:17:51.017Z",
+      "updatedAt": "2026-10-14T00:17:51.017Z"
     }
   },
   "dismissed": {
@@ -97,6 +106,7 @@
     "kilo",
     "kimi-code-cli",
     "opencode",
+    "pi",
     "warp",
     "zed"
   ]
