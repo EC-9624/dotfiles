@@ -136,6 +136,8 @@ Oil uses its native LSP file-operation support to update references when files a
 
 Oxfmt and `tsgo` are optional project-local tools. When present, Oxfmt takes priority over Prettier for supported files, and `tsc.nvim` finds `node_modules/.bin/tsgo` automatically.
 
+TypeScript LSP selection uses the nearest workspace installation: `effect_tsgo` for `@effect/tsgo`, native `tsc` for TypeScript 7+, and `ts_ls` otherwise. Native servers use project dependencies rather than Mason. Add a `.ts_ls` file at the project root to force `ts_ls` (for example, for CSS Modules Kit); with TypeScript 7 this uses the language server's bundled older TypeScript. Restart Neovim after changing dependencies or the override, and use `:LspBuf` to check the selected client.
+
 `home/.vimrc` is a plugin-free keybinding starter for minimal Vim or Neovim installations. Neovim does not load it automatically; source it from an `init.vim` or copy the mappings when bootstrapping a separate setup.
 
 ### CSS Modules

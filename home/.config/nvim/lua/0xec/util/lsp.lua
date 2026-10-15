@@ -11,9 +11,10 @@ end
 local ts_clients = {
 	ts_ls = true,
 	effect_tsgo = true,
+	tsc = true,
 }
 
---- ts_ls names its source actions `source.*.ts`; effect_tsgo (TypeScript-Go) uses the
+--- ts_ls names its source actions `source.*.ts`; native TypeScript servers use the
 --- unprefixed kinds. Pass both so the mapping works with whichever client owns the buffer.
 local function apply_source_action(kinds)
 	vim.lsp.buf.code_action({

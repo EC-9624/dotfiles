@@ -1,6 +1,6 @@
--- effect_tsgo is installed per project (npm i -D @effect/tsgo), never through Mason.
+-- Native TypeScript servers use project dependencies, never Mason's compiler.
 local mason_servers = vim.tbl_filter(function(server)
-	return server ~= "effect_tsgo"
+	return server ~= "effect_tsgo" and server ~= "tsc"
 end, vim.tbl_keys(require("0xec.lsp.servers")))
 table.sort(mason_servers)
 

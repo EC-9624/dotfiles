@@ -1,5 +1,33 @@
 local npm_root = vim.trim(vim.fn.system({ "npm", "root", "-g" }))
-local effect = require("0xec.util.effect")
+local typescript = require("0xec.util.typescript")
+
+local function native_typescript(server)
+	return {
+		filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+		root_dir = function(bufnr, on_dir)
+			local root, _, selected = typescript.resolve(bufnr)
+			if selected == server then
+				on_dir(root)
+			end
+		end,
+		cmd = function(dispatchers, config)
+			local root = (config or {}).root_dir
+			return vim.lsp.rpc.start({ typescript.exe(root), "--lsp", "--stdio" }, dispatchers, { cwd = root })
+		end,
+		settings = {
+			["js/ts"] = {
+				inlayHints = {
+					parameterNames = { enabled = "literals", suppressWhenArgumentMatchesName = true },
+					parameterTypes = { enabled = true },
+					variableTypes = { enabled = true },
+					propertyDeclarationTypes = { enabled = true },
+					functionLikeReturnTypes = { enabled = true },
+					enumMemberValues = { enabled = true },
+				},
+			},
+		},
+	}
+end
 
 return {
 	bashls = {},
@@ -109,34 +137,9 @@ return {
 			},
 		},
 	},
-	-- Effect Language Service (TypeScript-Go). Installed per project, never by Mason.
-	-- Attaches only where @effect/tsgo is installed and `get-exe-path` resolves a binary;
-	-- ts_ls yields the buffer in that case (see plugins/lsp/lspconfig.lua).
-	effect_tsgo = {
-		filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-		root_dir = function(bufnr, on_dir)
-			local root, exe = effect.resolve(bufnr)
-			if root and exe then
-				on_dir(root)
-			end
-		end,
-		cmd = function(dispatchers, config)
-			local root = (config or {}).root_dir
-			return vim.lsp.rpc.start({ effect.exe(root), "--lsp", "--stdio" }, dispatchers, { cwd = root })
-		end,
-		settings = {
-			["js/ts"] = {
-				inlayHints = {
-					parameterNames = { enabled = "literals", suppressWhenArgumentMatchesName = true },
-					parameterTypes = { enabled = true },
-					variableTypes = { enabled = true },
-					propertyDeclarationTypes = { enabled = true },
-					functionLikeReturnTypes = { enabled = true },
-					enumMemberValues = { enabled = true },
-				},
-			},
-		},
-	},
+	-- Native servers use the workspace installation, never Mason's compiler.
+	effect_tsgo = native_typescript("effect_tsgo"),
+	tsc = native_typescript("tsc"),
 	oxlint = {
 		root_markers = { ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts", "package.json", ".git" },
 		workspace_required = false,

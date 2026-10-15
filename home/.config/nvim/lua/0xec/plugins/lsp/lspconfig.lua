@@ -8,7 +8,7 @@ return {
 		},
 		config = function()
 			local lsp = require("0xec.util.lsp")
-			local effect = require("0xec.util.effect")
+			local typescript = require("0xec.util.typescript")
 			local border = "rounded"
 			local diagnostic_icons = {
 				[vim.diagnostic.severity.ERROR] = "",
@@ -65,9 +65,8 @@ return {
 
 				if server == "ts_ls" and ts_ls_root_dir then
 					merged.root_dir = function(bufnr, on_dir)
-						-- Never run ts_ls alongside effect_tsgo: duplicate diagnostics and two TS engines.
-						local root, exe = effect.resolve(bufnr)
-						if root and exe then
+						local root = typescript.resolve(bufnr)
+						if root then
 							return
 						end
 						ts_ls_root_dir(bufnr, on_dir)
@@ -77,8 +76,8 @@ return {
 				vim.lsp.config(server, merged)
 			end
 
-			-- Not a Mason package, so mason-lspconfig will never enable it; root_dir gates it per buffer.
-			vim.lsp.enable("effect_tsgo")
+			-- Workspace-local servers are enabled here; root_dir selects one per buffer.
+			vim.lsp.enable({ "effect_tsgo", "tsc" })
 		end,
 	},
 }
