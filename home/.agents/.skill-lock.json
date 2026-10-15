@@ -90,6 +90,15 @@
       "skillFolderHash": "362200ac2fb3c17b765049444e88de73767e6d08",
       "installedAt": "2026-10-14T00:17:51.017Z",
       "updatedAt": "2026-10-14T00:17:51.017Z"
+    },
+    "writing-unit-tests": {
+      "source": "riekelt/principal-engineer",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/riekelt/principal-engineer.git",
+      "skillPath": "plugins/principal-engineer/skills/writing-unit-tests/SKILL.md",
+      "skillFolderHash": "06a65b3a72de3592a8bcaf9594b66a766d9f14a1",
+      "installedAt": "2026-10-15T03:29:04.866Z",
+      "updatedAt": "2026-10-15T03:29:04.866Z"
     }
   },
   "dismissed": {
