@@ -28,7 +28,7 @@
   "diffs": {
     "single": false,
     "view": "auto",
-    "tree": true
+    "tree": false
   },
   "prompt": {
     "paste": "compact",
