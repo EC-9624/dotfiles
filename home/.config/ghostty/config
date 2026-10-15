@@ -3,8 +3,10 @@ macos-option-as-alt = true
 macos-titlebar-proxy-icon = hidden
 title = Ghostty
 # --- Typography ---
-font-family = JetBrainsMono Nerd Font Mono
-font-family = UDEV Gothic NF
+# Use Ghostty's bundled fonts to preserve the original Nerd Font icon sizing.
+font-family = JetBrains Mono
+# Keep Japanese/CJK glyphs in UDEV without changing text or icon fallback.
+font-codepoint-map = U+3000-U+30FF,U+31F0-U+31FF,U+3400-U+4DBF,U+4E00-U+9FFF,U+F900-U+FAFF,U+FF00-U+FFEF=UDEV Gothic NF
 font-size = 14
 font-thicken = true
 adjust-cell-height = 2
