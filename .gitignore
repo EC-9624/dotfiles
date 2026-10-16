@@ -18,13 +18,13 @@ home/.claude/*
 !home/.claude/statusline-command.sh
 home/.codex/*
 !home/.codex/AGENTS.md
-!home/.codex/config.toml
 !home/.codex/dotfiles.config.toml
 
 # Retired My CodeMode: keep any local OAuth state or scratch files untracked
 home/.config/my-codemode/*
 home/.local/state/my-codemode/
 home/.local/share/codemode-mcp-gateway/
+home/.local/state/codemode-mcp-gateway/
 
 # OpenCode local runtime output
 .opencode/plans/

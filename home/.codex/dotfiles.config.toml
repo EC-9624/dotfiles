@@ -1,5 +1,5 @@
 # Launch with `cx` or `codex --profile dotfiles` (Codex 0.134.0+).
-# The complete base configuration is managed directly in home/.codex/config.toml.
+# The private base config is seeded from config/codex.toml; it is not stowed.
 model = "gpt-6.1-sol"
 model_context_window = 1050000
 model_reasoning_effort = "high"

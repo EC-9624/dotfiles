@@ -82,6 +82,9 @@ restow() {
   need_cmd stow
   # Keep runtime-writing tools from populating the stowed source directories.
   mkdir -p "${HOME}/.codex" "${HOME}/.claude" "${HOME}/.local/bin" "${HOME}/.config/codemode-mcp-gateway"
+  if [[ ! -e "${HOME}/.codex/config.toml" && ! -L "${HOME}/.codex/config.toml" ]]; then
+    (umask 077; cp -n "${DOTFILES_DIR}/config/codex.toml" "${HOME}/.codex/config.toml")
+  fi
   stow -R -d "${DOTFILES_DIR}" -t "${HOME}" home
 }
 

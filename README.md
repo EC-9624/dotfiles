@@ -49,12 +49,12 @@ OpenCode, Codex, and Claude Code share instructions from `home/.agents/AGENTS.md
 | Tool | Launch | Managed settings |
 | --- | --- | --- |
 | OpenCode | `oc` | `home/.config/opencode/opencode.json`, `cli.json` |
-| Codex CLI / desktop | `codex` or `cx` | `home/.codex/config.toml`, `dotfiles.config.toml` |
+| Codex CLI / desktop | `codex` or `cx` | `config/codex.toml` template, private `~/.codex/config.toml`, `dotfiles.config.toml` profile |
 | Claude Code | `cc` or `claude` | `home/.claude/settings.json`, `statusline-command.sh` |
 
-Codex's portable `~/.codex/config.toml` and Claude Code's `~/.claude/settings.json` are managed directly by Stow. Codex project trust, authentication, plugin marketplace caches, and app-installed MCP integrations are machine/runtime state and are not tracked. Edit the managed config in `home/`; no config-patching step is required.
+Claude Code's `~/.claude/settings.json` is managed directly by Stow. Codex's `~/.codex/config.toml` is a private local file because native MCP HTTP headers contain a credential. `./dot stow` seeds it from the secret-free `config/codex.toml` template only when missing; existing local changes are preserved. Edit portable defaults in the template and merge future changes into the local config explicitly; restowing never overwrites it. Existing config symlinks must be reconciled to private local files before storing credentials. Codex project trust, authentication, plugin caches, and app-installed MCP integrations remain machine/runtime state.
 
-`cx` runs `codex --profile dotfiles --add-dir "$HOME/Code/agent-vault"`. The optional profile requires Codex 0.134.0+ and overlays preferences on the managed base config, with a 1,050,000-token context window matching OpenCode. Plain `codex` and the desktop app use the managed base config. All launches receive the shared global instructions and skills.
+`cx` runs `codex --profile dotfiles --add-dir "$HOME/Code/agent-vault"`. The optional profile requires Codex 0.134.0+ and overlays preferences on the private base config, with a 1,050,000-token context window matching OpenCode. Plain `codex` and the desktop app use the same private base config. All launches receive the shared global instructions and skills.
 
 The shared vault is expected at `~/Code/agent-vault/`. Claude Code includes it through `permissions.additionalDirectories`; Codex's `cx` shortcut adds it as a writable directory. Launch plain `codex --profile dotfiles` if the vault is not installed.
 
@@ -62,7 +62,7 @@ The shared vault is expected at `~/Code/agent-vault/`. Claude Code includes it t
 
 ### MCP
 
-OpenCode keeps its direct servers from `opencode.json` unchanged. Codex and Claude Code launch **codemode-mcp-gateway**, whose CLI is **`gw`**, over stdio. Each client owns its own gateway process; there is no shared HTTP daemon.
+OpenCode keeps its direct servers from `opencode.json` unchanged. Codex and Claude Code connect directly to **codemode-mcp-gateway** via Streamable HTTP MCP at `http://127.0.0.1:4791/mcp`. One user launchd service owns the gateway; clients do not launch a gateway or bridge. Its CLI is **`gw`**.
 
 ```bash
 ./dot stow
@@ -70,17 +70,23 @@ OpenCode keeps its direct servers from `opencode.json` unchanged. Codex and Clau
 
 Install Bun 1.4.3, then run `bun run install:local` in `~/Code/personal/mcm` (the codemode-mcp-gateway repository). This builds and verifies private local tarballs, installs them under `~/.local/share/codemode-mcp-gateway/installs/`, and activates a `current` symlink. It does not publish packages or run from the source checkout. Builds are explicit; script-disable policy is preserved. Re-run the command for an explicit local update; earlier installs remain available for rollback.
 
-Codex's MCP registration is managed in `config.toml`. Claude's user-scoped registration lives in local `~/.claude.json`; on a new machine register the launcher once:
+After building, run `gw service install` and `gw service status --json`. The service starts at login and restarts on crashes, not clean stops. Updates use `bun run install:local` followed by `gw service restart`; clients reconnect without automatically replaying interrupted scripts.
+
+Alternatively run the gateway in the foreground:
 
 ```bash
-claude mcp add --scope user --transport stdio codemode-mcp-gateway -- \
-  /bin/sh -c 'exec "$HOME/.local/bin/gw"'
+gw serve
 ```
 
 Managed files:
 
 - `home/.local/bin/gw`: portable Bun launcher for the installed CLI.
 - `home/.config/codemode-mcp-gateway/config.json`: New Relic, Metabase, Notion, and Jira upstreams.
+- `config/codex.toml`: secret-free defaults; the active `~/.codex/config.toml` is a private regular file, not a Stow symlink.
+
+The local service bearer lives in `~/.local/state/codemode-mcp-gateway/service/auth.json` (or the same suffix under `XDG_STATE_HOME`), not Git. `gw serve` automatically provisions Codex's native `http_headers` and Claude's native `headers`, using atomic 0600 local config files without printing it or putting it in process arguments. `gw service install/start/restart` uses the same registration behavior. It preserves unrelated client settings and refuses symlinked configs/directories or destinations inside Git checkouts. No secret is written to the tracked template or LaunchAgent. Run plain `claude` / `codex` (or `cc` / `cx`): no setup script, wrapper, token environment variable, or Python dependency is needed. The gateway does not depend on this dotfiles repository. Applications reading the same user configs use those same headers without shell inheritance. Restart already-running clients to reload their configs. Later starts synchronize changed ports/tokens; ordinary restarts do not rotate the token. Provider OAuth is separate.
+
+Registration results are reported per client; malformed or unwritable configs are left intact, and the other client can still work. A matching already-running gateway is reused, not duplicated. The gateway repository owns registration tests and installed-package verification. There is no `./dot mcp` command.
 
 There is **no gateway tool allowlist**. New Relic and Metabase retain their requested read/query OAuth scopes; provider-side grants govern actual permissions. Notion uses its consent flow. The `jira` connection uses Atlassian MCP and may advertise other Atlassian tools too. GitHub is not configured. Never put credentials in the tracked JSON.
 
@@ -97,9 +103,9 @@ gw login --server jira
 gw doctor --json
 ```
 
-The new gateway stores credentials in the OS secret store. Old My CodeMode credentials, Keychain entries, and source repository are not deleted or silently migrated. Missing authorization leaves that upstream in `needs-auth`; the stdio gateway stays available and other authorized upstreams remain usable. Restart Codex/Claude after changing their MCP registration; existing gateway processes adopt new authorization automatically.
+The gateway stores provider credentials in the OS secret store. Old My CodeMode credentials, Keychain entries, and source repository are not deleted or silently migrated. Missing authorization leaves that upstream in `needs-auth`; the service stays available and other authorized upstreams remain usable. Reload Codex/Claude after changing their registration; the shared daemon adopts provider authorization changes automatically.
 
-Edit the managed gateway JSON here and restow it; commands that atomically replace it can replace its Stow symlink. Config edits require restarting the client-owned gateway. Codex may update its config at runtime, so review changes before committing. Sign in to Codex and Claude Code interactively on a new machine.
+Edit the managed gateway JSON here and restow it; commands that atomically replace it can replace its Stow symlink. Config edits require `gw service restart`. `gw doctor` reads the actual daemon; `gw doctor --stdio` explicitly probes fresh connections. Stop/uninstall do not remove provider credentials or builds. Codex may update its config at runtime, so review changes before committing. Sign in to Codex and Claude Code interactively on a new machine.
 
 ## Themes
 

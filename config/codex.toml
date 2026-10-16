@@ -1,4 +1,4 @@
-# Portable user configuration; machine-specific session/auth state stays outside dotfiles.
+# Secret-free template for the private ~/.codex/config.toml; never symlink this file.
 model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 personality = "pragmatic"
@@ -23,8 +23,8 @@ screen_reader_detection_done = true
 url = "https://developers.openai.com/mcp"
 
 [mcp_servers."codemode-mcp-gateway"]
-command = "/bin/sh"
-args = ["-c", 'exec "$HOME/.local/bin/gw"']
+url = "http://127.0.0.1:4791/mcp"
+# gw serve provisions the Authorization header only in the private local copy.
 startup_timeout_sec = 60
 tool_timeout_sec = 60
 
