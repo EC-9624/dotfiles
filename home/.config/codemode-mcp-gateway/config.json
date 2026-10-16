@@ -1,11 +1,11 @@
 {
-  "service": { "port": 4791 },
+  "service": {"port": 4791},
   "mcp": {
     "servers": {
       "newrelic": {
         "type": "remote",
         "url": "https://mcp.newrelic.com/mcp/",
-        "oauth": { "scope": "observability:read" }
+        "oauth": {"scope": "observability:read"}
       },
       "metabase": {
         "type": "remote",
@@ -27,7 +27,7 @@
     }
   },
   "sandbox": {
-    "timeoutMs": 30000,
+    "timeoutMs": 360000,
     "totalTimeoutMs": 45000,
     "maxConcurrentExecutions": 4
   }
