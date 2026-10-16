@@ -57,6 +57,16 @@
 - Write error messages to help the reader recover: say what happened, why if known, impact, and the next useful action
 - If the cause is unknown, say that plainly; do not invent false precision
 
+## Comments and Documentation
+
+- Code explains how through names, types, and control flow
+- Comments explain what non-obvious logic accomplishes and why it is necessary: intent, constraints, ownership, and failure modes
+- Explain why an apparently simpler alternative would break a guarantee when relevant; do not merely narrate the code
+- Keep public API contracts and important limitations near the code callers use
+- Ground comments in verified behavior and update them when implementation changes; do not invent rationale
+- For dependency workarounds, record the failure being prevented, the upstream reference when available, and the condition for removal
+- Tests verify observable behavior; commit messages explain the problem and motivation
+
 ## Testing
 
 - Treat work as incomplete until the requested deliverables are done or explicitly marked blocked
