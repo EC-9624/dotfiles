@@ -1,4 +1,5 @@
 {
+  "$schema": "https://opencode.ai/v2/cli.json",
   "theme": {
     "name": "current",
     "mode": "system"
@@ -9,13 +10,14 @@
   "tabs": {
     "layout": "horizontal",
     "scope": "cwd",
-    "enabled": false
+    "mode": "off"
   },
   "terminal": {
     "title": true,
     "copy": "select"
   },
   "session": {
+    "permissions": "autoaccept",
     "sidebar": "hide",
     "scrollbar": false,
     "markdown": "rendered",
