@@ -1,0 +1,33 @@
+{
+  "mcp": {
+    "servers": {
+      "newrelic": {
+        "type": "remote",
+        "url": "https://mcp.newrelic.com/mcp/",
+        "oauth": { "scope": "observability:read" }
+      },
+      "metabase": {
+        "type": "remote",
+        "url": "https://metabase.prtimes-tools.jp/api/metabase-mcp",
+        "oauth": {
+          "scope": "agent:query agent:query:construct agent:query:execute agent:question:execute agent:resource:read agent:search"
+        }
+      },
+      "notion": {
+        "type": "remote",
+        "url": "https://mcp.notion.com/mcp",
+        "oauth": {}
+      },
+      "jira": {
+        "type": "remote",
+        "url": "https://mcp.atlassian.com/v1/mcp/authv2",
+        "oauth": {}
+      }
+    }
+  },
+  "sandbox": {
+    "timeoutMs": 30000,
+    "totalTimeoutMs": 45000,
+    "maxConcurrentExecutions": 4
+  }
+}

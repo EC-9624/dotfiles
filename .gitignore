@@ -21,11 +21,10 @@ home/.codex/*
 !home/.codex/config.toml
 !home/.codex/dotfiles.config.toml
 
-# My CodeMode: track configuration, never OAuth state or local scratch files
+# Retired My CodeMode: keep any local OAuth state or scratch files untracked
 home/.config/my-codemode/*
-!home/.config/my-codemode/codex-live.json
-!home/.config/my-codemode/mcm-live.sh
 home/.local/state/my-codemode/
+home/.local/share/codemode-mcp-gateway/
 
 # OpenCode local runtime output
 .opencode/plans/

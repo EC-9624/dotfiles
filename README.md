@@ -58,46 +58,48 @@ Codex's portable `~/.codex/config.toml` and Claude Code's `~/.claude/settings.js
 
 The shared vault is expected at `~/Code/agent-vault/`. Claude Code includes it through `permissions.additionalDirectories`; Codex's `cx` shortcut adds it as a writable directory. Launch plain `codex --profile dotfiles` if the vault is not installed.
 
-`./dot stow` creates real `~/.codex`, `~/.claude`, and `~/.config/my-codemode` directories before linking individual managed files, so session history and credentials stay local. On an existing machine, Stow reports conflicting files instead of overwriting them: back up and reconcile your settings before replacing them with the managed versions. Authentication stays outside git. Claude's mixed `~/.claude.json` file also stays local because it contains account metadata, project state, MCP registrations, and caches.
+`./dot stow` creates real `~/.codex`, `~/.claude`, `~/.local/bin`, and `~/.config/codemode-mcp-gateway` directories before linking individual managed files, so session history, installed packages, and credentials stay local. On an existing machine, Stow reports conflicting files instead of overwriting them: back up and reconcile your settings before replacing them with the managed versions. Authentication stays outside git. Claude's mixed `~/.claude.json` file also stays local because it contains account metadata, project state, MCP registrations, and caches.
 
 ### MCP
 
-OpenCode uses its direct servers from `opencode.json`. Codex and Claude Code both launch `my_codemode` over stdio; the gateway connects to GitHub, New Relic, and Metabase over HTTP/OAuth.
+OpenCode keeps its direct servers from `opencode.json` unchanged. Codex and Claude Code launch **codemode-mcp-gateway**, whose CLI is **`gw`**, over stdio. Each client owns its own gateway process; there is no shared HTTP daemon.
 
 ```bash
 ./dot stow
 ```
 
-Codex's MCP registration is part of the directly managed `config.toml`. Claude's user-scoped MCP registration lives in its local `~/.claude.json`; on a new machine, register the managed launcher once:
+Install Bun 1.4.3, then run `bun run install:local` in `~/Code/personal/mcm` (the codemode-mcp-gateway repository). This builds and verifies private local tarballs, installs them under `~/.local/share/codemode-mcp-gateway/installs/`, and activates a `current` symlink. It does not publish packages or run from the source checkout. Builds are explicit; script-disable policy is preserved. Re-run the command for an explicit local update; earlier installs remain available for rollback.
+
+Codex's MCP registration is managed in `config.toml`. Claude's user-scoped registration lives in local `~/.claude.json`; on a new machine register the launcher once:
 
 ```bash
-claude mcp add --scope user --transport stdio my_codemode -- \
-  /bin/sh -c 'exec /bin/sh "$HOME/.config/my-codemode/mcm-live.sh" serve'
+claude mcp add --scope user --transport stdio codemode-mcp-gateway -- \
+  /bin/sh -c 'exec "$HOME/.local/bin/gw"'
 ```
 
-The shared files are:
+Managed files:
 
-- `home/.config/my-codemode/mcm-live.sh`: portable launcher using `$HOME`, Bun, and macOS Keychain.
-- `home/.config/my-codemode/codex-live.json`: shared provider configuration and explicit read-tool allowlists (63 GitHub, 34 New Relic, 6 Metabase at setup).
+- `home/.local/bin/gw`: portable Bun launcher for the installed CLI.
+- `home/.config/codemode-mcp-gateway/config.json`: New Relic, Metabase, Notion, and Jira upstreams.
 
-GitHub uses its provider-enforced read-only mode. Metabase exposes resource/search, saved-question, and structured-query tools; create/update and raw-SQL tools are excluded. GitHub's OAuth `repo` scope is broader than read-only, so the endpoint mode and gateway allowlist are the tool-access boundary.
+There is **no gateway tool allowlist**. New Relic and Metabase retain their requested read/query OAuth scopes; provider-side grants govern actual permissions. Notion uses its consent flow. The `jira` connection uses Atlassian MCP and may advertise other Atlassian tools too. GitHub is not configured. Never put credentials in the tracked JSON.
 
-#### New-machine prerequisites
+#### Explicit provider login
 
-1. Install Bun and clone `my-codemode` into `~/Code/personal/my-codemode`; install its locked dependencies using that repository's instructions.
-2. Provision the existing `my-codemode-dev` OAuth app's client secret in the **login Keychain**, with account `EC-9624` and service `my-codemode.github-oauth.Ov23lijrFXwA3lhQMXCy`. The public client ID is tracked; the secret is not. The app's callback is `http://127.0.0.1:19877/callback`.
-3. Sign in to each provider, sequentially, then check connections:
+Sign in sequentially, then check connections. These commands open an explicit browser authorization flow; MCP serving never prompts for login:
 
 ```bash
-sh ~/.config/my-codemode/mcm-live.sh auth login github
-sh ~/.config/my-codemode/mcm-live.sh auth login newrelic
-sh ~/.config/my-codemode/mcm-live.sh auth login metabase
-sh ~/.config/my-codemode/mcm-live.sh doctor
+gw check --json
+gw login --server newrelic
+gw login --server metabase
+gw login --server notion
+gw login --server jira
+gw doctor --json
 ```
 
-My CodeMode stores OAuth state privately under `~/.local/state/my-codemode/oauth` by default. Credentials, Keychain data, and agent sessions are not in this repository. The launcher resolves the GitHub client secret at startup, so no token export is needed for a desktop app or daemon. All configured providers must connect for gateway startup to succeed.
+The new gateway stores credentials in the OS secret store. Old My CodeMode credentials, Keychain entries, and source repository are not deleted or silently migrated. Missing authorization leaves that upstream in `needs-auth`; the stdio gateway stays available and other authorized upstreams remain usable. Restart Codex/Claude after changing their MCP registration; existing gateway processes adopt new authorization automatically.
 
-Edit the managed gateway JSON here and restow it; using commands that atomically replace that file can replace its Stow symlink. Codex may update its config at runtime, so review changes there before committing. Configure a separate local gateway profile for experiments. Sign in to Codex and Claude Code interactively on a new machine.
+Edit the managed gateway JSON here and restow it; commands that atomically replace it can replace its Stow symlink. Config edits require restarting the client-owned gateway. Codex may update its config at runtime, so review changes before committing. Sign in to Codex and Claude Code interactively on a new machine.
 
 ## Themes
 
