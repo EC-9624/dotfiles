@@ -11,7 +11,7 @@
         "type": "remote",
         "url": "https://metabase.prtimes-tools.jp/api/metabase-mcp",
         "oauth": {
-          "scope": "agent:query agent:query:construct agent:query:execute agent:question:execute agent:resource:read agent:search"
+          "scope": "agent:content:read agent:content:write agent:query:run agent:sql:run"
         }
       },
       "notion": {

@@ -24,6 +24,7 @@ url = "https://developers.openai.com/mcp"
 
 [mcp_servers."codemode-mcp-gateway"]
 url = "http://127.0.0.1:4791/mcp"
+bearer_token_env_var = "GW_MCP_TOKEN"
 # gw serve provisions the Authorization header only in the private local copy.
 startup_timeout_sec = 60
 tool_timeout_sec = 60
