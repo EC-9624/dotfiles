@@ -28,7 +28,7 @@ gui:
   showBottomLine: true
   showPanelJumps: false
   border: rounded
-git:
-  diffRenderers:
-    - colorArg: always
-      command: delta --dark --paging=never --line-numbers
+# git:
+#   diffRenderers:
+#     - colorArg: always
+#       command: delta --dark --paging=never --line-numbers
