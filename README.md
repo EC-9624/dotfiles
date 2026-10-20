@@ -49,14 +49,14 @@ OpenCode, Codex, and Claude Code share instructions from `home/.agents/AGENTS.md
 | Tool | Launch | Managed settings |
 | --- | --- | --- |
 | OpenCode | `oc` | `home/.config/opencode/opencode.json`, `cli.json` |
-| Codex CLI / desktop | `codex` or `cx` | `config/codex.toml` template, private `~/.codex/config.toml`, `dotfiles.config.toml` profile |
+| Codex CLI / desktop | `codex` | `config/codex.toml` template, private `~/.codex/config.toml`, `dotfiles.config.toml` profile |
 | Claude Code | `cc` or `claude` | `home/.claude/settings.json`, `statusline-command.sh` |
 
 Claude Code's `~/.claude/settings.json` is managed directly by Stow. Codex's `~/.codex/config.toml` is a private local file because native MCP HTTP headers contain a credential. `./dot stow` seeds it from the secret-free `config/codex.toml` template only when missing; existing local changes are preserved. Edit portable defaults in the template and merge future changes into the local config explicitly; restowing never overwrites it. Existing config symlinks must be reconciled to private local files before storing credentials. Codex project trust, authentication, plugin caches, and app-installed MCP integrations remain machine/runtime state.
 
-`cx` runs `codex --profile dotfiles --add-dir "$HOME/Code/agent-vault"`. The optional profile requires Codex 0.134.0+ and overlays preferences on the private base config, with a 1,050,000-token context window matching OpenCode. Plain `codex` and the desktop app use the same private base config. All launches receive the shared global instructions and skills.
+Run `codex --profile dotfiles` to use the optional profile. It requires Codex 0.134.0+ and overlays preferences on the private base config, with a 1,050,000-token context window matching OpenCode. Plain `codex` and the desktop app use the same private base config. All launches receive the shared global instructions and skills.
 
-The shared vault is expected at `~/Code/agent-vault/`. Claude Code includes it through `permissions.additionalDirectories`; Codex's `cx` shortcut adds it as a writable directory. Launch plain `codex --profile dotfiles` if the vault is not installed.
+The shared vault is expected at `~/Code/agent-vault/`. Claude Code includes it through `permissions.additionalDirectories`; add `--add-dir "$HOME/Code/agent-vault"` when launching Codex if you want it available as a writable directory.
 
 `./dot stow` creates real `~/.codex`, `~/.claude`, `~/.local/bin`, and `~/.config/codemode-mcp-gateway` directories before linking individual managed files, so session history, installed packages, and credentials stay local. On an existing machine, Stow reports conflicting files instead of overwriting them: back up and reconcile your settings before replacing them with the managed versions. Authentication stays outside git. Claude's mixed `~/.claude.json` file also stays local because it contains account metadata, project state, MCP registrations, and caches.
 
@@ -84,7 +84,7 @@ Managed files:
 - `home/.config/codemode-mcp-gateway/config.json`: New Relic, Metabase, Notion, and Jira upstreams.
 - `config/codex.toml`: secret-free defaults; the active `~/.codex/config.toml` is a private regular file, not a Stow symlink.
 
-The local service bearer lives in `~/.local/state/codemode-mcp-gateway/service/auth.json` (or the same suffix under `XDG_STATE_HOME`), not Git. `gw serve` automatically provisions Codex's native `http_headers` and Claude's native `headers`, using atomic 0600 local config files without printing it or putting it in process arguments. `gw service install/start/restart` uses the same registration behavior. It preserves unrelated client settings and refuses symlinked configs/directories or destinations inside Git checkouts. No secret is written to the tracked template or LaunchAgent. Run plain `claude` / `codex` (or `cc` / `cx`): no setup script, wrapper, token environment variable, or Python dependency is needed. The gateway does not depend on this dotfiles repository. Applications reading the same user configs use those same headers without shell inheritance. Restart already-running clients to reload their configs. Later starts synchronize changed ports/tokens; ordinary restarts do not rotate the token. Provider OAuth is separate.
+The local service bearer lives in `~/.local/state/codemode-mcp-gateway/service/auth.json` (or the same suffix under `XDG_STATE_HOME`), not Git. `gw serve` automatically provisions Codex's native `http_headers` and Claude's native `headers`, using atomic 0600 local config files without printing it or putting it in process arguments. `gw service install/start/restart` uses the same registration behavior. It preserves unrelated client settings and refuses symlinked configs/directories or destinations inside Git checkouts. No secret is written to the tracked template or LaunchAgent. Run plain `claude` / `codex` (or `cc` for Claude): no setup script, wrapper, token environment variable, or Python dependency is needed. The gateway does not depend on this dotfiles repository. Applications reading the same user configs use those same headers without shell inheritance. Restart already-running clients to reload their configs. Later starts synchronize changed ports/tokens; ordinary restarts do not rotate the token. Provider OAuth is separate.
 
 Registration results are reported per client; malformed or unwritable configs are left intact, and the other client can still work. A matching already-running gateway is reused, not duplicated. The gateway repository owns registration tests and installed-package verification. There is no `./dot mcp` command.
 
@@ -141,6 +141,8 @@ The Neovim configuration requires Neovim 0.12 or newer. Treesitter parser instal
 Oil handles directory editing, while Neo-tree provides a persistent project tree. FFF provides indexed project file and content search; its native binary is downloaded during plugin installation and can fall back to a local Rust toolchain. Snacks provides buffers, help, recent files, LSP and TODO pickers alongside its dashboard, notification, Git, scratch, and toggle features.
 
 Oil uses its native LSP file-operation support to update references when files are renamed. Any buffers changed by those edits must be saved separately. `<leader>e` toggles Neo-tree and reveals the current file when opening it.
+
+Bufferline is disabled. Lualine shows Git changes, the relative file path and status, diagnostics, active language servers, filetype, encoding, line endings, progress, and cursor position. Use `[b` / `]b` or `<leader>fb` to switch buffers.
 
 Oxfmt and `tsgo` are optional project-local tools. When present, Oxfmt takes priority over Prettier for supported files, and `tsc.nvim` finds `node_modules/.bin/tsgo` automatically.
 

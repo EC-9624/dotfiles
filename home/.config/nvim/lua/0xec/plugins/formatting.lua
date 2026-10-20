@@ -34,50 +34,50 @@ return {
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
 		cmd = { "ConformInfo", "ConformFormat" },
-		config = function()
+		opts = {
+			formatters = {
+				oxfmt = {
+					inherit = true,
+					command = function(_, ctx)
+						return find_local_binary(ctx.dirname, "oxfmt") or "oxfmt"
+					end,
+					condition = function(_, ctx)
+						return find_local_binary(ctx.dirname, "oxfmt") ~= nil
+					end,
+					cwd = formatter_root,
+				},
+				prettierd = {
+					prepend_args = { "--no-bracket-spacing" },
+				},
+				prettier = {
+					prepend_args = { "--no-bracket-spacing" },
+				},
+			},
+			formatters_by_ft = {
+				javascript = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
+				javascriptreact = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
+				typescript = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
+				typescriptreact = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
+				astro = { "prettierd", "prettier", stop_after_first = true },
+				css = { "prettierd", "prettier", stop_after_first = true },
+				html = { "prettierd", "prettier", stop_after_first = true },
+				json = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
+				svelte = { "prettierd", "prettier", stop_after_first = true },
+				yaml = { "prettierd", "prettier", stop_after_first = true },
+				zig = { "zigfmt" },
+				lua = { "stylua" },
+			},
+			format_on_save = function(bufnr)
+				if vim.bo[bufnr].buftype ~= "" then
+					return
+				end
+				local is_js = vim.tbl_contains(js_fts, vim.bo[bufnr].filetype)
+				return { lsp_format = is_js and "never" or "fallback", timeout_ms = 5000 }
+			end,
+		},
+		config = function(_, opts)
 			local conform = require("conform")
-
-			conform.setup({
-				formatters = {
-					oxfmt = {
-						inherit = true,
-						command = function(_, ctx)
-							return find_local_binary(ctx.dirname, "oxfmt") or "oxfmt"
-						end,
-						condition = function(_, ctx)
-							return find_local_binary(ctx.dirname, "oxfmt") ~= nil
-						end,
-						cwd = formatter_root,
-					},
-					prettierd = {
-						prepend_args = { "--no-bracket-spacing" },
-					},
-					prettier = {
-						prepend_args = { "--no-bracket-spacing" },
-					},
-				},
-				formatters_by_ft = {
-					javascript = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
-					javascriptreact = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
-					typescript = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
-					typescriptreact = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
-					astro = { "prettierd", "prettier", stop_after_first = true },
-					css = { "prettierd", "prettier", stop_after_first = true },
-					html = { "prettierd", "prettier", stop_after_first = true },
-					json = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
-					svelte = { "prettierd", "prettier", stop_after_first = true },
-					yaml = { "prettierd", "prettier", stop_after_first = true },
-					zig = { "zigfmt" },
-					lua = { "stylua" },
-				},
-				format_on_save = function(bufnr)
-					if vim.bo[bufnr].buftype ~= "" then
-						return
-					end
-					local is_js = vim.tbl_contains(js_fts, vim.bo[bufnr].filetype)
-					return { lsp_format = is_js and "never" or "fallback", timeout_ms = 5000 }
-				end,
-			})
+			conform.setup(opts)
 
 			vim.api.nvim_create_user_command("ConformFormat", function(opts)
 				conform.format({
@@ -90,21 +90,15 @@ return {
 				desc = "Format buffer (async). Usage: :ConformFormat [formatter_name ...]",
 				complete = function()
 					local names = {}
-					local seen = {}
-					for name, _ in pairs(conform.formatters) do
-						if not seen[name] then
-							table.insert(names, name)
-							seen[name] = true
-						end
+					for name in pairs(conform.formatters) do
+						names[name] = true
 					end
 					for _, info in ipairs(conform.list_all_formatters()) do
-						if not seen[info.name] then
-							table.insert(names, info.name)
-							seen[info.name] = true
-						end
+						names[info.name] = true
 					end
-					table.sort(names)
-					return names
+					local sorted = vim.tbl_keys(names)
+					table.sort(sorted)
+					return sorted
 				end,
 			})
 		end,

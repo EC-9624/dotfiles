@@ -1,6 +1,17 @@
 local npm_root = vim.trim(vim.fn.system({ "npm", "root", "-g" }))
 local typescript = require("0xec.util.typescript")
 
+local ts_inlay_hints = {
+	includeInlayEnumMemberValueHints = true,
+	includeInlayFunctionLikeReturnTypeHints = true,
+	includeInlayFunctionParameterTypeHints = true,
+	includeInlayParameterNameHints = "all",
+	includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+	includeInlayPropertyDeclarationTypeHints = true,
+	includeInlayVariableTypeHints = true,
+	includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+}
+
 local function native_typescript(server)
 	return {
 		filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
@@ -112,28 +123,10 @@ return {
 		},
 		settings = {
 			javascript = {
-				inlayHints = {
-					includeInlayEnumMemberValueHints = true,
-					includeInlayFunctionLikeReturnTypeHints = true,
-					includeInlayFunctionParameterTypeHints = true,
-					includeInlayParameterNameHints = "all",
-					includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-					includeInlayPropertyDeclarationTypeHints = true,
-					includeInlayVariableTypeHints = true,
-					includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-				},
+				inlayHints = vim.deepcopy(ts_inlay_hints),
 			},
 			typescript = {
-				inlayHints = {
-					includeInlayEnumMemberValueHints = true,
-					includeInlayFunctionLikeReturnTypeHints = true,
-					includeInlayFunctionParameterTypeHints = true,
-					includeInlayParameterNameHints = "all",
-					includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-					includeInlayPropertyDeclarationTypeHints = true,
-					includeInlayVariableTypeHints = true,
-					includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-				},
+				inlayHints = vim.deepcopy(ts_inlay_hints),
 			},
 		},
 	},

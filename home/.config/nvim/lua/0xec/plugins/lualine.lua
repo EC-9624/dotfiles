@@ -1,37 +1,24 @@
 return {
 	"nvim-lualine/lualine.nvim",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
-	config = function()
-		local lualine = require("lualine")
+	opts = function()
 		local lazy_status = require("lazy.status")
 		local colors = require("0xec.theme").colors
 
+		local function mode(background)
+			return {
+				a = { fg = colors.base, bg = background, gui = "bold" },
+				b = { fg = colors.text, bg = colors.none },
+				c = { fg = colors.subtle, bg = colors.none },
+			}
+		end
+
 		local my_lualine_theme = {
-			normal = {
-				a = { fg = colors.base, bg = colors.gold, gui = "bold" },
-				b = { fg = colors.text, bg = colors.none },
-				c = { fg = colors.subtle, bg = colors.none },
-			},
-			insert = {
-				a = { fg = colors.base, bg = colors.foam, gui = "bold" },
-				b = { fg = colors.text, bg = colors.none },
-				c = { fg = colors.subtle, bg = colors.none },
-			},
-			visual = {
-				a = { fg = colors.base, bg = colors.iris, gui = "bold" },
-				b = { fg = colors.text, bg = colors.none },
-				c = { fg = colors.subtle, bg = colors.none },
-			},
-			replace = {
-				a = { fg = colors.base, bg = colors.love, gui = "bold" },
-				b = { fg = colors.text, bg = colors.none },
-				c = { fg = colors.subtle, bg = colors.none },
-			},
-			command = {
-				a = { fg = colors.base, bg = colors.highlight_high, gui = "bold" },
-				b = { fg = colors.text, bg = colors.none },
-				c = { fg = colors.subtle, bg = colors.none },
-			},
+			normal = mode(colors.gold),
+			insert = mode(colors.foam),
+			visual = mode(colors.iris),
+			replace = mode(colors.love),
+			command = mode(colors.highlight_high),
 			inactive = {
 				a = { fg = colors.muted, bg = colors.none, gui = "bold" },
 				b = { fg = colors.muted, bg = colors.none },
@@ -53,7 +40,8 @@ return {
 		local filename = {
 			"filename",
 			file_status = true,
-			path = 0,
+			path = 1,
+			shorting_target = 100,
 		}
 
 		local branch = {
@@ -99,7 +87,7 @@ return {
 			filetypes = { "oil" },
 		}
 
-		lualine.setup({
+		return {
 			icons_enabled = true,
 			options = {
 				theme = my_lualine_theme,
@@ -109,14 +97,29 @@ return {
 			},
 			sections = {
 				lualine_a = { "mode" },
-				lualine_b = { branch },
-				lualine_c = { diff, filename },
+				lualine_b = { branch, diff },
+				lualine_c = {
+					filename,
+					{
+						"diagnostics",
+						sources = { "nvim_diagnostic" },
+						sections = { "error", "warn", "info", "hint" },
+						symbols = { error = " ", warn = " ", info = " ", hint = "󰌶 " },
+						diagnostics_color = {
+							error = { fg = colors.love },
+							warn = { fg = colors.gold },
+							info = { fg = colors.foam },
+							hint = { fg = colors.iris },
+						},
+					},
+				},
 				lualine_x = {
 					{
 						lazy_status.updates,
 						cond = lazy_status.has_updates,
 						color = { fg = colors.gold },
 					},
+					"lsp_status",
 					{
 						"filetype",
 						fmt = function(ft)
@@ -128,8 +131,10 @@ return {
 						end,
 					},
 				},
+				lualine_y = { "encoding", { "fileformat", icons_enabled = false } },
+				lualine_z = { "progress", "location" },
 			},
 			extensions = { oil_extension },
-		})
+		}
 	end,
 }

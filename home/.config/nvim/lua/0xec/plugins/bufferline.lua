@@ -1,5 +1,6 @@
 return {
 	"akinsho/bufferline.nvim",
+	enabled = false,
 	version = "*",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	opts = function()
@@ -24,20 +25,10 @@ return {
 				diagnostics_indicator = function(_, _, diagnostics)
 					local parts = {}
 
-					if diagnostics.error then
-						table.insert(parts, diagnostic_icons.error .. diagnostics.error)
-					end
-
-					if diagnostics.warning then
-						table.insert(parts, diagnostic_icons.warning .. diagnostics.warning)
-					end
-
-					if diagnostics.info then
-						table.insert(parts, diagnostic_icons.info .. diagnostics.info)
-					end
-
-					if diagnostics.hint then
-						table.insert(parts, diagnostic_icons.hint .. diagnostics.hint)
+					for _, severity in ipairs({ "error", "warning", "info", "hint" }) do
+						if diagnostics[severity] then
+							table.insert(parts, diagnostic_icons[severity] .. diagnostics[severity])
+						end
 					end
 
 					return #parts > 0 and " " .. table.concat(parts, " ") or ""
