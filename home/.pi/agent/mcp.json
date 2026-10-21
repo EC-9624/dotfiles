@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "notion": {
+      "url": "https://mcp.notion.com/mcp",
+      "description": "Search and work with Notion pages and workspace content."
+    },
+    "newrelic": {
+      "url": "https://mcp.newrelic.com/mcp/",
+      "description": "Query New Relic telemetry and investigate application performance."
+    },
+    "atlassian": {
+      "url": "https://mcp.atlassian.com/v1/mcp/authv2",
+      "description": "Search and work with Atlassian Jira and Confluence content."
+    },
+    "metabase": {
+      "url": "https://metabase.prtimes-tools.jp/api/metabase-mcp",
+      "description": "Explore PR TIMES Metabase data and run authorized queries.",
+      "oauth": {
+        "scope": "agent:content:read agent:query:run agent:resource:read agent:sql:run"
+      }
+    }
+  }
+}

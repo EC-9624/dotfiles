@@ -19,7 +19,7 @@ cd ~/Code/dotfiles
 ./dot init
 ```
 
-`./dot init` installs the Homebrew bundle, Bun, OpenCode 2, clones `~/.oh-my-zsh` when missing, and stows `home/` into `$HOME`. Install Codex CLI and Claude Code separately.
+`./dot init` installs the Homebrew bundle, Bun, OpenCode 2, clones `~/.oh-my-zsh` when missing, and stows `home/` into `$HOME`. Install Codex CLI, Claude Code, and Pi separately.
 
 Ghostty, the configured font, and tmux's plugin manager are separate prerequisites:
 
@@ -44,13 +44,14 @@ The service listens on localhost by default. For remote access on a trusted netw
 
 ## Shared agent setup
 
-OpenCode, Codex, and Claude Code share instructions from `home/.agents/AGENTS.md`, linked into each tool's global instruction path. Edit that source file to change the common guidance. Skills live in `home/.agents/skills/`: Codex discovers `~/.agents/skills` directly, and Claude Code's `~/.claude/skills` links there. Cloud-synced skills under `skills/synced/` are local runtime content and ignored by git.
+OpenCode, Codex, Claude Code, and Pi share instructions from `home/.agents/AGENTS.md`, linked into each tool's global instruction path. Edit that source file to change the common guidance. Skills live in `home/.agents/skills/`: Codex and Pi discover `~/.agents/skills` directly, and Claude Code's `~/.claude/skills` links there. Cloud-synced skills under `skills/synced/` are local runtime content and ignored by git.
 
 | Tool | Launch | Managed settings |
 | --- | --- | --- |
 | OpenCode | `oc` | `home/.config/opencode/opencode.json`, `cli.json` |
 | Codex CLI / desktop | `codex` | `config/codex.toml` template, private `~/.codex/config.toml`, `dotfiles.config.toml` profile |
 | Claude Code | `cc` or `claude` | `home/.claude/settings.json`, `statusline-command.sh` |
+| Pi | `pi` | `home/.pi/agent/settings.json`, `models.json`, `mcp.json` |
 
 Claude Code's `~/.claude/settings.json` is managed directly by Stow. Codex's `~/.codex/config.toml` is a private local file because native MCP HTTP headers contain a credential. `./dot stow` seeds it from the secret-free `config/codex.toml` template only when missing; existing local changes are preserved. Edit portable defaults in the template and merge future changes into the local config explicitly; restowing never overwrites it. Existing config symlinks must be reconciled to private local files before storing credentials. Codex project trust, authentication, plugin caches, and app-installed MCP integrations remain machine/runtime state.
 
@@ -58,7 +59,43 @@ Run `codex --profile dotfiles` to use the optional profile. It requires Codex 0.
 
 The shared vault is expected at `~/Code/agent-vault/`. Claude Code includes it through `permissions.additionalDirectories`; add `--add-dir "$HOME/Code/agent-vault"` when launching Codex if you want it available as a writable directory.
 
-`./dot stow` creates real `~/.codex`, `~/.claude`, `~/.local/bin`, and `~/.config/codemode-mcp-gateway` directories before linking individual managed files, so session history, installed packages, and credentials stay local. On an existing machine, Stow reports conflicting files instead of overwriting them: back up and reconcile your settings before replacing them with the managed versions. Authentication stays outside git. Claude's mixed `~/.claude.json` file also stays local because it contains account metadata, project state, MCP registrations, and caches.
+`./dot stow` creates real `~/.codex`, `~/.claude`, `~/.pi/agent`, `~/.local/bin`, and `~/.config/codemode-mcp-gateway` directories before linking individual managed files, so session history, installed packages, and credentials stay local. On an existing machine, Stow reports conflicting files instead of overwriting them: back up and reconcile your settings before replacing them with the managed versions. Authentication stays outside git. Claude's mixed `~/.claude.json` file also stays local because it contains account metadata, project state, MCP registrations, and caches.
+
+### Pi
+
+Install Pi using its official installer, then restow:
+
+```bash
+curl -fsSL https://pi.dev/install.sh | sh
+./dot stow
+pi
+```
+
+Run `/login` inside Pi to connect your provider. Stow manages `~/.pi/agent/settings.json` and `models.json` directly from `home/.pi/agent/`. The default model is OpenAI `gpt-6.1-sol`, with thinking blocks hidden. Its model override requests fast/priority processing using `samplingParams.service_tier: "priority"`; this does not lower reasoning effort. Priority availability depends on the provider/account and can increase charges or subscription usage. Remove its `service_tier` field to return to the normal service tier.
+
+GPT-6.1 Sol and GPT-6 Sol, Luna, and Astra mirror the limits in `home/.config/opencode/opencode.json`: 1,050,000 context tokens and up to 128,000 output tokens. Per-model compaction reserves 128,000 tokens, targeting a 922,000-token input budget; this is a compaction threshold, not a hard request-size limit. These local overrides do not grant larger context access if the provider/account does not support it. Pi already requests automatic reasoning summaries and encrypted reasoning content for these models when reasoning is enabled.
+
+The four `-fast` entries are local chat-model aliases, not additional catalog models. Each sends the corresponding base model ID with `service_tier: "priority"`. Their thinking-level maps, compatibility flags, and base pricing were copied from the installed catalog; review them when updating Pi. The ordinary GPT-6 entries use the normal service tier; the default GPT-6.1 Sol retains its earlier priority setting.
+
+Pi can write device IDs and changelog state into the managed settings file. Review diffs and exclude machine-specific fields before committing. Keep API keys, OAuth tokens, and credential-bearing model or MCP configuration out of these tracked files.
+
+`home/.pi/agent/AGENTS.md` links to the shared instructions. Pi discovers `~/.agents/skills` automatically, so no duplicate skills directory or resource setting is needed. Authentication, sessions, installed releases, and model stores stay under `~/.pi/agent/`, outside Git. Run `/reload` after instruction or resource changes; restart Pi to apply startup model defaults.
+
+#### Pi MCP and codemode
+
+`home/.pi/agent/mcp.json` connects directly to the enabled Notion, New Relic, Atlassian, and Metabase servers from OpenCode. Metabase uses the same requested OAuth scopes. Pi does not use the local MCP gateway. Server exposure defaults to `codemode` without explicit exposure fields: scripts discover tools with `searchTools()` or `describeNamespace()` and call them without declaring the whole tool catalog to the model. `defaultTools: ["+codemode"]` also enables codemode without an MCP connection while retaining the ordinary file and shell tools; no extension package is required.
+
+After restowing, authorize each server explicitly:
+
+```bash
+pi mcp login notion
+pi mcp login newrelic
+pi mcp login atlassian
+pi mcp login metabase
+pi mcp list
+```
+
+Approve each browser flow with your own account. Pi stores OAuth credentials in the untracked `~/.pi/agent/mcp-auth.json`, not in the managed `mcp.json`. Inside Pi, run `/reload`, then `/mcp` to inspect or reconnect servers. A server cannot supply tools until its connection and authorization succeed.
 
 ### MCP
 
