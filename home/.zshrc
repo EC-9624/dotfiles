@@ -14,6 +14,8 @@ set -o vi
 eval "$(starship init zsh)"
 
 # node
+# Drop inherited fnm shell paths so nested shells do not accumulate them.
+path=("${(@)path:#*/fnm_multishells/*/bin}")
 eval "$(fnm env --shell zsh --use-on-cd)"
 
 # bun completions
