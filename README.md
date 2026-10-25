@@ -44,7 +44,7 @@ The service listens on localhost by default. For remote access on a trusted netw
 
 ## Shared agent setup
 
-OpenCode, Codex, Claude Code, and Pi share instructions from `home/.agents/AGENTS.md`, linked into each tool's global instruction path. Edit that source file to change the common guidance. Skills live in `home/.agents/skills/`: Codex and Pi discover `~/.agents/skills` directly, and Claude Code's `~/.claude/skills` links there. Cloud-synced skills under `skills/synced/` are local runtime content and ignored by git.
+OpenCode, Codex, Claude Code, and Pi share skills from `home/.agents/skills/`: Codex and Pi discover `~/.agents/skills` directly, and Claude Code's `~/.claude/skills` links there. Cloud-synced skills under `skills/synced/` are local runtime content and ignored by git. Global instruction files (`AGENTS.md`/`CLAUDE.md`) are intentionally not managed; only project-level instructions apply.
 
 | Tool | Launch | Managed settings |
 | --- | --- | --- |
@@ -55,7 +55,7 @@ OpenCode, Codex, Claude Code, and Pi share instructions from `home/.agents/AGENT
 
 Claude Code's `~/.claude/settings.json` is managed directly by Stow. Codex's `~/.codex/config.toml` is a private local file because native MCP HTTP headers contain a credential. `./dot stow` seeds it from the secret-free `config/codex.toml` template only when missing; existing local changes are preserved. Edit portable defaults in the template and merge future changes into the local config explicitly; restowing never overwrites it. Existing config symlinks must be reconciled to private local files before storing credentials. Codex project trust, authentication, plugin caches, and app-installed MCP integrations remain machine/runtime state.
 
-Run `codex --profile dotfiles` to use the optional profile. It requires Codex 0.134.0+ and overlays preferences on the private base config, with a 1,050,000-token context window matching OpenCode. Plain `codex` and the desktop app use the same private base config. All launches receive the shared global instructions and skills.
+Run `codex --profile dotfiles` to use the optional profile. It requires Codex 0.134.0+ and overlays preferences on the private base config, with a 1,050,000-token context window matching OpenCode. Plain `codex` and the desktop app use the same private base config. All launches receive the shared skills.
 
 The shared vault is expected at `~/Code/agent-vault/`. Claude Code includes it through `permissions.additionalDirectories`; add `--add-dir "$HOME/Code/agent-vault"` when launching Codex if you want it available as a writable directory.
 
@@ -79,7 +79,7 @@ The four `-fast` entries are local chat-model aliases, not additional catalog mo
 
 Pi can write device IDs and changelog state into the managed settings file. Review diffs and exclude machine-specific fields before committing. Keep API keys, OAuth tokens, and credential-bearing model or MCP configuration out of these tracked files.
 
-`home/.pi/agent/AGENTS.md` links to the shared instructions. Pi discovers `~/.agents/skills` automatically, so no duplicate skills directory or resource setting is needed. Authentication, sessions, installed releases, and model stores stay under `~/.pi/agent/`, outside Git. Run `/reload` after instruction or resource changes; restart Pi to apply startup model defaults.
+Pi discovers `~/.agents/skills` automatically, so no duplicate skills directory or resource setting is needed. Authentication, sessions, installed releases, and model stores stay under `~/.pi/agent/`, outside Git. Run `/reload` after skill or resource changes; restart Pi to apply startup model defaults.
 
 #### Pi MCP and codemode
 
