@@ -64,3 +64,6 @@ home/**/*.key
 home/**/id_rsa*
 home/**/id_ed25519*
 home/**/*.token
+
+# Pi session exports
+pi-session-*.html
