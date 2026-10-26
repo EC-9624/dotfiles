@@ -60,27 +60,27 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/GoogleChrome/modern-web-guidance.git",
       "skillPath": "skills/modern-web-guidance/SKILL.md",
-      "skillFolderHash": "fa59ae3a1c180aefacb82eff7e2bbb8134b045e0",
+      "skillFolderHash": "5f268ec207be7d074dd7fca0fe8be084fe76733a",
       "installedAt": "2026-06-23T05:26:05.377Z",
-      "updatedAt": "2026-10-14T00:13:41.161Z"
+      "updatedAt": "2026-10-26T01:12:43.865Z"
     },
     "gh-stack": {
       "source": "github/gh-stack",
       "sourceType": "github",
       "sourceUrl": "https://github.com/github/gh-stack.git",
       "skillPath": "skills/gh-stack/SKILL.md",
-      "skillFolderHash": "bde7bcf5a96697d31aa55b33565fa0ff002167ca",
+      "skillFolderHash": "53018dd61238961f3aae77c6d369170ab4eb06f3",
       "installedAt": "2026-08-05T07:10:00.649Z",
-      "updatedAt": "2026-10-06T09:50:11.008Z"
+      "updatedAt": "2026-10-26T01:12:46.466Z"
     },
     "install-anti-slop": {
       "source": "dmmulroy/anti-slop",
       "sourceType": "github",
       "sourceUrl": "https://github.com/dmmulroy/anti-slop.git",
       "skillPath": "skills/install-anti-slop/SKILL.md",
-      "skillFolderHash": "89044d21c75a367eac1ddbaf208e650b1a7d5820",
+      "skillFolderHash": "97962dc9fad565ca7695bf57805d9d0138ce1def",
       "installedAt": "2026-09-23T05:39:23.498Z",
-      "updatedAt": "2026-09-23T05:39:23.498Z"
+      "updatedAt": "2026-10-26T01:12:48.371Z"
     },
     "show-me": {
       "source": "humanlayer/skills",
