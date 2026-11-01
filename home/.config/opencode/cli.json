@@ -28,9 +28,10 @@
   },
   "animations": true,
   "diffs": {
-    "single": false,
-    "view": "auto",
-    "tree": false
+    "single": true,
+    "view": "split",
+    "tree": true,
+    "fullscreen": true
   },
   "prompt": {
     "paste": "compact",
