@@ -6,7 +6,6 @@
       "~/Code/agent-vault/"
     ]
   },
-  "model": "sonnet",
   "worktree": {
     "baseRef": "fresh"
   },
@@ -42,6 +41,13 @@
     }
   },
   "askUserQuestionTimeout": "60s",
+  "pluginConfigs": {
+    "cc-plugin-agents-md@builtin": {
+      "options": {
+        "instructionFiles": "claude-md-or-agents-md"
+      }
+    }
+  },
   "tui": "fullscreen",
   "timeFormat": "auto",
   "theme": "dark",
@@ -49,11 +55,17 @@
   "verbose": true,
   "preferredNotifChannel": "auto",
   "fileCheckpointingEnabled": true,
-  "pluginConfigs": {
-    "cc-plugin-agents-md@builtin": {
-      "options": {
-        "instructionFiles": "claude-md-or-agents-md"
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh -c 'rex __internal session-start --agent claude 2>/dev/null || true'",
+            "timeout": 5
+          }
+        ]
       }
-    }
+    ]
   }
 }
