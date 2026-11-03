@@ -16,6 +16,7 @@ home/.claude/*
 !home/.claude/skills
 !home/.claude/statusline-command.sh
 home/.codex/*
+!home/.codex/config.toml
 !home/.codex/dotfiles.config.toml
 home/.pi/*
 !home/.pi/agent/

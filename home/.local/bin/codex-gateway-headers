@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+# Codex reads this output directly; never log or save the generated headers.
+token="$("$HOME/.local/bin/gw" token show)"
+printf '%s' "$token" | /opt/homebrew/bin/jq -Rs '{Authorization: ("Bearer " + .)}'

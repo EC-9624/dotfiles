@@ -1,4 +1,4 @@
-# Secret-free template for the private ~/.codex/config.toml; never symlink this file.
+# Stow-managed Codex config. Keep credentials out of this file.
 model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 personality = "pragmatic"
@@ -15,17 +15,18 @@ status_line = ["model-with-reasoning", "context-remaining", "project-name", "git
 theme = "gruvbox-dark"
 status_line_use_colors = true
 screen_reader_detection_done = true
+terminal_title = ["activity", "thread-name", "project-name"]
+agents_overview_grouping = "project"
 
 [tui.model_availability_nux]
-"gpt-6.1-sol" = 3
+"gpt-6.1-sol" = 4
 
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
 
 [mcp_servers."codemode-mcp-gateway"]
 url = "http://127.0.0.1:4791/mcp"
-bearer_token_env_var = "GW_MCP_TOKEN"
-# gw serve provisions the Authorization header only in the private local copy.
+http_headers_helper = "/Users/eakudompong.chanoknan/.local/bin/codex-gateway-headers"
 startup_timeout_sec = 60
 tool_timeout_sec = 60
 
@@ -49,14 +50,15 @@ NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = ""
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = ""
 NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = ""
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.1007.71326"
-NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/eakudompong.chanoknan/.codex/plugins/cache/openai-bundled/browser/26.1007.71326/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
+BROWSER_USE_CODEX_APP_VERSION = "26.1013.40934"
+NODE_REPL_TRUSTED_SERVICES = '{"browser":"/Users/eakudompong.chanoknan/.codex/plugins/cache/openai-bundled/browser/26.1013.40934/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
 SKY_CUA_SERVICE_PATH = "/Users/eakudompong.chanoknan/.codex/computer-use/Codex Computer Use.app"
 CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"
 
 [features]
 terminal_resize_reflow = true
 js_repl = false
+apps = false
 
 [desktop]
 appearanceTheme = "system"
@@ -118,6 +120,15 @@ trust_level = "trusted"
 [projects."/Users/eakudompong.chanoknan/Code/prtimes-dev-docker/prtimes-frontend/src"]
 trust_level = "trusted"
 
+[projects."/Users/eakudompong.chanoknan/Code/prtimes-dev-docker/web/prtimes-source"]
+trust_level = "trusted"
+
+[projects."/Users/eakudompong.chanoknan/Code/dotfiles"]
+trust_level = "trusted"
+
+[projects."/Users/eakudompong.chanoknan/Code/personal/codemode-mcp-gateway"]
+trust_level = "trusted"
+
 [[skills.config]]
 path = "/Users/eakudompong.chanoknan/.codex/skills/hatch-pet/SKILL.md"
 enabled = false
@@ -156,3 +167,6 @@ enabled = true
 
 [plugins."template-creator@openai-primary-runtime"]
 enabled = true
+
+[apps.connector_openai_chatgpt_pets]
+enabled = false

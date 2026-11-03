@@ -91,10 +91,12 @@ map("n", "<leader>v", "<C-w>v", opts("Split window vertically"))
 map("n", "<leader>h", "<C-w>s", opts("Split window horizontally"))
 map("n", "<leader>se", "<C-w>=", opts("Splits: equalize sizes"))
 map("n", "<leader>xs", "<cmd>close<CR>", opts("Close current split"))
-map("n", "<C-k>", "<cmd>TmuxNavigateUp<CR>", opts("Focus upper window or tmux pane"))
-map("n", "<C-j>", "<cmd>TmuxNavigateDown<CR>", opts("Focus lower window or tmux pane"))
-map("n", "<C-h>", "<cmd>TmuxNavigateLeft<CR>", opts("Focus left window or tmux pane"))
-map("n", "<C-l>", "<cmd>TmuxNavigateRight<CR>", opts("Focus right window or tmux pane"))
+for key, direction in pairs({ h = "left", j = "lower", k = "upper", l = "right" }) do
+	local navigation_key = key
+	map("n", "<C-" .. key .. ">", function()
+		require("0xec.util.navigation").move(navigation_key)
+	end, opts("Focus " .. direction .. " window or Rex pane"))
+end
 
 -- Tabs
 map("n", "<leader>to", "<cmd>tabnew<CR>", opts("Tab: open"))
