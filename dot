@@ -167,7 +167,6 @@ doctor() {
     "${HOME}/.claude/skills"
     "${HOME}/.claude/statusline-command.sh"
     "${HOME}/.codex/config.toml"
-    "${HOME}/.codex/dotfiles.config.toml"
     "${HOME}/.pi/agent/settings.json"
     "${HOME}/.pi/agent/models.json"
     "${HOME}/.pi/agent/mcp.json"

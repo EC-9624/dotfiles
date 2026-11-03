@@ -39,14 +39,13 @@ Edit files under `home/`; Stow links them to the matching paths in `$HOME`.
 | Shell | `.zshenv`, `.zprofile`, `.zshrc` |
 | Ghostty | `.config/ghostty/config` |
 | tmux | `.config/tmux/tmux.conf` |
-| Rex | `.config/rex/init.lua` |
+| Rex | `.config/rex/` (`keys.lua`, `navigation.lua`) |
 | Neovim | `.config/nvim/` |
 | OpenCode (`oc`) | `.config/opencode/opencode.json`, `cli.json` |
-| Codex | `.codex/config.toml`, `dotfiles.config.toml` |
+| Codex | `.codex/config.toml` |
 | Claude Code (`cc`) | `.claude/settings.json` |
 | Pi | `.pi/agent/settings.json`, `models.json`, `mcp.json` |
 
 `packages/bundle` lists Homebrew dependencies. `scripts/` contains maintenance helpers. Agents share skills from `home/.agents/skills/`.
 
-Keep credentials, session history, and caches outside Git. Codex and Pi can update managed settings at runtime; review diffs before committing. The optional Codex profile is selected with `codex --profile dotfiles`.
-
+Keep credentials, session history, and caches outside Git. Codex and Pi can update managed settings at runtime; review diffs before committing.

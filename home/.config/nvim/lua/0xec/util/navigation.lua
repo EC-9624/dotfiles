@@ -20,7 +20,7 @@ function M.move(key)
 	end
 
 	-- No RPC listener: the local Rex CLI moves focus only at an editor edge.
-	vim.system({ "rex", "--autostart=false", "--timeout=2s", "focus", "-s", session, direction }, {
+	vim.system({ "rex", "--autostart=false", "--timeout=2s", "focus", "-s", session, direction, "--wrap" }, {
 		text = true,
 		timeout = 2500,
 	}, function(result)
