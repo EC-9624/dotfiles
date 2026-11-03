@@ -140,27 +140,6 @@
       "atlassian": {
         "type": "remote",
         "url": "https://mcp.atlassian.com/v1/mcp/authv2"
-      },
-      "metabase": {
-        "type": "remote",
-        "url": "https://metabase.prtimes-tools.jp/api/metabase-mcp",
-        "oauth": {
-          "scope": "agent:content:read agent:query:run agent:resource:read agent:sql:run"
-        }
-      },
-      "metabase-clipping": {
-        "type": "remote",
-        "url": "https://metabase.webclipping.jp/api/metabase-mcp",
-        "oauth": {
-          "scope": "agent:content:read agent:query:run agent:resource:read agent:sql:run"
-        }
-      },
-      "metabase-story": {
-        "type": "remote",
-        "url": "https://story-metabase.prtimes-tools.jp/api/metabase-mcp",
-        "oauth": {
-          "scope": "agent:content:read agent:query:run agent:resource:read agent:sql:run"
-        }
       }
     }
   }

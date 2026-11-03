@@ -30,7 +30,7 @@
   "diffs": {
     "single": true,
     "view": "split",
-    "tree": true,
+    "tree": false,
     "fullscreen": true
   },
   "prompt": {
