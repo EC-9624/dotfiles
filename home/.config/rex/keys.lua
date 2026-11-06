@@ -1,6 +1,3 @@
-local register_navigation = require("navigation")
-local register_popup = require("popups")
-
 -- Keep Rex's native Cmd shortcuts alongside tmux-style prefix sequences.
 local prefix = "ctrl+space>"
 
@@ -16,15 +13,16 @@ bind("-", "pane.split", { direction = "down" })
 for key, direction in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
 	bind(key, "pane.focus", { direction = direction })
 	bind("shift+" .. key, "pane.resize", { direction = direction, amount = 5 })
-	rex.bind("ctrl+" .. key, register_navigation(key, direction))
+	rex.bind("ctrl+" .. key, "navigate_" .. direction)
 end
 
 bind("m", "pane.zoom")
+bind("f", "toggle_centered_float")
 bind("=", "pane.balance")
 
-bind("t", register_popup("shell", "Scratch Shell"))
-bind("g", register_popup("lazygit", "Lazygit", { "lazygit" }))
-bind("y", register_popup("yazi", "Yazi", { "yazi" }))
+bind("t", "popup_shell")
+bind("g", "popup_lazygit")
+bind("y", "popup_yazi")
 
 -- Tabs correspond to tmux windows.
 bind("c", "client.tab.new")

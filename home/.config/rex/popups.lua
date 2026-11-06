@@ -14,7 +14,7 @@ local function current_window(ctx)
 	error("Popup: no source pane")
 end
 
-return function(name, title, command)
+local function register(name, title, command)
 	local action = "popup_" .. name
 	local label = "popup:" .. name
 	rex.action({
@@ -61,5 +61,8 @@ return function(name, title, command)
 			}))
 		end,
 	})
-	return action
 end
+
+register("shell", "Scratch Shell")
+register("lazygit", "Lazygit", { "lazygit" })
+register("yazi", "Yazi", { "yazi" })

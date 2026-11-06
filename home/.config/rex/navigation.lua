@@ -22,7 +22,7 @@ local function should_forward(process)
 end
 
 -- Let Neovim handle its own splits before handing off at an editor edge.
-return function(key, direction)
+local function register(key, direction)
 	local action = "navigate_" .. direction
 	rex.action({
 		name = action,
@@ -42,5 +42,8 @@ return function(key, direction)
 			rex.client.queue("pane.focus", { direction = direction, wrap = true })
 		end,
 	})
-	return action
+end
+
+for key, direction in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+	register(key, direction)
 end
