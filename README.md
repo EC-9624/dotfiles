@@ -39,7 +39,7 @@ Edit files under `home/`; Stow links them to the matching paths in `$HOME`.
 | Shell | `.zshenv`, `.zprofile`, `.zshrc` |
 | Ghostty | `.config/ghostty/config` |
 | tmux | `.config/tmux/tmux.conf` |
-| Rex | `.config/rex/` (`keys.lua`, `navigation.lua`) |
+| Rex | `.config/rex/` (`keys.lua`, `navigation.lua`, `popups.lua`, `floating.lua`) |
 | Neovim | `.config/nvim/` |
 | OpenCode (`oc`) | `.config/opencode/opencode.json`, `cli.json` |
 | Codex | `.codex/config.toml` |

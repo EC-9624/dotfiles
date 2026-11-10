@@ -253,6 +253,19 @@ local function harness(layout)
 	function h.forget(id)
 		return actions.forget_centered_float({ session_id = "session:test", block_id = id })
 	end
+	-- Seed the journal file the way a real save leaves it, corrupt it with
+	-- raw junk, and read back the most recently saved state.
+	function h.seed_journal(state)
+		local token = next_id("json:")
+		serialized[token] = copy(state)
+		files["/state/rex/floating.json"] = token
+	end
+	function h.corrupt_journal(text)
+		files["/state/rex/floating.json"] = text
+	end
+	function h.saved_state()
+		return copy(serialized[files["/state/rex/floating.json"]])
+	end
 	function h.reject(id, text)
 		local ok, err = pcall(h.toggle, id)
 		assert(not ok, "expected toggle to fail")
@@ -549,6 +562,143 @@ test("random nested layouts and split pop-outs restore their original slot", fun
 		h.toggle("extra2")
 		equal(shape(h.layout()), shape(expected))
 	end
+end)
+
+test("journal drops unknown top-level keys", function()
+	local original = horizontal(leaf("A"), leaf("B"))
+	local h = harness(copy(original))
+	h.seed_journal({ version = 9, sessions = {}, extra = "junk" })
+	h.toggle("B")
+	h.toggle("B")
+	equal(shape(h.layout()), shape(original))
+	local saved = h.saved_state()
+	assert(type(saved.sessions) == "table", "journal must keep its sessions")
+	assert(saved.version == nil and saved.extra == nil, "journal must hold only the current shape")
+end)
+
+test("a corrupt journal is discarded instead of blocking the toggle", function()
+	local original = horizontal(leaf("A"), leaf("B"))
+	local h = harness(copy(original))
+	h.corrupt_journal("not-a-token")
+	h.toggle("B")
+	h.toggle("B")
+	equal(shape(h.layout()), shape(original))
+end)
+
+test("an interrupted original-format restore resumes the complete group", function()
+	local h = harness(horizontal(leaf("A"), vertical(leaf("B"), leaf("C"))))
+	h.toggle("A")
+	h.split("A", "D")
+	local _, floating = h.location("D")
+	-- The original implementation saved this state after returning A, before
+	-- rebuilding its sibling subtree and returning the rest of the group.
+	h.windows[1].layers[1].layout = vertical(horizontal(leaf("A"), leaf("B")), leaf("C"))
+	floating.layout = leaf("D")
+	h.seed_journal({
+		version = 1,
+		sessions = {
+			["session:test"] = {
+				original = {
+					window_id = "original",
+					original_block = "A",
+					layer_id = floating.layer_id,
+					origins = {
+						{
+							sibling = vertical(leaf("B"), leaf("C")),
+							direction = "horizontal",
+							side = "before",
+							ratio = 0.5,
+						},
+					},
+					restore = {
+						group = horizontal(leaf("A"), leaf("D")),
+						window_id = "original",
+						next = 2,
+						moves = {
+							{
+								block_id = "A",
+								anchor_block_id = "B",
+								direction = "horizontal",
+								side = "before",
+								ratio = 0.5,
+							},
+							{
+								block_id = "C",
+								anchor_block_id = "B",
+								direction = "vertical",
+								side = "after",
+								ratio = 0.5,
+							},
+							{
+								block_id = "D",
+								anchor_block_id = "A",
+								direction = "horizontal",
+								side = "after",
+								ratio = 0.5,
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	h.reload()
+	h.toggle("D")
+	equal(shape(h.layout()), shape(horizontal(horizontal(leaf("A"), leaf("D")), vertical(leaf("B"), leaf("C")))))
+	equal(h.moves, 2)
+	equal(h.focus, "D")
+	assert(next(h.saved_state().sessions["session:test"]) == nil)
+end)
+
+test("malformed nested records do not block restoring or forgetting valid records", function()
+	local invalid = {
+		123,
+		{ origins = {} },
+		{ original_block = "X", origins = { 123 } },
+		{
+			original_block = "X",
+			origins = { { direction = "horizontal", side = "before", ratio = 0.5, sibling = {} } },
+		},
+		{ original_block = "X", origins = { [2] = {} } },
+		{ original_block = "X", origins = {}, restore = 123 },
+		{ original_block = "X", origins = {}, restore = { group = leaf("X"), moves = {}, next = "1" } },
+		{ original_block = "X", origins = {}, restore_plan = {} },
+	}
+	for _, bad in ipairs(invalid) do
+		for _, action in ipairs({ "toggle", "forget" }) do
+			local original = horizontal(leaf("A"), leaf("B"), 0.7)
+			local h = harness(copy(original))
+			h.toggle("B")
+			local state = h.saved_state()
+			local record = copy(bad)
+			if type(record) == "table" then
+				record.window_id, record.layer_id = "broken", "missing-layer"
+			end
+			state.sessions["session:test"].broken = record
+			state.sessions["broken-session"] = 123
+			h.seed_journal(state)
+			h[action]("B")
+			local saved = h.saved_state()
+			assert(next(saved.sessions["session:test"]) == nil)
+			assert(saved.sessions["broken-session"] == nil)
+			if action == "toggle" then
+				equal(shape(h.layout()), shape(original))
+			else
+				equal(h.moves, 0)
+				local _, layer = h.location("B")
+				equal(layer.kind, "floating")
+			end
+		end
+	end
+end)
+
+test("a malformed current session does not block a new float", function()
+	local original = horizontal(leaf("A"), leaf("B"))
+	local h = harness(copy(original))
+	h.seed_journal({ sessions = { ["session:test"] = 123 } })
+	h.toggle("B")
+	h.toggle("B")
+	equal(shape(h.layout()), shape(original))
 end)
 
 print("Passed " .. count .. " Rex floating tests")
