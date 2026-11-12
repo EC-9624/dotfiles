@@ -119,6 +119,13 @@
             "input": 372000,
             "output": 128000
           }
+        },
+        "claude-opus-5": {
+          "limit": {
+            "context": 500000,
+            "input": 372000,
+            "output": 128000
+          }
         }
       }
     }

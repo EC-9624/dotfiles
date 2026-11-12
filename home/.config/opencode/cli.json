@@ -28,8 +28,8 @@
   },
   "animations": true,
   "diffs": {
-    "single": true,
-    "view": "split",
+    "single": false,
+    "view": "auto",
     "tree": true,
     "fullscreen": true
   },
