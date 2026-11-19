@@ -22,88 +22,84 @@
     "openai": {
       "models": {
         "gpt-6.1-sol": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6.1-sol-fast": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6-sol": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6-sol-fast": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6-luna": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6-luna-fast": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6-astra": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6-astra-fast": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          },
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.2-sol": {
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.2-sol-fast": {
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.2-sol-ultrafast": {
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.2-astra": {
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.2-astra-fast": {
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.2-astra-ultrafast": {
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
@@ -113,20 +109,8 @@
     },
     "claude-agent": {
       "models": {
-        "opus": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          }
-        },
-        "claude-opus-5": {
-          "limit": {
-            "context": 500000,
-            "input": 372000,
-            "output": 128000
-          }
-        }
+        "opus": {},
+        "claude-opus-5": {}
       }
     }
   },
@@ -156,7 +140,7 @@
       },
       "atlassian": {
         "type": "remote",
-        "url": "https://mcp.atlassian.com/v1/mcp/authv2"
+        "url": "https://mcp.atlassian.com/v2/mcp"
       }
     }
   }

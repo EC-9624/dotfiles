@@ -24,7 +24,8 @@
     "grouping": "none",
     "image_preview": true,
     "new_location": "launch",
-    "thinking": "show"
+    "thinking": "show",
+    "verbosity": "high"
   },
   "animations": true,
   "diffs": {
