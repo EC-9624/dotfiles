@@ -71,6 +71,7 @@ return {
 		},
 	},
 	marksman = {},
+	ols = {},
 	svelte = {},
 	terraformls = {},
 	yamlls = {},

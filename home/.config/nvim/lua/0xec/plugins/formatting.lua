@@ -62,6 +62,7 @@ return {
 				css = { "prettierd", "prettier", stop_after_first = true },
 				html = { "prettierd", "prettier", stop_after_first = true },
 				json = { "oxfmt", "prettierd", "prettier", stop_after_first = true },
+				odin = { "odinfmt" },
 				svelte = { "prettierd", "prettier", stop_after_first = true },
 				yaml = { "prettierd", "prettier", stop_after_first = true },
 				zig = { "zigfmt" },
