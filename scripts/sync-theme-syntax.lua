@@ -8,6 +8,7 @@ local themes = {
 	["tokyo-night"] = "Tokyo Night",
 	catppuccin = "Catppuccin Macchiato",
 	gruvbox = "Gruvbox",
+	opencode = "OpenCode",
 }
 
 -- TextMate/Syntect equivalents of Neovim's syntax categories. Specific scopes

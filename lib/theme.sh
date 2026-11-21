@@ -40,6 +40,14 @@ apply_rex_theme() {
   done <<<"$client_list"
 }
 
+opencode_theme_name() {
+  if [[ "$1" == opencode ]]; then
+    printf 'opencode\n'
+  else
+    printf 'dotfiles-%s\n' "$1"
+  fi
+}
+
 install_opencode_themes() {
   local themes_dir="$1"
   local output_dir="$2"
@@ -49,7 +57,10 @@ install_opencode_themes() {
   for source in "$themes_dir"/*/opencode.json; do
     [[ -f "$source" ]] || continue
     preset="${source%/*}"
-    target="${output_dir}/dotfiles-${preset##*/}.json"
+    preset="${preset##*/}"
+    # The default's JSON is a token source for other apps, not a custom TUI theme.
+    [[ "$preset" != opencode ]] || continue
+    target="${output_dir}/dotfiles-${preset}.json"
     if ! cmp -s "$source" "$target"; then
       cp "$source" "$target"
     fi
@@ -73,7 +84,7 @@ stage_live_selection() {
     cat "$cli"
   else
     printf '%s\n' '{}'
-  fi | jq -es --arg name "dotfiles-${dir##*/}" '
+  fi | jq -es --arg name "$(opencode_theme_name "${dir##*/}")" '
     if length == 1 and (.[0] | type == "object")
     then .[0] | .theme.name = $name | .theme.mode //= "system"
     else error("expected one OpenCode CLI config object")

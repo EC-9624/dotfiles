@@ -28,7 +28,7 @@ Skip the TPM clone if already installed. In tmux, press `Ctrl+Space`, then `Shif
 | `./dot doctor` | Check commands, config paths, and Stow conflicts |
 | `./dot theme <name>` | Switch the shared theme |
 
-Themes: `tokyo-night`, `rose-pine`, `catppuccin`, `gruvbox`. Rex, Neovim, and OpenCode V2 switch live after one-time setup. Run `./dot theme <name>` to install the named OpenCode palettes, then reopen any OpenCode TUIs that were already running and start Neovim with the updated config. Subsequent switches are live. Use `:DotThemeReload` in Neovim to reapply the selected palette manually.
+Themes: `tokyo-night`, `rose-pine`, `catppuccin`, `gruvbox`, `opencode`. The `opencode` preset selects the TUI's built-in default. Its dark tokens from the [official theme tool](https://opencode.ai/theme/) are stored in `home/.config/themes/opencode/opencode.json` for Neovim, lualine, and Yazi; no `dotfiles-opencode` theme is installed. Rex, Neovim, and OpenCode V2 switch live after one-time setup. Run `./dot theme <name>` to install the named OpenCode palettes, then reopen any OpenCode TUIs that were already running and start Neovim with the updated config. Subsequent switches are live. Use `:DotThemeReload` in Neovim to reapply the selected palette manually.
 
 In Rex, press `Ctrl+Space`, then `Shift+T`, or choose **Switch shared theme** in the command palette. The active preset starts first. Move or type to preview the highlighted theme in Rex, Neovim, and OpenCode. `Enter` keeps it and updates the remaining tools; `Esc` or closing the popup restores the starting preset. Rex’s built-in **Change Theme…** only changes Rex.
 

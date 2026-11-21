@@ -93,7 +93,6 @@ set_theme() (
   local current_theme="${HOME}/.config/current-theme"
   local opencode_dir="${XDG_CONFIG_HOME:-${HOME}/.config}/opencode"
   local opencode_cli="${opencode_dir}/cli.json"
-  local opencode_name="dotfiles-${name}"
   local opencode_new_theme=false
   local lazygit_config="${HOME}/.config/lazygit/config.yml"
   local stage
@@ -109,7 +108,7 @@ set_theme() (
   need_cmd jq
   jq -e 'type == "object"' "${theme_dir}/opencode.json" >/dev/null || fail "invalid OpenCode theme JSON: ${theme_dir}/opencode.json"
 
-  if [[ ! -f "${opencode_dir}/themes/${opencode_name}.json" ]]; then
+  if [[ "$name" != opencode && ! -f "${opencode_dir}/themes/dotfiles-${name}.json" ]]; then
     opencode_new_theme=true
   fi
   mkdir -p "$opencode_dir"
@@ -147,7 +146,7 @@ ensure_theme() {
     set_theme tokyo-night
   else
     preset="$(basename "$(readlink "${HOME}/.config/current-theme")")"
-    if [[ ! -f "${opencode_dir}/themes/dotfiles-${preset}.json" || ! -f "${opencode_dir}/cli.json" ]] \
+    if [[ ! -f "${opencode_dir}/cli.json" || ( "$preset" != opencode && ! -f "${opencode_dir}/themes/dotfiles-${preset}.json" ) ]] \
       || jq -e '.theme.name == "current"' "${opencode_dir}/cli.json" >/dev/null; then
       set_theme "$preset"
     else
@@ -180,6 +179,7 @@ doctor() {
     "${XDG_CONFIG_HOME:-${HOME}/.config}/opencode/themes/dotfiles-tokyo-night.json"
     "${HOME}/.config/themes/catppuccin"
     "${HOME}/.config/themes/gruvbox"
+    "${HOME}/.config/themes/opencode"
     "${HOME}/.config/themes/rose-pine"
     "${HOME}/.config/themes/tokyo-night"
     "/opt/homebrew/opt/fzf/shell/key-bindings.zsh"
