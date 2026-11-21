@@ -154,7 +154,7 @@ function M.apply(color)
 end
 
 function M.setup(path)
-	-- All three editor presets are pinned to dark variants (main/night/macchiato).
+	-- The editor presets are pinned to dark variants.
 	local color = require("0xec.theme.tokens").load(path, "dark")
 	local group = vim.api.nvim_create_augroup("0xec-theme-syntax", { clear = true })
 	vim.api.nvim_create_autocmd("ColorScheme", {

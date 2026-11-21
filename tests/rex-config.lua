@@ -1,4 +1,4 @@
--- Run from the repository root: luajit scripts/tests/rex-config.lua
+-- Run from the repository root: luajit tests/rex-config.lua
 package.path = "home/.config/rex/?.lua;" .. package.path
 
 local actions, bindings = {}, {}
@@ -19,15 +19,17 @@ rex = {
 }
 
 assert(loadfile("home/.config/rex/init.lua"))()
-assert(action_count == 9, "expected navigation, popup, and floating actions")
-assert(binding_count == 37, "expected all existing shortcuts")
+assert(action_count == 10, "expected navigation, popup, and floating actions")
+assert(binding_count == 38, "expected all shortcuts")
 for _, name in ipairs({ "navigation", "popups", "floating", "keys" }) do
 	assert(package.loaded[name] == true, name .. " should initialize itself without returning a factory")
 end
 assert(loadfile("home/.config/rex/init.lua"))() -- require must not register anything twice.
-assert(action_count == 9 and binding_count == 37)
+assert(action_count == 10 and binding_count == 38)
 assert(bindings["ctrl+space>f"].action == "toggle_centered_float")
 assert(bindings["ctrl+space>t"].action == "popup_shell")
+assert(bindings["ctrl+space>shift+t"].action == "popup_theme")
+assert(actions.popup_theme.title == "Switch shared theme")
 assert(bindings["ctrl+space>g"].action == "popup_lazygit")
 assert(bindings["ctrl+space>y"].action == "popup_yazi")
 for key, direction in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
@@ -42,4 +44,4 @@ for _, binding in pairs(bindings) do
 	assert(binding.action:find(".", 1, true) or actions[binding.action], "unregistered action: " .. binding.action)
 end
 
-print("Passed Rex config wiring test: self-initializing modules, 9 actions, 37 shortcuts")
+print("Passed Rex config wiring test: self-initializing modules, 10 actions, 38 shortcuts")

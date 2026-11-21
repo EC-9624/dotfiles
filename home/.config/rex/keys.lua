@@ -21,6 +21,7 @@ bind("f", "toggle_centered_float")
 bind("=", "pane.balance")
 
 bind("t", "popup_shell")
+bind("shift+t", "popup_theme")
 bind("g", "popup_lazygit")
 bind("y", "popup_yazi")
 

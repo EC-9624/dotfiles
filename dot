@@ -7,6 +7,7 @@ export PATH="${HOME}/.opencode/bin:${HOME}/.local/bin:${HOME}/.bun/bin:/opt/home
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOME_DIR="${DOTFILES_DIR}/home"
 PACKAGES_DIR="${DOTFILES_DIR}/packages"
+source "$DOTFILES_DIR/lib/theme.sh"
 
 say() {
   printf '%s\n' "$1"
@@ -90,10 +91,12 @@ set_theme() (
   local themes_dir="${HOME}/.config/themes"
   local theme_dir="${themes_dir}/${name}"
   local current_theme="${HOME}/.config/current-theme"
-  local opencode_cli="${HOME}/.config/opencode/cli.json"
-  local opencode_cli_tmp
+  local opencode_dir="${XDG_CONFIG_HOME:-${HOME}/.config}/opencode"
+  local opencode_cli="${opencode_dir}/cli.json"
+  local opencode_name="dotfiles-${name}"
+  local opencode_new_theme=false
   local lazygit_config="${HOME}/.config/lazygit/config.yml"
-  local lazygit_tmp
+  local stage
 
   if [[ ! "$name" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
     fail "invalid theme name: ${name:-<empty>}"
@@ -106,54 +109,50 @@ set_theme() (
   need_cmd jq
   jq -e 'type == "object"' "${theme_dir}/opencode.json" >/dev/null || fail "invalid OpenCode theme JSON: ${theme_dir}/opencode.json"
 
-  mkdir -p "${HOME}/.config/opencode/themes"
-  opencode_cli_tmp="$(mktemp "${opencode_cli}.XXXXXX")"
-  trap "rm -f -- $(printf '%q' "$opencode_cli_tmp")" EXIT
-  if [[ -f "$opencode_cli" ]]; then
-    jq -e '.theme.name = "current" | .theme.mode //= "system"' "$opencode_cli" > "$opencode_cli_tmp"
-  else
-    printf '%s\n' '{}' | jq '.theme.name = "current" | .theme.mode = "system"' > "$opencode_cli_tmp"
+  if [[ ! -f "${opencode_dir}/themes/${opencode_name}.json" ]]; then
+    opencode_new_theme=true
   fi
-
-  cp "${theme_dir}/opencode.json" "${HOME}/.config/opencode/themes/current.json"
-  # Write through Stow's symlink rather than replacing it.
-  cat "$opencode_cli_tmp" > "$opencode_cli"
-  chmod 600 "$opencode_cli"
-  ln -nsf "$theme_dir" "$current_theme"
-
-  if [[ -f "${theme_dir}/lazygit.yml" ]]; then
+  mkdir -p "$opencode_dir"
+  if [[ -e "$current_theme" && ! -L "$current_theme" ]]; then
+    fail "expected a symlink at $current_theme"
+  fi
+  stage="$(mktemp -d "${current_theme}.XXXXXX")"
+  trap 'rm -rf -- "$stage"' EXIT
+  stage_live_selection "$theme_dir" "$opencode_cli" "$stage"
+  if [[ -f "$theme_dir/lazygit.yml" ]]; then
     need_cmd yq
-    [[ -f "$lazygit_config" ]] || fail "missing lazygit config: $lazygit_config"
-    yq -e 'type == "!!map"' "${theme_dir}/lazygit.yml" >/dev/null \
-      || fail "invalid lazygit theme YAML: ${theme_dir}/lazygit.yml"
-    lazygit_tmp="$(mktemp "${lazygit_config}.XXXXXX")"
-    trap "rm -f -- $(printf '%q' "$opencode_cli_tmp") $(printf '%q' "$lazygit_tmp")" EXIT
-    yq ".gui.theme = load(\"${theme_dir}/lazygit.yml\")" "$lazygit_config" > "$lazygit_tmp"
-    # Write through Stow's symlink rather than replacing it.
-    cat "$lazygit_tmp" > "$lazygit_config"
+    stage_lazygit_selection "$theme_dir/lazygit.yml" "$lazygit_config" "$stage/lazygit.yml"
   fi
 
-  if [[ -d "${HOME}/.config/tmux-palette" ]]; then
-    printf '%s\n' '{' '  "name": "terminal"' '}' > "${HOME}/.config/tmux-palette/theme.json"
+  prepare_theme_session "$stage" "$themes_dir" "$opencode_dir"
+  ensure_rex_palette "$theme_dir" "$stage" || true
+  if [[ -f "$stage/lazygit.yml" ]]; then
+    cat "$stage/lazygit.yml" > "$lazygit_config"
   fi
-
-  if command -v tmux >/dev/null 2>&1 && tmux list-sessions >/dev/null 2>&1; then
-    tmux source-file "${HOME}/.config/tmux/tmux.conf"
-  fi
-
-  if pgrep -x btop >/dev/null 2>&1; then
-    pkill -SIGUSR2 btop
-  fi
+  activate_live_theme "$theme_dir" "$opencode_cli" "$stage"
+  refresh_theme_tools
 
   say "theme: $name"
-  say "reload Ghostty with Cmd+Shift+,; restart open Neovim, Yazi, and OpenCode sessions"
+  if [[ "$opencode_new_theme" == true ]]; then
+    say "OpenCode: reopen TUIs that were open before the named themes were installed"
+  fi
+  say "reopen Yazi or lazygit for app-specific colors; reload Ghostty with Cmd+Shift+, if used"
 )
 
 ensure_theme() {
+  local opencode_dir="${XDG_CONFIG_HOME:-${HOME}/.config}/opencode"
+  local preset
+
   if [[ ! -e "${HOME}/.config/current-theme" ]]; then
     set_theme tokyo-night
-  elif [[ ! -f "${HOME}/.config/opencode/themes/current.json" || ! -f "${HOME}/.config/opencode/cli.json" ]]; then
-    set_theme "$(basename "$(readlink "${HOME}/.config/current-theme")")"
+  else
+    preset="$(basename "$(readlink "${HOME}/.config/current-theme")")"
+    if [[ ! -f "${opencode_dir}/themes/dotfiles-${preset}.json" || ! -f "${opencode_dir}/cli.json" ]] \
+      || jq -e '.theme.name == "current"' "${opencode_dir}/cli.json" >/dev/null; then
+      set_theme "$preset"
+    else
+      install_opencode_themes "${HOME}/.config/themes" "${opencode_dir}/themes"
+    fi
   fi
 }
 
@@ -175,7 +174,10 @@ doctor() {
     "${HOME}/.oh-my-zsh/oh-my-zsh.sh"
     "${HOME}/.config/lazygit/config.yml"
     "${HOME}/.config/current-theme"
-    "${HOME}/.config/opencode/themes/current.json"
+    "${XDG_CONFIG_HOME:-${HOME}/.config}/opencode/themes/dotfiles-catppuccin.json"
+    "${XDG_CONFIG_HOME:-${HOME}/.config}/opencode/themes/dotfiles-gruvbox.json"
+    "${XDG_CONFIG_HOME:-${HOME}/.config}/opencode/themes/dotfiles-rose-pine.json"
+    "${XDG_CONFIG_HOME:-${HOME}/.config}/opencode/themes/dotfiles-tokyo-night.json"
     "${HOME}/.config/themes/catppuccin"
     "${HOME}/.config/themes/gruvbox"
     "${HOME}/.config/themes/rose-pine"
@@ -259,4 +261,6 @@ main() {
   esac
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  main "$@"
+fi

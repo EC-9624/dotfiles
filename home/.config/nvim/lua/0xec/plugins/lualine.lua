@@ -1,6 +1,15 @@
 return {
 	"nvim-lualine/lualine.nvim",
 	dependencies = { "nvim-tree/nvim-web-devicons" },
+	init = function(plugin)
+		vim.api.nvim_create_autocmd("User", {
+			group = vim.api.nvim_create_augroup("0xec-lualine-theme", { clear = true }),
+			pattern = "DotThemeChanged",
+			callback = function()
+				plugin.config()
+			end,
+		})
+	end,
 	config = function()
 		local lualine = require("lualine")
 		local lazy_status = require("lazy.status")

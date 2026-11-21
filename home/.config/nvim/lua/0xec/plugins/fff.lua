@@ -1,4 +1,7 @@
-local theme = require("0xec.theme")
+local function cursor_highlight()
+	-- A scheme can supply its own cursor highlight; otherwise use CursorLine.
+	vim.api.nvim_set_hl(0, "FFFCursorLine", { link = "CursorLine", default = true })
+end
 
 return {
 	"dmtrKovalenko/fff.nvim",
@@ -10,7 +13,7 @@ return {
 		"nvim-tree/nvim-web-devicons",
 	},
 	opts = {
-		hl = theme.spec.name == "rose-pine" and { cursor = "FFFCursorLine" } or nil,
+		hl = { cursor = "FFFCursorLine" },
 		layout = {
 			height = 0.8,
 			width = 0.95,
@@ -28,4 +31,12 @@ return {
 			send_to_quickfix = "<C-q>",
 		},
 	},
+	config = function(_, opts)
+		cursor_highlight()
+		vim.api.nvim_create_autocmd("ColorScheme", {
+			group = vim.api.nvim_create_augroup("0xec-fff-theme", { clear = true }),
+			callback = cursor_highlight,
+		})
+		require("fff").setup(opts)
+	end,
 }

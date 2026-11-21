@@ -14,12 +14,12 @@ local function current_window(ctx)
 	error("Popup: no source pane")
 end
 
-local function register(name, title, command)
+local function register(name, title, command, bounds)
 	local action = "popup_" .. name
 	local label = "popup:" .. name
 	rex.action({
 		name = action,
-		title = title .. " Popup",
+		title = title,
 		category = "Pane",
 		run = function(ctx)
 			local window = current_window(ctx)
@@ -49,7 +49,7 @@ local function register(name, title, command)
 			return assert(rex.session.new_layer({
 				session_id = ctx.session_id,
 				window_id = window.window_id,
-				bounds = { 0.1, 0.1, 0.8, 0.8 },
+				bounds = bounds or { 0.1, 0.1, 0.8, 0.8 },
 				focus = true,
 				layout = {
 					block = {
@@ -63,6 +63,7 @@ local function register(name, title, command)
 	})
 end
 
-register("shell", "Scratch Shell")
-register("lazygit", "Lazygit", { "lazygit" })
-register("yazi", "Yazi", { "yazi" })
+register("shell", "Scratch Shell Popup")
+register("lazygit", "Lazygit Popup", { "lazygit" })
+register("yazi", "Yazi Popup", { "yazi" })
+register("theme", "Switch shared theme", { os.getenv("HOME") .. "/.config/rex/theme-picker.py" }, { 0.25, 0.3, 0.5, 0.4 })

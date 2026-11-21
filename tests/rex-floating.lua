@@ -1,4 +1,4 @@
--- Run from the repository root: luajit scripts/tests/rex-floating.lua
+-- Run from the repository root: luajit tests/rex-floating.lua
 local module_path = "home/.config/rex/floating.lua"
 local function copy(value)
 	if type(value) ~= "table" then
