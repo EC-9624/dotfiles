@@ -22,12 +22,49 @@
     "openai": {
       "models": {
         "gpt-6.1-sol": {
+          "limit": { "context": 500000 },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6.1-sol-fast": {
+          "limit": { "context": 500000 },
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.1-sol-flex": {
+          "limit": { "context": 500000 },
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.1-sol-ultrafast": {
+          "limit": { "context": 500000 },
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.1-terra": {
+          "limit": { "context": 500000 },
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.1-terra-fast": {
+          "limit": { "context": 500000 },
+          "settings": {
+            "reasoningSummary": "auto",
+            "include": ["reasoning.encrypted_content"]
+          }
+        },
+        "gpt-6.1-terra-flex": {
+          "limit": { "context": 500000 },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
@@ -70,36 +107,42 @@
           }
         },
         "gpt-6.2-sol": {
+          "limit": { "context": 500000 },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6.2-sol-fast": {
+          "limit": { "context": 500000 },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6.2-sol-ultrafast": {
+          "limit": { "context": 500000 },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6.2-astra": {
+          "limit": { "context": 272000 },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6.2-astra-fast": {
+          "limit": { "context": 272000 },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
           }
         },
         "gpt-6.2-astra-ultrafast": {
+          "limit": { "context": 272000 },
           "settings": {
             "reasoningSummary": "auto",
             "include": ["reasoning.encrypted_content"]
