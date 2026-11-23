@@ -48,7 +48,7 @@ Edit files under `home/`; Stow links them to the matching paths in `$HOME`.
 | OpenCode (`oc`) | `.config/opencode/opencode.json`, `cli.json` |
 | Codex | `.codex/config.toml` |
 | Claude Code (`cc`) | `.claude/settings.json` |
-| Pi | `.pi/agent/settings.json`, `models.json`, `mcp.json` |
+| Pi | `.pi/agent/settings.json`, `models.json`, `mcp.json`, `extensions/cache-footer.ts` |
 
 **How theme switching works:** `dot` runs a full switch. In `home/.config/rex/`, `theme-picker.py` handles highlighting, accepting, and canceling; `apply-picker-theme.sh` prepares once per popup, previews live apps, and updates the remaining tools on commit. Both Bash entry points source `lib/theme.sh`, which owns palette import, config staging, and the timed live handoff.
 
