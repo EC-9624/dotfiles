@@ -1,5 +1,5 @@
 gui:
-  theme: {activeBorderColor: ["#8aadf4", bold], inactiveBorderColor: ["#363a4f"], searchingActiveBorderColor: ["#eed49f", bold], optionsTextColor: ["#c6a0f6"], selectedLineBgColor: ["#1e2030"], selectedRangeBgColor: ["#181926"], cherryPickedCommitBgColor: ["#a6da95"], cherryPickedCommitFgColor: ["#24273a"], unstagedChangesColor: ["#ed8796"], defaultFgColor: ["#cad3f5"]}
+  theme: {activeBorderColor: ["#9ccfd8", bold], inactiveBorderColor: ["#6e6a86"], searchingActiveBorderColor: ["#f6c177", bold], optionsTextColor: ["#c4a7e7"], selectedLineBgColor: ["#1f1d2e"], selectedRangeBgColor: ["#26233a"], cherryPickedCommitBgColor: ["#9ccfd8"], cherryPickedCommitFgColor: ["#191724"], unstagedChangesColor: ["#eb6f92"], defaultFgColor: ["#e0def4"]}
   nerdFontsVersion: "3"
   showRandomTip: false
   showCommandLog: false
