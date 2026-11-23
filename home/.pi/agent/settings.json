@@ -4,8 +4,11 @@
   "defaultModel": "gpt-6.2-sol",
   "theme": "dotfiles-shared",
   "editorPaddingX": 2,
-  "hideThinkingBlock": true,
-  "defaultTools": ["+codemode"],
+  "showCacheMissNotices": true,
+  "hideThinkingBlock": false,
+  "defaultTools": [
+    "+codemode"
+  ],
   "compaction": {
     "modelOverrides": {
       "openai/gpt-6.1-sol": {
@@ -34,6 +37,8 @@
       }
     }
   },
+  "lastChangelogVersion": "1.6.0",
+  "deviceId": "2418c790-e0cc-4614-8e32-2a4517d819e2",
   "enabledModels": [
     "openai/chat-latest",
     "openai/gpt-6-astra",
@@ -53,5 +58,6 @@
     "openai/gpt-6-luna-fast",
     "openai/gpt-6-astra-fast"
   ],
-  "lastChangelogVersion": "1.3.0"
+  "cacheWarming": "idle",
+  "collapseChangelog": false
 }
