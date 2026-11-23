@@ -14,6 +14,7 @@ dir="$themes/$name"
 case "$1" in
   prepare)
     prepare_theme_session "$stage" "$themes" "$oc"
+    apply_pi_theme "$dir"
     ;;
   preview)
     ensure_rex_palette "$dir" "$stage"

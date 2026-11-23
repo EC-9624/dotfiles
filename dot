@@ -151,6 +151,7 @@ ensure_theme() {
       set_theme "$preset"
     else
       install_opencode_themes "${HOME}/.config/themes" "${opencode_dir}/themes"
+      apply_pi_theme "${HOME}/.config/themes/${preset}"
     fi
   fi
 }

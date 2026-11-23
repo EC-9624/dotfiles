@@ -1,5 +1,20 @@
 # Shared Bash operations. Callers own PATH, shell options and their stage directory.
 
+apply_pi_theme() (
+  local dir="$1"
+  local themes="${PI_CODING_AGENT_DIR:-${HOME}/.pi/agent}/themes"
+  local target="$themes/dotfiles-shared.json" tmp
+  mkdir -p "$themes" || return 1
+  tmp="$(mktemp "$themes/.dotfiles-shared.XXXXXX")" || return 1
+  trap 'rm -f -- "$tmp"' EXIT
+  jq -e -f "$(dirname "${BASH_SOURCE[0]}")/pi-theme.jq" "$dir/opencode.json" > "$tmp" || return 1
+  # Pi watches the directory for updates to this filename. Keep the name stable
+  # and replace the file atomically so readers never see partially written JSON.
+  if ! cmp -s "$tmp" "$target"; then
+    /bin/mv -f "$tmp" "$target"
+  fi
+)
+
 rex_theme_names() {
   defaults export com.superlogical.rex - 2>/dev/null \
     | plutil -extract 'Workspace\.customThemes' raw -o - - 2>/dev/null \
@@ -107,6 +122,7 @@ stage_lazygit_selection() {
 
 activate_live_theme() {
   local dir="$1" cli="$2" stage="$3" rex_pid=""
+  apply_pi_theme "$dir" || return 1
   if [[ -s "$dir/rex.theme" && -s "$stage/clients" ]]; then
     apply_rex_theme "$(<"$dir/rex.theme")" "$(<"$stage/clients")" &
     rex_pid=$!
