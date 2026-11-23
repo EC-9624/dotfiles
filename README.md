@@ -42,7 +42,7 @@ Edit files under `home/`; Stow links them to the matching paths in `$HOME`.
 | OpenCode (`oc`) | `.config/opencode/opencode.json`, `cli.json` |
 | Codex | `.codex/config.toml` |
 | Claude Code (`cc`) | `.claude/settings.json` |
-| Pi | `.pi/agent/settings.json`, `models.json`, `mcp.json`, `extensions/cache-footer.ts` |
+| Pi | `.pi/agent/settings.json`, `models.json`, `mcp.json` |
 
 `scripts/` holds the Yazi theme generator; `tests/` holds the Rex and theme tests.
 
